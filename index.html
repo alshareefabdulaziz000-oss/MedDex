@@ -233,20 +233,63 @@ cursor: pointer; transition: background .18s;
 .sel-btn:hover { background: #333333 !important; }
 
 /* PATHWAY */
-.pw-summary { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; animation: fadeUp .4s ease .3s backwards; }
-.pw-sum-lbl { font-family: var(–mono); font-size: 8.5px; letter-spacing: .17em; color: var(–dim); text-transform: uppercase; margin-bottom: 8px; }
-.pw-sum-txt { font-size: 14px; color: var(–muted); line-height: 1.75; }
-.pw-card { background: var(–surface); border: 1px solid var(–border); border-left: 3px solid var(–text); border-radius: 12px; padding: 20px 22px; animation: fadeUp .4s ease .35s backwards; }
-.pw-title { font-family: var(–mono); font-size: 8.5px; letter-spacing: .17em; color: var(–text); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 7px; }
-.pw-title::before { content: ‘’; width: 5px; height: 5px; background: var(–text); border-radius: 50%; flex-shrink: 0; }
-.pw-step { display: flex; gap: 14px; margin-bottom: 18px; }
-.pw-step:last-child { margin-bottom: 0; }
-.step-num { width: 22px; height: 22px; border-radius: 50%; background: var(–text); color: #fff; font-family: var(–mono); font-size: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-.step-body { flex: 1; }
-.step-test { font-size: 14px; font-weight: 600; color: var(–text); margin-bottom: 7px; }
-.step-line { font-size: 13px; color: var(–muted); line-height: 1.65; margin-top: 4px; }
-.step-line .pos { color: var(–green); font-weight: 600; }
-.step-line .neg { color: var(–red); font-weight: 600; }
+.pw-summary {
+background: #1a1714;
+border-radius: 14px; padding: 22px 24px; margin-bottom: 16px;
+animation: fadeUp .4s ease .3s backwards;
+}
+.pw-sum-lbl {
+font-family: var(–mono); font-size: 8px; letter-spacing: .22em;
+color: rgba(255,255,255,.45); text-transform: uppercase; margin-bottom: 10px;
+display: flex; align-items: center; gap: 8px;
+}
+.pw-sum-lbl::before { content: ‘’; width: 18px; height: 1px; background: rgba(255,255,255,.3); }
+.pw-sum-txt { font-size: 14.5px; color: rgba(255,255,255,.88); line-height: 1.8; font-family: var(–display); font-weight: 300; font-style: italic; }
+
+.pw-steps-wrap { display: flex; flex-direction: column; gap: 12px; animation: fadeUp .4s ease .35s backwards; }
+
+.pw-step-card {
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 14px; overflow: hidden;
+}
+.pw-step-header {
+display: flex; align-items: center; gap: 14px;
+padding: 16px 20px; background: #f2efe9; border-bottom: 1px solid var(–border);
+}
+.pw-step-num {
+width: 28px; height: 28px; border-radius: 50%;
+background: #1a1714; color: #fff;
+font-family: var(–mono); font-size: 11px; font-weight: 600;
+display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.pw-step-test {
+font-family: var(–ui); font-size: 15px; font-weight: 600; color: var(–text);
+flex: 1;
+}
+.pw-step-body { padding: 14px 20px; display: flex; flex-direction: column; gap: 10px; }
+
+.pw-outcome {
+display: flex; align-items: flex-start; gap: 12px;
+padding: 12px 16px; border-radius: 10px;
+}
+.pw-outcome.pos { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.pw-outcome.neg { background: #fff1f2; border: 1px solid #fecdd3; }
+
+.pw-outcome-icon {
+width: 24px; height: 24px; border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 12px; flex-shrink: 0; margin-top: 1px; font-weight: 700;
+}
+.pw-outcome.pos .pw-outcome-icon { background: #166534; color: #fff; }
+.pw-outcome.neg .pw-outcome-icon { background: #991b1b; color: #fff; }
+
+.pw-outcome-label {
+font-family: var(–mono); font-size: 8px; letter-spacing: .15em;
+text-transform: uppercase; margin-bottom: 3px; font-weight: 600;
+}
+.pw-outcome.pos .pw-outcome-label { color: #166534; }
+.pw-outcome.neg .pw-outcome-label { color: #991b1b; }
+.pw-outcome-text { font-size: 13px; color: var(–muted); line-height: 1.65; }
 
 /* MODAL */
 .movl { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 300; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(6px); }
@@ -654,14 +697,46 @@ function renderPathway(pathway, containerId, sectionId) {
   var pc = document.getElementById(containerId);
   if (!pathway || !pathway.steps || !pathway.steps.length) return;
   var html = '';
+
+  // Clinical Summary — dark card
   if (pathway.summary) {
-    html += '<div class="pw-summary"><div class="pw-sum-lbl">Clinical Summary</div><div class="pw-sum-txt">' + esc(pathway.summary) + '</div></div>';
+    html += '<div class="pw-summary">' +
+      '<div class="pw-sum-lbl">Clinical Summary</div>' +
+      '<div class="pw-sum-txt">' + esc(pathway.summary) + '</div>' +
+      '</div>';
   }
-  html += '<div class="pw-card"><div class="pw-title">Step-by-Step Decision Pathway</div>';
+
+  // Steps
+  html += '<div class="pw-steps-wrap">';
   pathway.steps.forEach(function(s) {
-    html += '<div class="pw-step"><div class="step-num">' + s.step + '</div><div class="step-body"><div class="step-test">' + esc(s.test||'') + '</div><div class="step-line"><span class="pos">✓ If Positive: </span>' + esc(s.if_positive||'') + '</div><div class="step-line"><span class="neg">✗ If Negative: </span>' + esc(s.if_negative||'') + '</div></div></div>';
+    var posText = esc(s.if_positive || '');
+    var negText = esc(s.if_negative || '');
+    // Strip leading arrow if present
+    posText = posText.replace(/^[→\-\s]+/, '');
+    negText = negText.replace(/^[→\-\s]+/, '');
+
+    html +=
+      '<div class="pw-step-card">' +
+        '<div class="pw-step-header">' +
+          '<div class="pw-step-num">' + s.step + '</div>' +
+          '<div class="pw-step-test">' + esc(s.test || '') + '</div>' +
+        '</div>' +
+        '<div class="pw-step-body">' +
+          '<div class="pw-outcome pos">' +
+            '<div class="pw-outcome-icon">✓</div>' +
+            '<div><div class="pw-outcome-label">If Positive</div>' +
+            '<div class="pw-outcome-text">' + posText + '</div></div>' +
+          '</div>' +
+          '<div class="pw-outcome neg">' +
+            '<div class="pw-outcome-icon">✗</div>' +
+            '<div><div class="pw-outcome-label">If Negative</div>' +
+            '<div class="pw-outcome-text">' + negText + '</div></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
   });
   html += '</div>';
+
   pc.innerHTML = html;
   ps.style.display = 'block';
 }
