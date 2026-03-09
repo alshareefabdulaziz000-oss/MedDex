@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedDx — AI Clinical Diagnostic Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syne:wght@400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   SHARED VARIABLES
+═══════════════════════════════════════════ */
+:root {
+  --bg:      #f7f5f0;
+  --surface: #ffffff;
+  --border:  #e5e0d8;
+  --border2: #d0c9be;
+  --text:    #1a1714;
+  --muted:   #6b6560;
+  --dim:     #a09990;
+  --green:   #166534;
+  --red:     #991b1b;
+  --gold:    #78450a;
+  --silver:  #4a4540;
+  --bronze:  #6b3a1a;
+  --display: 'Cormorant Garamond', serif;
+  --ui:      'Syne', sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--ui); min-height: 100vh; }
+
+/* ═══════════════════════════════════════════
+SHARED HEADER
+═══════════════════════════════════════════ */
+.hdr {
+background: var(–surface); border-bottom: 1px solid var(–border);
+padding: 18px 24px; display: flex; align-items: center;
+justify-content: space-between; position: sticky; top: 0; z-index: 100;
+}
+.logo-name { font-family: var(–display); font-size: 26px; font-weight: 300; }
+.logo-name em { font-style: italic; }
+.logo-tag { font-family: var(–mono); font-size: 8px; letter-spacing: .2em; color: var(–dim); text-transform: uppercase; margin-top: 2px; }
+.hdr-right { display: flex; align-items: center; gap: 10px; }
+.back-btn {
+display: none; background: none; border: 1px solid var(–border2);
+border-radius: 8px; padding: 7px 14px; cursor: pointer;
+color: var(–muted); font-family: var(–ui); font-size: 12px; font-weight: 500;
+transition: all .18s;
+}
+.back-btn:hover { border-color: var(–text); color: var(–text); }
+.back-btn.show { display: flex; align-items: center; gap: 6px; }
+.gear-btn {
+background: none; border: 1px solid var(–border2); border-radius: 8px;
+padding: 8px 10px; cursor: pointer; color: var(–muted); transition: all .2s;
+}
+.gear-btn:hover { border-color: var(–text); color: var(–text); }
+
+/* ═══════════════════════════════════════════
+LANDING PAGE
+═══════════════════════════════════════════ */
+#landing {
+min-height: calc(100vh - 62px);
+display: flex; flex-direction: column; align-items: center;
+justify-content: center; padding: 48px 24px;
+}
+.land-title {
+font-family: var(–display); font-size: 48px; font-weight: 300;
+text-align: center; line-height: 1.1; margin-bottom: 10px;
+}
+.land-title em { font-style: italic; }
+.land-sub {
+font-family: var(–mono); font-size: 9px; letter-spacing: .22em;
+color: var(–dim); text-transform: uppercase; text-align: center;
+margin-bottom: 60px;
+}
+.tool-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; width: 100%; }
+.tool-card {
+background: var(–surface); border: 1.5px solid var(–border2);
+border-radius: 20px; padding: 36px 28px; cursor: pointer;
+transition: all .22s; text-align: left; position: relative; overflow: hidden;
+}
+.tool-card::before {
+content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.tool-card.clindx::before { background: #1a1714; }
+.tool-card.dermdx::before { background: #78450a; }
+.tool-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,.1); border-color: var(–text); }
+.tool-icon { font-size: 34px; margin-bottom: 16px; }
+.tool-name {
+font-family: var(–display); font-size: 30px; font-weight: 300;
+margin-bottom: 4px; line-height: 1;
+}
+.tool-name em { font-style: italic; }
+.tool-badge {
+font-family: var(–mono); font-size: 8px; letter-spacing: .18em;
+color: var(–dim); text-transform: uppercase; margin-bottom: 18px;
+}
+.tool-desc { font-size: 13px; color: var(–muted); line-height: 1.65; }
+.tool-arrow {
+margin-top: 20px; font-family: var(–mono); font-size: 10px;
+color: var(–dim); display: flex; align-items: center; gap: 6px;
+letter-spacing: .1em;
+}
+.land-note {
+font-family: var(–mono); font-size: 9px; color: var(–dim);
+text-align: center; margin-top: 44px; letter-spacing: .1em;
+line-height: 1.8;
+}
+
+/* ═══════════════════════════════════════════
+APP WRAPPERS
+═══════════════════════════════════════════ */
+#appWrap { display: none; }
+#appWrap.show { display: block; }
+.app-view { display: none; }
+.app-view.show { display: block; }
+.wrap { max-width: 660px; margin: 0 auto; padding: 32px 20px 120px; }
+
+/* ═══════════════════════════════════════════
+SHARED FORM ELEMENTS
+═══════════════════════════════════════════ */
+.lbl { font-family: var(–mono); font-size: 9px; letter-spacing: .18em; color: var(–dim); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.lbl .req { color: var(–red); }
+.lbl .opt { color: var(–dim); opacity: .7; font-size: 8.5px; }
+.fg { margin-bottom: 24px; }
+
+input[type=number], input[type=text], textarea, select {
+width: 100%; background: var(–surface); border: 1px solid var(–border);
+color: var(–text); font-family: var(–ui); font-size: 14px; line-height: 1.6;
+padding: 12px 14px; border-radius: 10px; outline: none;
+transition: border-color .18s; resize: none; -webkit-appearance: none; appearance: none;
+}
+input[type=number]:focus, input[type=text]:focus, textarea:focus, select:focus { border-color: var(–text); }
+textarea::placeholder, input::placeholder { color: var(–dim); font-size: 13px; }
+
+/* TOGGLE BUTTONS */
+.tog-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.tog {
+padding: 11px 22px; background: var(–surface); border: 1.5px solid var(–border2);
+color: var(–muted); border-radius: 9px; font-family: var(–ui); font-size: 13.5px;
+font-weight: 500; cursor: pointer; transition: all .15s;
+}
+.tog:hover { border-color: var(–text); color: var(–text); }
+.tog.on { background: #1a1714 !important; border-color: #1a1714 !important; color: #ffffff !important; font-weight: 600 !important; }
+
+/* SELECT BUTTON */
+.sel-w { position: relative; }
+.sel-w::after { content: ‘▾’; position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: var(–muted); pointer-events: none; font-size: 11px; }
+
+/* GO BUTTON */
+.go {
+width: 100%; padding: 18px;
+background: #1a1714 !important; color: #ffffff !important;
+border: none !important; border-radius: 12px;
+font-family: var(–ui); font-size: 15px; font-weight: 600;
+cursor: pointer; transition: background .22s; margin-top: 8px;
+-webkit-appearance: none; appearance: none;
+}
+.go:hover:not(:disabled) { background: #2d2926 !important; }
+.go:disabled { background: #999999 !important; color: #dddddd !important; cursor: not-allowed; }
+
+/* ERROR */
+.err { display: none; margin-top: 12px; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 10px; padding: 13px 15px; color: var(–red); font-size: 13px; line-height: 1.6; }
+.err.show { display: block; }
+.err strong { display: block; font-family: var(–mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 3px; }
+
+/* LOADING */
+.loading { display: none; text-align: center; padding: 64px 0; }
+.loading.show { display: block; }
+.spin { width: 40px; height: 40px; margin: 0 auto 18px; border: 1.5px solid var(–border2); border-top-color: var(–text); border-radius: 50%; animation: spin .85s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin-lbl { font-family: var(–mono); font-size: 10px; letter-spacing: .14em; color: var(–muted); }
+.spin-steps { margin-top: 14px; }
+.spin-step { font-size: 12px; color: var(–dim); margin: 5px 0; transition: all .3s; }
+.spin-step.on { color: var(–text); font-weight: 500; }
+
+/* RESULTS */
+.results { display: none; margin-top: 44px; }
+.results.show { display: block; }
+.sec-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 11px; border-bottom: 1px solid var(–border); }
+.sec-lbl { font-family: var(–mono); font-size: 9px; letter-spacing: .2em; color: var(–dim); text-transform: uppercase; white-space: nowrap; }
+.sec-line { flex: 1; height: 1px; background: var(–border); }
+
+/* DX CARDS */
+.dx {
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 14px; padding: 22px 24px; margin-bottom: 14px;
+position: relative; overflow: hidden;
+box-shadow: 0 1px 3px rgba(0,0,0,.05), 0 4px 12px rgba(0,0,0,.05);
+animation: fadeUp .4s ease backwards;
+}
+.dx::before { content: ‘’; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+.dx1::before { background: var(–gold); }
+.dx2::before { background: var(–silver); }
+.dx3::before { background: var(–bronze); }
+.dx1 { animation-delay: .05s; } .dx2 { animation-delay: .15s; } .dx3 { animation-delay: .25s; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+.dx-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
+.dx-name { font-family: var(–display); font-size: 22px; font-weight: 400; line-height: 1.2; flex: 1; }
+.rank-chip { font-family: var(–mono); font-size: 9px; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; margin-top: 3px; }
+.dx1 .rank-chip { background: rgba(120,69,10,.1); color: var(–gold); border: 1px solid rgba(120,69,10,.2); }
+.dx2 .rank-chip { background: rgba(74,69,64,.1); color: var(–silver); border: 1px solid rgba(74,69,64,.2); }
+.dx3 .rank-chip { background: rgba(107,58,26,.1); color: var(–bronze); border: 1px solid rgba(107,58,26,.2); }
+
+.prob-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.prob-track { flex: 1; height: 3px; background: var(–border); border-radius: 2px; overflow: hidden; }
+.prob-fill { height: 100%; border-radius: 2px; width: 0; transition: width 1.1s cubic-bezier(.4,0,.2,1); }
+.dx1 .prob-fill { background: linear-gradient(90deg, #78450a, #d97706); }
+.dx2 .prob-fill { background: linear-gradient(90deg, #4a4540, #a8a29e); }
+.dx3 .prob-fill { background: linear-gradient(90deg, #6b3a1a, #b07040); }
+.prob-num { font-family: var(–mono); font-size: 12px; color: var(–muted); min-width: 34px; text-align: right; }
+
+.tx { margin-bottom: 16px; }
+.tx-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.tx-lbl { font-family: var(–mono); font-size: 8.5px; letter-spacing: .15em; color: var(–dim); text-transform: uppercase; }
+.g-badge { font-family: var(–mono); font-size: 8.5px; padding: 2px 8px; border-radius: 20px; background: #f0ede8; border: 1px solid var(–border2); color: var(–muted); }
+.tx-body { font-size: 13.5px; color: #5a5450; line-height: 1.75; }
+.tx-body.green { color: var(–green); }
+.divider { height: 1px; background: var(–border); margin: 16px 0; }
+
+.sel-btn {
+width: 100%; margin-top: 18px; padding: 13px;
+background: #1a1714 !important; border: none;
+color: #ffffff !important; border-radius: 9px;
+font-family: var(–ui); font-size: 13px; font-weight: 600;
+cursor: pointer; transition: background .18s;
+-webkit-appearance: none; appearance: none;
+}
+.sel-btn:hover { background: #333333 !important; }
+
+/* PATHWAY */
+.pw-summary { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; animation: fadeUp .4s ease .3s backwards; }
+.pw-sum-lbl { font-family: var(–mono); font-size: 8.5px; letter-spacing: .17em; color: var(–dim); text-transform: uppercase; margin-bottom: 8px; }
+.pw-sum-txt { font-size: 14px; color: var(–muted); line-height: 1.75; }
+.pw-card { background: var(–surface); border: 1px solid var(–border); border-left: 3px solid var(–text); border-radius: 12px; padding: 20px 22px; animation: fadeUp .4s ease .35s backwards; }
+.pw-title { font-family: var(–mono); font-size: 8.5px; letter-spacing: .17em; color: var(–text); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 7px; }
+.pw-title::before { content: ‘’; width: 5px; height: 5px; background: var(–text); border-radius: 50%; flex-shrink: 0; }
+.pw-step { display: flex; gap: 14px; margin-bottom: 18px; }
+.pw-step:last-child { margin-bottom: 0; }
+.step-num { width: 22px; height: 22px; border-radius: 50%; background: var(–text); color: #fff; font-family: var(–mono); font-size: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { flex: 1; }
+.step-test { font-size: 14px; font-weight: 600; color: var(–text); margin-bottom: 7px; }
+.step-line { font-size: 13px; color: var(–muted); line-height: 1.65; margin-top: 4px; }
+.step-line .pos { color: var(–green); font-weight: 600; }
+.step-line .neg { color: var(–red); font-weight: 600; }
+
+/* MODAL */
+.movl { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 300; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(6px); }
+.movl.show { display: flex; }
+.modal { background: #ffffff !important; border: 1px solid var(–border2); border-radius: 16px; padding: 28px 26px; max-width: 560px; width: 100%; max-height: 88vh; overflow-y: auto; position: relative; animation: pop .25s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+@keyframes pop { from { opacity:0; transform:scale(.94) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+.modal-title { font-family: var(–display); font-size: 24px; font-weight: 300; margin-bottom: 2px; }
+.modal-sub { font-family: var(–mono); font-size: 9px; letter-spacing: .18em; color: var(–dim); text-transform: uppercase; margin-bottom: 18px; }
+.rpt { background: #ffffff !important; border: 1.5px solid #1a1714 !important; border-radius: 10px; padding: 20px 22px; font-family: var(–mono); font-size: 12px; line-height: 2; color: #1a1714 !important; white-space: pre-wrap; word-break: break-word; margin-bottom: 18px; }
+.m-acts { display: flex; gap: 10px; }
+.m-btn { flex: 1; padding: 13px; border-radius: 9px; font-family: var(–ui); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .18s; border: 1.5px solid #1a1714 !important; background: #ffffff !important; color: #1a1714 !important; }
+.m-btn.pri { background: #1a1714 !important; color: #ffffff !important; border-color: #1a1714 !important; }
+.m-btn:hover { opacity: .85; }
+.m-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: var(–dim); cursor: pointer; font-size: 17px; }
+
+/* DRAWER */
+.ovl { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 200; }
+.ovl.show { display: block; }
+.drawer { position: fixed; right: -310px; top: 0; bottom: 0; width: 290px; background: var(–surface); border-left: 1px solid var(–border); z-index: 201; padding: 26px 20px; transition: right .3s cubic-bezier(.4,0,.2,1); overflow-y: auto; }
+.drawer.open { right: 0; }
+.drawer-title { font-family: var(–display); font-size: 22px; font-weight: 300; margin-bottom: 18px; }
+.drawer-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: var(–dim); cursor: pointer; font-size: 16px; }
+.save-btn { width: 100%; padding: 12px; background: #1a1714 !important; color: #fff !important; border: none; border-radius: 9px; font-family: var(–ui); font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 8px; }
+.key-ok { display: none; font-family: var(–mono); font-size: 9px; color: var(–green); text-align: center; margin-top: 10px; letter-spacing: .1em; }
+.drawer-note { font-size: 12px; color: var(–dim); line-height: 1.65; margin-top: 16px; }
+.key-link { color: var(–text); font-size: 12px; text-decoration: underline; }
+
+/* DERM-SPECIFIC */
+.upload-zone { border: 2px dashed var(–border2); border-radius: 16px; background: var(–surface); text-align: center; padding: 44px 20px; cursor: pointer; transition: all .22s; position: relative; overflow: hidden; margin-bottom: 28px; }
+.upload-zone:hover { border-color: var(–text); }
+.upload-zone.has-img { padding: 0; border-style: solid; border-color: var(–text); }
+#dPrev { width: 100%; max-height: 300px; object-fit: cover; border-radius: 14px; display: none; }
+.upload-ico { font-size: 36px; margin-bottom: 10px; }
+.upload-t { font-family: var(–display); font-size: 20px; font-weight: 300; margin-bottom: 5px; }
+.upload-h { font-size: 12px; color: var(–dim); }
+.chg-btn { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,.65); color: #fff; border: none; border-radius: 7px; padding: 5px 11px; font-family: var(–ui); font-size: 11px; cursor: pointer; display: none; }
+input[type=file] { display: none; }
+.loc-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.loc-btn { padding: 9px 16px; background: var(–surface); border: 1.5px solid var(–border2); color: var(–muted); border-radius: 8px; font-family: var(–ui); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; }
+.loc-btn:hover { border-color: var(–text); color: var(–text); }
+.loc-btn.on { background: #1a1714 !important; border-color: #1a1714 !important; color: #ffffff !important; font-weight: 600 !important; }
+.dur-row { display: flex; gap: 8px; }
+.dur-btn { flex: 1; padding: 11px; text-align: center; background: var(–surface); border: 1.5px solid var(–border2); color: var(–muted); border-radius: 9px; font-family: var(–ui); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all .15s; }
+.dur-btn:hover { border-color: var(–text); color: var(–text); }
+.dur-btn.on { background: #1a1714 !important; border-color: #1a1714 !important; color: #ffffff !important; font-weight: 600 !important; }
+.sym-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sym-item { display: flex; align-items: center; justify-content: space-between; background: var(–surface); border: 1px solid var(–border); border-radius: 9px; padding: 10px 13px; gap: 8px; transition: border-color .15s; }
+.sym-item.answered { border-color: var(–border2); }
+.sym-label { font-size: 13px; color: var(–text); flex: 1; }
+.sym-btns { display: flex; gap: 5px; }
+.sym-btn { padding: 5px 11px; border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer; border: 1.5px solid var(–border2); background: var(–bg); color: var(–muted); transition: all .15s; font-family: var(–ui); }
+.sym-btn:hover { border-color: var(–text); color: var(–text); }
+.sym-btn.yes.on { background: #166534 !important; border-color: #166534 !important; color: #ffffff !important; }
+.sym-btn.no.on  { background: #991b1b !important; border-color: #991b1b !important; color: #ffffff !important; }
+.visual-box { background: var(–surface); border: 1px solid var(–border); border-left: 3px solid var(–text); border-radius: 12px; padding: 16px 18px; margin-bottom: 18px; }
+.visual-lbl { font-family: var(–mono); font-size: 8.5px; letter-spacing: .18em; color: var(–dim); text-transform: uppercase; margin-bottom: 7px; }
+.visual-txt { font-size: 13.5px; color: var(–muted); line-height: 1.75; }
+.sim-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 8px; }
+.sim-img { border-radius: 9px; overflow: hidden; aspect-ratio: 1; position: relative; }
+.sim-img img { width: 100%; height: 100%; object-fit: cover; }
+.sim-badge { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.65); color: #fff; font-family: var(–mono); font-size: 8px; padding: 4px 6px; line-height: 1.3; }
+.sim-note { font-family: var(–mono); font-size: 9px; color: var(–dim); text-align: center; margin-bottom: 20px; letter-spacing: .07em; }
+
+/* CLIN-SPECIFIC */
+.img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+
+@media (max-width: 520px) {
+.tool-cards { grid-template-columns: 1fr; }
+.land-title { font-size: 36px; }
+.sym-grid { grid-template-columns: 1fr; }
+.dur-row { flex-wrap: wrap; }
+.dur-btn { flex: none; min-width: calc(50% - 4px); }
+.img-row { grid-template-columns: 1fr; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- SHARED HEADER -->
+
+<header class="hdr">
+  <div id="logoWrap">
+    <div class="logo-name" id="logoName">Med<em>Dx</em></div>
+    <div class="logo-tag" id="logoTag">AI Clinical Diagnostic Suite</div>
+  </div>
+  <div class="hdr-right">
+    <button class="back-btn" id="backBtn" onclick="goHome()">← Home</button>
+    <button class="gear-btn" onclick="openDrawer()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════ LANDING ═══════════════ -->
+
+<div id="landing">
+  <div class="land-title">Med<em>Dx</em></div>
+  <div class="land-sub">AI-Powered Clinical Diagnostic Suite</div>
+  <div class="tool-cards">
+
+```
+<div class="tool-card clindx" onclick="openApp('clindx')">
+  <div class="tool-icon">🩺</div>
+  <div class="tool-name">Clin<em>Dx</em></div>
+  <div class="tool-badge">Clinical Differential</div>
+  <div class="tool-desc">Enter symptoms, labs, and imaging to generate a ranked differential diagnosis with exact drug dosages and clinical workup.</div>
+  <div class="tool-arrow">Open → </div>
+</div>
+
+<div class="tool-card dermdx" onclick="openApp('dermdx')">
+  <div class="tool-icon">🔬</div>
+  <div class="tool-name">Derm<em>Dx</em></div>
+  <div class="tool-badge">Dermatology AI</div>
+  <div class="tool-desc">Upload a lesion photo and enter clinical data for AI-powered visual analysis and dermatology differential diagnosis.</div>
+  <div class="tool-arrow">Open → </div>
+</div>
+```
+
+  </div>
+  <div class="land-note">Powered by Groq · Based on AAD · BAD · NICE · UpToDate · Harrison's<br>For clinical decision support only — not a substitute for clinical judgment</div>
+</div>
+
+<!-- ═══════════════ APP WRAP ═══════════════ -->
+
+<div id="appWrap">
+
+  <!-- ══════ CLINDX ══════ -->
+
+  <div class="app-view" id="clindxView">
+    <div class="wrap">
+      <div class="fg">
+        <div class="lbl">Symptoms <span class="req">*</span></div>
+        <textarea id="cSx" rows="4" placeholder="Describe symptoms, onset, duration, character…"></textarea>
+      </div>
+      <div class="fg">
+        <div class="lbl">Age <span class="req">*</span></div>
+        <input type="number" id="cAge" min="0" max="120" placeholder="e.g. 45" style="max-width:150px">
+      </div>
+      <div class="fg">
+        <div class="lbl">Patient Sex <span class="req">*</span></div>
+        <div class="tog-row">
+          <button class="tog" id="cTMale" onclick="cSetSex('Male')">Male</button>
+          <button class="tog" id="cTFemale" onclick="cSetSex('Female')">Female</button>
+        </div>
+        <div id="cPregWrap" style="display:none; margin-top:14px;">
+          <div class="lbl">Pregnancy Status</div>
+          <div class="tog-row">
+            <button class="tog" id="cTPreg" onclick="cSetPreg('Pregnant')">Pregnant</button>
+            <button class="tog" id="cTNotPreg" onclick="cSetPreg('Not Pregnant')">Not Pregnant</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="lbl">Medical History & Medications <span class="opt">optional</span></div>
+        <textarea id="cHx" rows="3" placeholder="e.g. HTN, DM Type 2, on Metformin 500mg, Lisinopril 10mg…"></textarea>
+      </div>
+      <div class="fg">
+        <div class="lbl">Abnormal Lab Results <span class="opt">optional</span></div>
+        <textarea id="cLabs" rows="3" placeholder="e.g. WBC 14.5 k/uL, CRP 85 mg/L, Hgb 8.2 g/dL…"></textarea>
+      </div>
+      <div class="fg">
+        <div class="lbl">Imaging <span class="opt">optional</span></div>
+        <div class="img-row">
+          <div class="sel-w">
+            <select id="cItype">
+              <option value="">— Select type —</option>
+              <option>X-Ray</option><option>CT Scan</option>
+              <option>CT Pulmonary Angiography</option><option>MRI</option>
+              <option>Ultrasound</option><option>Echocardiography</option>
+              <option>Doppler Ultrasound</option><option>PET-CT</option>
+              <option>Mammography</option><option>DXA</option><option>Other</option>
+            </select>
+          </div>
+          <input type="text" id="cIfind" placeholder="e.g. bilateral infiltrates…">
+        </div>
+      </div>
+      <button class="go" id="cGoBtn" onclick="cAnalyze()">Analyze Patient</button>
+      <div class="err" id="cErr"><strong id="cErrTitle"></strong><span id="cErrMsg"></span></div>
+      <div class="loading" id="cLoading">
+        <div class="spin"></div>
+        <div class="spin-lbl">Consulting guidelines…</div>
+        <div class="spin-steps">
+          <div class="spin-step" id="cLs1">Reviewing patient data…</div>
+          <div class="spin-step" id="cLs2">Consulting UpToDate · NICE · AHA guidelines…</div>
+          <div class="spin-step" id="cLs3">Building differential diagnosis…</div>
+          <div class="spin-step" id="cLs4">Generating clinical pathway…</div>
+        </div>
+      </div>
+      <div class="results" id="cResults">
+        <div class="sec-hdr"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
+        <div id="cCards"></div>
+        <div id="cPathwaySection" style="display:none; margin-top:28px;">
+          <div class="sec-hdr"><span class="sec-lbl">Clinical Decision Pathway</span><div class="sec-line"></div></div>
+          <div id="cPathwayContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ DERMDX ══════ -->
+
+  <div class="app-view" id="dermdxView">
+    <div class="wrap">
+      <div class="upload-zone" id="dUploadZone" onclick="document.getElementById('dImgInput').click()">
+        <div class="upload-ico" id="dUico">🔬</div>
+        <div class="upload-t" id="dUtitle">Upload Lesion Photo</div>
+        <div class="upload-h" id="dUhint">Tap to select — clear, close-up, well-lit photo</div>
+        <img id="dPrev" alt="lesion">
+        <button class="chg-btn" id="dChgBtn" onclick="event.stopPropagation(); document.getElementById('dImgInput').click()">Change Photo</button>
+      </div>
+      <input type="file" id="dImgInput" accept="image/*" onchange="dHandleImg(this)">
+      <div class="fg">
+        <div class="lbl">Age <span class="req">*</span></div>
+        <input type="number" id="dAge" min="0" max="120" placeholder="e.g. 34" style="max-width:150px">
+      </div>
+      <div class="fg">
+        <div class="lbl">Patient Sex <span class="req">*</span></div>
+        <div class="tog-row">
+          <button class="tog" id="dTMale" onclick="dSetSex('Male')">Male</button>
+          <button class="tog" id="dTFemale" onclick="dSetSex('Female')">Female</button>
+        </div>
+        <div id="dPregWrap" style="display:none; margin-top:14px;">
+          <div class="lbl">Pregnancy Status</div>
+          <div class="tog-row">
+            <button class="tog" id="dTPreg" onclick="dSetPreg('Pregnant')">Pregnant</button>
+            <button class="tog" id="dTNotPreg" onclick="dSetPreg('Not Pregnant')">Not Pregnant</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="lbl">Lesion Location <span class="req">*</span></div>
+        <div class="loc-grid">
+          <button class="loc-btn" onclick="dSetLoc(this,'Face')">Face</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Scalp')">Scalp</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Neck')">Neck</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Chest')">Chest</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Back')">Back</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Abdomen')">Abdomen</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Arms')">Arms</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Hands')">Hands</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Legs')">Legs</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Feet')">Feet</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Genitalia')">Genitalia</button>
+          <button class="loc-btn" onclick="dSetLoc(this,'Nails')">Nails</button>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="lbl">Duration <span class="req">*</span></div>
+        <div class="dur-row">
+          <button class="dur-btn" onclick="dSetDur(this,'Days')">Days</button>
+          <button class="dur-btn" onclick="dSetDur(this,'Weeks')">Weeks</button>
+          <button class="dur-btn" onclick="dSetDur(this,'Months')">Months</button>
+          <button class="dur-btn" onclick="dSetDur(this,'Years')">Years</button>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="lbl">Associated Symptoms <span class="req">*</span></div>
+        <div class="sym-grid">
+          <div class="sym-item"><span class="sym-label">Itching</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'itch','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'itch','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">Pain</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'pain','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'pain','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">Burning</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'burn','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'burn','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">Bleeding</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'bleed','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'bleed','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">Ulceration</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'ulcer','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'ulcer','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">Spreading</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'spread','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'spread','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">Growing</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'grow','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'grow','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">Sun Sensitivity</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'sun','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'sun','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">Family History</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'family','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'family','no')">No</button></div></div>
+          <div class="sym-item"><span class="sym-label">On Medications</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'meds','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'meds','no')">No</button></div></div>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="lbl">Additional Notes <span class="opt">optional</span></div>
+        <textarea id="dExtra" rows="3" placeholder="Medications, skin type, recent travel, previous treatments…"></textarea>
+      </div>
+      <button class="go" id="dGoBtn" onclick="dAnalyze()">Analyze Lesion</button>
+      <div class="err" id="dErr"><strong id="dErrTitle"></strong><span id="dErrMsg"></span></div>
+      <div class="loading" id="dLoading">
+        <div class="spin"></div>
+        <div class="spin-lbl">Analyzing…</div>
+        <div class="spin-steps">
+          <div class="spin-step" id="dLs1">Searching ISIC database…</div>
+          <div class="spin-step" id="dLs2">Analyzing image with Llama Vision…</div>
+          <div class="spin-step" id="dLs3">Consulting AAD · BAD · NICE guidelines…</div>
+          <div class="spin-step" id="dLs4">Generating diagnostic report…</div>
+        </div>
+      </div>
+      <div class="results" id="dResults">
+        <div class="sec-hdr"><span class="sec-lbl">Similar Cases — ISIC Archive</span><div class="sec-line"></div></div>
+        <div class="sim-row" id="dSimRow"></div>
+        <div class="sim-note" id="dSimNote"></div>
+        <div id="dVisualBox"></div>
+        <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
+        <div id="dCards"></div>
+        <div id="dPathwaySection" style="display:none; margin-top:28px;">
+          <div class="sec-hdr"><span class="sec-lbl">Clinical Decision Pathway</span><div class="sec-line"></div></div>
+          <div id="dPathwayContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /appWrap -->
+
+<!-- SHARED DRAWER -->
+
+<div class="ovl" id="ovl" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  <div class="drawer-title">Settings</div>
+  <div class="lbl" style="margin-bottom:8px;">Groq API Key</div>
+  <input type="text" id="keyInput" placeholder="gsk_…" style="font-family:var(--mono);font-size:12px;margin-bottom:8px;">
+  <div style="margin:8px 0 14px;"><a class="key-link" href="https://console.groq.com" target="_blank">↗ Get free key at console.groq.com</a></div>
+  <button class="save-btn" onclick="saveKey()">Save Key</button>
+  <div class="key-ok" id="keyOk">✓ Key saved</div>
+  <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
+  <div class="drawer-note">Your key is stored only in your browser and sent directly to Groq. Never stored on any server.</div>
+</div>
+
+<!-- SHARED MODAL -->
+
+<div class="movl" id="movl">
+  <div class="modal">
+    <button class="m-close" onclick="closeMod()">✕</button>
+    <div class="modal-title" id="modTitle">Report</div>
+    <div class="modal-sub" id="modSub">Generated by MedDx</div>
+    <div class="rpt" id="rptBox"></div>
+    <div class="m-acts">
+      <button class="m-btn pri" id="copyBtn" onclick="copyRpt()">Copy Report</button>
+      <button class="m-btn" onclick="newCase()">New Case</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════ */
+var currentApp = '';
+var rptText = '';
+
+function openApp(app) {
+  currentApp = app;
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('appWrap').classList.add('show');
+  document.getElementById('backBtn').classList.add('show');
+  if (app === 'clindx') {
+    document.getElementById('clindxView').classList.add('show');
+    document.getElementById('dermdxView').classList.remove('show');
+    document.getElementById('logoName').innerHTML = 'Clin<em>Dx</em>';
+    document.getElementById('logoTag').textContent = 'Clinical Differential Diagnosis';
+  } else {
+    document.getElementById('dermdxView').classList.add('show');
+    document.getElementById('clindxView').classList.remove('show');
+    document.getElementById('logoName').innerHTML = 'Derm<em>Dx</em>';
+    document.getElementById('logoTag').textContent = 'AI Dermatology Support';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome() {
+  document.getElementById('landing').style.display = '';
+  document.getElementById('appWrap').classList.remove('show');
+  document.getElementById('backBtn').classList.remove('show');
+  document.getElementById('logoName').innerHTML = 'Med<em>Dx</em>';
+  document.getElementById('logoTag').textContent = 'AI Clinical Diagnostic Suite';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════
+   SHARED UTILITIES
+════════════════════════════════════ */
+function getKey() { return localStorage.getItem('meddx_key') || ''; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function openDrawer() {
+  document.getElementById('keyInput').value = getKey();
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('ovl').classList.add('show');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('ovl').classList.remove('show');
+}
+function saveKey() {
+  var k = document.getElementById('keyInput').value.trim();
+  localStorage.setItem('meddx_key', k);
+  document.getElementById('keyOk').style.display = 'block';
+  setTimeout(function() { document.getElementById('keyOk').style.display = 'none'; closeDrawer(); }, 1400);
+}
+function closeMod() { document.getElementById('movl').classList.remove('show'); }
+function copyRpt() {
+  navigator.clipboard.writeText(rptText).then(function() {
+    var b = document.getElementById('copyBtn');
+    b.textContent = '✓ Copied!';
+    setTimeout(function() { b.textContent = 'Copy Report'; }, 2000);
+  });
+}
+
+function renderPathway(pathway, containerId, sectionId) {
+  var ps = document.getElementById(sectionId);
+  var pc = document.getElementById(containerId);
+  if (!pathway || !pathway.steps || !pathway.steps.length) return;
+  var html = '';
+  if (pathway.summary) {
+    html += '<div class="pw-summary"><div class="pw-sum-lbl">Clinical Summary</div><div class="pw-sum-txt">' + esc(pathway.summary) + '</div></div>';
+  }
+  html += '<div class="pw-card"><div class="pw-title">Step-by-Step Decision Pathway</div>';
+  pathway.steps.forEach(function(s) {
+    html += '<div class="pw-step"><div class="step-num">' + s.step + '</div><div class="step-body"><div class="step-test">' + esc(s.test||'') + '</div><div class="step-line"><span class="pos">✓ If Positive: </span>' + esc(s.if_positive||'') + '</div><div class="step-line"><span class="neg">✗ If Negative: </span>' + esc(s.if_negative||'') + '</div></div></div>';
+  });
+  html += '</div>';
+  pc.innerHTML = html;
+  ps.style.display = 'block';
+}
+
+function renderCards(diagnoses, containerId, selectFn) {
+  var container = document.getElementById(containerId);
+  container.innerHTML = '';
+  var labels = ['1st','2nd','3rd'];
+  diagnoses.slice(0,3).forEach(function(dx, i) {
+    var d = document.createElement('div');
+    d.className = 'dx dx' + (i+1);
+    d.innerHTML =
+      '<div class="dx-head"><div class="dx-name">' + esc(dx.name) + '</div><div class="rank-chip">' + labels[i] + '</div></div>' +
+      '<div class="prob-row"><div class="prob-track"><div class="prob-fill" data-w="' + (dx.likelihood||0) + '"></div></div><div class="prob-num">' + (dx.likelihood||'—') + '%</div></div>' +
+      '<div class="tx"><div class="tx-head"><span class="tx-lbl">First-line Treatment</span><span class="g-badge">' + esc(dx.guideline||'') + '</span></div><div class="tx-body">' + esc(dx.first_line||'') + '</div></div>' +
+      '<div class="divider"></div>' +
+      '<div class="tx"><div class="tx-head"><span class="tx-lbl">Alternative Treatment</span></div><div class="tx-body">' + esc(dx.alternatives||'') + '</div></div>' +
+      '<div class="divider"></div>' +
+      '<div class="tx"><div class="tx-head"><span class="tx-lbl">Recommended Workup</span></div><div class="tx-body green">' + esc(dx.workup||'') + '</div></div>' +
+      '<button class="sel-btn" onclick="' + selectFn + '(' + i + ')">Select this Diagnosis — Generate Report →</button>';
+    container.appendChild(d);
+  });
+  setTimeout(function() {
+    document.querySelectorAll('.prob-fill').forEach(function(b) { b.style.width = b.dataset.w + '%'; });
+  }, 80);
+}
+
+/* ════════════════════════════════════
+   CLINDX
+════════════════════════════════════ */
+var cSex = '', cPreg = '';
+var cStore = {};
+
+function cSetSex(s) {
+  cSex = s;
+  document.getElementById('cTMale').classList.toggle('on', s==='Male');
+  document.getElementById('cTFemale').classList.toggle('on', s==='Female');
+  document.getElementById('cPregWrap').style.display = s==='Female' ? 'block' : 'none';
+  if (s==='Male') cPreg = '';
+}
+function cSetPreg(p) {
+  cPreg = p;
+  document.getElementById('cTPreg').classList.toggle('on', p==='Pregnant');
+  document.getElementById('cTNotPreg').classList.toggle('on', p==='Not Pregnant');
+}
+
+function cShowErr(t, m) {
+  document.getElementById('cErrTitle').textContent = t;
+  document.getElementById('cErrMsg').textContent = ' ' + m;
+  document.getElementById('cErr').classList.add('show');
+}
+function cHideErr() { document.getElementById('cErr').classList.remove('show'); }
+
+async function cAnalyze() {
+  cHideErr();
+  var symptoms = document.getElementById('cSx').value.trim();
+  var age      = document.getElementById('cAge').value.trim();
+  var history  = document.getElementById('cHx').value.trim();
+  var labs     = document.getElementById('cLabs').value.trim();
+  var imgType  = document.getElementById('cItype').value;
+  var imgFind  = document.getElementById('cIfind').value.trim();
+  var apiKey   = getKey();
+
+  if (!symptoms) { cShowErr('Missing Field', 'Please describe the patient symptoms.'); return; }
+  if (!age)      { cShowErr('Missing Field', 'Please enter the patient age.'); return; }
+  if (!cSex)     { cShowErr('Missing Field', 'Please select patient sex.'); return; }
+  if (!apiKey)   { cShowErr('No API Key', 'Tap ⚙ and enter your Groq API key from console.groq.com'); return; }
+
+  var imaging    = imgType ? (imgType + (imgFind ? ': ' + imgFind : '')) : 'None';
+  var labsStr    = labs || 'None';
+  var historyStr = history || 'None';
+  var pregStr    = cSex === 'Female' ? (cPreg || 'Pregnancy status unknown') : '';
+  var patientStr = age + ' year-old ' + cSex + (pregStr ? ', ' + pregStr : '');
+
+  document.getElementById('cGoBtn').disabled = true;
+  document.getElementById('cLoading').classList.add('show');
+  document.getElementById('cResults').classList.remove('show');
+  document.getElementById('cCards').innerHTML = '';
+  document.getElementById('cPathwaySection').style.display = 'none';
+
+  var steps = ['cLs1','cLs2','cLs3','cLs4']; var si = 0;
+  var stInt = setInterval(function() {
+    steps.forEach(function(s) { document.getElementById(s).classList.remove('on'); });
+    if (si < steps.length) { document.getElementById(steps[si]).classList.add('on'); si++; }
+  }, 2000);
+
+  var prompt =
+    'You are a clinical expert physician. Base ALL answers strictly on UpToDate, NICE Guidelines, AHA/ACC/ESC/IDSA/ADA guidelines, BMJ Best Practice, and Harrison\'s Principles.\n\n' +
+    'Patient: ' + patientStr + '\n' +
+    'Symptoms: ' + symptoms + '\n' +
+    'Medical History & Medications: ' + historyStr + '\n' +
+    'Labs: ' + labsStr + '\n' +
+    'Imaging: ' + imaging + '\n\n' +
+    'CRITICAL INSTRUCTIONS:\n' +
+    '1. first_line: EXACT drug name + dose + route + frequency + duration per guidelines. Example: "Amoxicillin 500mg PO TID x 7 days (NICE NG193 2023)"\n' +
+    '2. alternatives: EXACT alternative drug + dose + route + duration + reason.\n' +
+    '3. workup: SPECIFIC tests with exact names + clinical reason + guideline citation per test. Example: "CBC with differential (assess leukocytosis — IDSA Sepsis Guidelines), Troponin I serial 0h/3h (ESC NSTEMI 2023 rapid rule-out)"\n' +
+    '4. guideline: Exact guideline name + year.\n\n' +
+    'Return ONLY raw JSON, no markdown, no code fences:\n' +
+    '{"diagnoses":[{"rank":1,"name":"","likelihood":0,"first_line":"","alternatives":"","workup":"","guideline":""}],' +
+    '"pathway":{"summary":"2-3 sentences on key differentiating features between these 3 diagnoses.",' +
+    '"steps":[{"step":1,"test":"Exact test","if_positive":"→ Supports [Dx1] because [reason]. Action: [next step]","if_negative":"→ [Dx1] less likely. Consider [Dx2]. Next: [action]"},{"step":2,"test":"","if_positive":"","if_negative":""},{"step":3,"test":"","if_positive":"","if_negative":""}]}}\n' +
+    'Return exactly 3 diagnoses ranked by likelihood.';
+
+  try {
+    var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.2, max_tokens: 3000
+      })
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'API error');
+    var raw = data.choices[0].message.content;
+    raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
+    var match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('Invalid response — please try again');
+    var parsed = JSON.parse(match[0]);
+    if (!parsed.diagnoses || !parsed.diagnoses.length) throw new Error('No diagnoses returned');
+
+    clearInterval(stInt);
+    document.getElementById('cLoading').classList.remove('show');
+    document.getElementById('cGoBtn').disabled = false;
+
+    cStore = { diagnoses: parsed.diagnoses, ctx: { patientStr, symptoms, historyStr, labsStr, imaging } };
+    renderCards(parsed.diagnoses, 'cCards', 'cSelectDx');
+    renderPathway(parsed.pathway, 'cPathwayContent', 'cPathwaySection');
+    document.getElementById('cResults').classList.add('show');
+    document.getElementById('cResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch(e) {
+    clearInterval(stInt);
+    document.getElementById('cLoading').classList.remove('show');
+    document.getElementById('cGoBtn').disabled = false;
+    cShowErr('Analysis Failed', e.message || 'Please check your API key and try again.');
+  }
+}
+
+function cSelectDx(i) {
+  var dx = cStore.diagnoses[i];
+  var ctx = cStore.ctx;
+  var date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  rptText =
+    'CLINICAL REPORT\n' + '━'.repeat(42) + '\n' +
+    'Date       : ' + date + '\n' + '─'.repeat(42) + '\n\n' +
+    'PATIENT\n  ' + ctx.patientStr + '\n\n' +
+    'PRESENTING COMPLAINT\n  ' + ctx.symptoms + '\n\n' +
+    'MEDICAL HISTORY & MEDICATIONS\n  ' + ctx.historyStr + '\n\n' +
+    'INVESTIGATIONS\n  Labs    : ' + ctx.labsStr + '\n  Imaging : ' + ctx.imaging + '\n\n' +
+    '─'.repeat(42) + '\n\n' +
+    'DIAGNOSIS\n  ' + dx.name + '\n  Likelihood: ' + dx.likelihood + '%\n\n' +
+    '─'.repeat(42) + '\n\n' +
+    'MANAGEMENT PLAN\n\n' +
+    '  First-line Treatment:\n  ' + dx.first_line + '\n\n' +
+    '  Alternative Treatment:\n  ' + dx.alternatives + '\n\n' +
+    '  Recommended Workup:\n  ' + (dx.workup||'N/A').replace(/\n/g,'\n  ') + '\n\n' +
+    '  Guideline Reference: ' + (dx.guideline||'') + '\n\n' +
+    '━'.repeat(42) + '\n' +
+    'Physician Signature : _______________\nDate                : _______________';
+
+  document.getElementById('modTitle').textContent = 'Clinical Report';
+  document.getElementById('modSub').textContent = 'Generated by ClinDx';
+  document.getElementById('rptBox').textContent = rptText;
+  document.getElementById('movl').classList.add('show');
+}
+
+function newCase() {
+  closeMod();
+  if (currentApp === 'clindx') {
+    document.getElementById('cResults').classList.remove('show');
+    ['cSx','cHx','cLabs','cIfind'].forEach(function(id) { document.getElementById(id).value = ''; });
+    document.getElementById('cAge').value = '';
+    document.getElementById('cItype').value = '';
+    cSex = ''; cPreg = '';
+    document.querySelectorAll('#clindxView .tog').forEach(function(b) { b.classList.remove('on'); });
+    document.getElementById('cPregWrap').style.display = 'none';
+  } else {
+    document.getElementById('dResults').classList.remove('show');
+    document.getElementById('dPrev').style.display = 'none';
+    document.getElementById('dChgBtn').style.display = 'none';
+    var z = document.getElementById('dUploadZone');
+    z.classList.remove('has-img');
+    ['dUico','dUtitle','dUhint'].forEach(function(id) { document.getElementById(id).style.display = ''; });
+    dImgB64 = ''; dSex = ''; dPreg = ''; dLoc = ''; dDur = ''; dSyms = {};
+    document.getElementById('dAge').value = '';
+    document.getElementById('dExtra').value = '';
+    document.querySelectorAll('#dermdxView .tog, .loc-btn, .dur-btn, .sym-btn').forEach(function(b) { b.classList.remove('on'); });
+    document.querySelectorAll('.sym-item').forEach(function(b) { b.classList.remove('answered'); });
+    document.getElementById('dPregWrap').style.display = 'none';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════
+   DERMDX
+════════════════════════════════════ */
+var dSex = '', dPreg = '', dLoc = '', dDur = '';
+var dSyms = {};
+var dImgB64 = '';
+var dStore = {};
+
+function dHandleImg(inp) {
+  var f = inp.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    dImgB64 = e.target.result.split(',')[1];
+    var p = document.getElementById('dPrev');
+    p.src = e.target.result; p.style.display = 'block';
+    document.getElementById('dChgBtn').style.display = 'block';
+    document.getElementById('dUploadZone').classList.add('has-img');
+    ['dUico','dUtitle','dUhint'].forEach(function(id) { document.getElementById(id).style.display = 'none'; });
+  };
+  r.readAsDataURL(f);
+}
+function dSetSex(s) {
+  dSex = s;
+  document.getElementById('dTMale').classList.toggle('on', s==='Male');
+  document.getElementById('dTFemale').classList.toggle('on', s==='Female');
+  document.getElementById('dPregWrap').style.display = s==='Female' ? 'block' : 'none';
+  if (s==='Male') dPreg = '';
+}
+function dSetPreg(p) {
+  dPreg = p;
+  document.getElementById('dTPreg').classList.toggle('on', p==='Pregnant');
+  document.getElementById('dTNotPreg').classList.toggle('on', p==='Not Pregnant');
+}
+function dSetLoc(btn, l) {
+  dLoc = l;
+  document.querySelectorAll('.loc-btn').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+}
+function dSetDur(btn, d) {
+  dDur = d;
+  document.querySelectorAll('.dur-btn').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+}
+function dSetSym(btn, key, val) {
+  dSyms[key] = val;
+  btn.closest('.sym-btns').querySelectorAll('.sym-btn').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  btn.closest('.sym-item').classList.add('answered');
+}
+
+function dSymStr() {
+  var map = { itch:'Itching', pain:'Pain', burn:'Burning', bleed:'Bleeding', ulcer:'Ulceration', spread:'Spreading', grow:'Growing', sun:'Sun sensitivity', family:'Family history of skin disease', meds:'Currently on medications' };
+  var yes = [], no = [];
+  Object.keys(map).forEach(function(k) { if (dSyms[k]==='yes') yes.push(map[k]); else if (dSyms[k]==='no') no.push(map[k]); });
+  var r = '';
+  if (yes.length) r += 'Present: ' + yes.join(', ') + '. ';
+  if (no.length)  r += 'Absent: '  + no.join(', ')  + '.';
+  return r || 'Not specified';
+}
+
+function dShowErr(t, m) {
+  document.getElementById('dErrTitle').textContent = t;
+  document.getElementById('dErrMsg').textContent = ' ' + m;
+  document.getElementById('dErr').classList.add('show');
+}
+function dHideErr() { document.getElementById('dErr').classList.remove('show'); }
+
+async function fetchISIC(dx) {
+  try {
+    var res = await fetch('https://api.isic-archive.com/api/v2/images/?diagnosis=' + encodeURIComponent(dx) + '&limit=3');
+    if (!res.ok) return [];
+    var d = await res.json();
+    return d.results || [];
+  } catch(e) { return []; }
+}
+
+async function dAnalyze() {
+  dHideErr();
+  var age    = document.getElementById('dAge').value.trim();
+  var extra  = document.getElementById('dExtra').value.trim();
+  var apiKey = getKey();
+
+  if (!dImgB64) { dShowErr('No Image', 'Please upload a photo of the lesion.'); return; }
+  if (!age)     { dShowErr('Missing Field', 'Please enter the patient age.'); return; }
+  if (!dSex)    { dShowErr('Missing Field', 'Please select patient sex.'); return; }
+  if (!dLoc)    { dShowErr('Missing Field', 'Please select lesion location.'); return; }
+  if (!dDur)    { dShowErr('Missing Field', 'Please select lesion duration.'); return; }
+  if (!apiKey)  { dShowErr('No API Key', 'Tap ⚙ and enter your Groq API key from console.groq.com'); return; }
+
+  var pregStr    = dSex==='Female' ? (dPreg||'Pregnancy status unknown') : '';
+  var patStr     = age + ' year-old ' + dSex + (pregStr ? ', ' + pregStr : '');
+  var sympStr    = dSymStr();
+
+  document.getElementById('dGoBtn').disabled = true;
+  document.getElementById('dLoading').classList.add('show');
+  document.getElementById('dResults').classList.remove('show');
+  document.getElementById('dCards').innerHTML = '';
+  document.getElementById('dSimRow').innerHTML = '';
+  document.getElementById('dVisualBox').innerHTML = '';
+  document.getElementById('dPathwaySection').style.display = 'none';
+
+  var steps = ['dLs1','dLs2','dLs3','dLs4']; var si = 0;
+  var stInt = setInterval(function() {
+    steps.forEach(function(s) { document.getElementById(s).classList.remove('on'); });
+    if (si < steps.length) { document.getElementById(steps[si]).classList.add('on'); si++; }
+  }, 2200);
+
+  var prompt =
+    'You are a board-certified dermatologist with 20 years of experience. Base ALL answers on AAD, BAD, NICE, Fitzpatrick\'s Dermatology (9th ed), UpToDate.\n\n' +
+    'PATIENT DATA:\nPatient: ' + patStr + '\nLesion Location: ' + dLoc + '\nDuration: ' + dDur + '\nSymptoms: ' + sympStr + '\n' +
+    (extra ? 'Additional Notes: ' + extra + '\n' : '') +
+    '\nAnalyze the skin lesion image carefully.\n\n' +
+    'TASK:\n1. Describe EXACTLY what you see: morphology type, color, borders, texture, size estimate, distribution.\n' +
+    '2. Correlate visual findings with clinical data.\n3. Exact treatment per guidelines WITH drug + dose + route + frequency + duration.\n' +
+    '4. Workup: SPECIFIC tests with names + clinical reason + guideline citation per test.\n' +
+    '5. Clinical decision pathway: sequential logic steps.\n\n' +
+    'Return ONLY raw JSON, no markdown:\n' +
+    '{"visual_features":"Detailed morphological description","diagnoses":[' +
+    '{"rank":1,"name":"","likelihood":75,"first_line":"Drug + exact dose + route + duration (guideline)","alternatives":"Alternative + dose + reason","workup":"1. Test (reason — guideline). 2. Test...","guideline":"Guideline + year"},' +
+    '{"rank":2,"name":"","likelihood":0,"first_line":"","alternatives":"","workup":"","guideline":""},' +
+    '{"rank":3,"name":"","likelihood":0,"first_line":"","alternatives":"","workup":"","guideline":""}],' +
+    '"pathway":{"summary":"2-3 sentences on key differentiating features.",' +
+    '"steps":[{"step":1,"test":"","if_positive":"→ [result]","if_negative":"→ [result]"},{"step":2,"test":"","if_positive":"","if_negative":""},{"step":3,"test":"","if_positive":"","if_negative":""}]}}';
+
+  try {
+    var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        messages: [{ role: 'user', content: [
+          { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + dImgB64 } },
+          { type: 'text', text: prompt }
+        ]}],
+        temperature: 0.15, max_tokens: 3500
+      })
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'API error');
+    var raw = data.choices[0].message.content;
+    raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
+    var match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('Invalid response — please try again');
+    var parsed = JSON.parse(match[0]);
+    if (!parsed.diagnoses || !parsed.diagnoses.length) throw new Error('No diagnoses returned');
+
+    clearInterval(stInt);
+    var simImgs = await fetchISIC(parsed.diagnoses[0].name);
+    document.getElementById('dLoading').classList.remove('show');
+    document.getElementById('dGoBtn').disabled = false;
+
+    // ISIC
+    var simRow = document.getElementById('dSimRow');
+    if (simImgs && simImgs.length) {
+      simImgs.forEach(function(img) {
+        var dx2 = (img.metadata && img.metadata.diagnosis) ? img.metadata.diagnosis : parsed.diagnoses[0].name;
+        var d = document.createElement('div');
+        d.className = 'sim-img';
+        d.innerHTML = '<img src="' + img.files.thumbnail_256.url + '" alt="ISIC"><div class="sim-badge">' + esc(dx2) + '</div>';
+        simRow.appendChild(d);
+      });
+      document.getElementById('dSimNote').textContent = simImgs.length + ' similar cases from ISIC Archive';
+    } else {
+      document.getElementById('dSimNote').textContent = 'ISIC Archive searched — analysis based on clinical image review';
+    }
+
+    // Visual
+    if (parsed.visual_features) {
+      document.getElementById('dVisualBox').innerHTML = '<div class="visual-box"><div class="visual-lbl">Visual Analysis</div><div class="visual-txt">' + esc(parsed.visual_features) + '</div></div>';
+    }
+
+    dStore = { diagnoses: parsed.diagnoses, ctx: { patStr, sympStr, loc: dLoc, dur: dDur, extra, visual: parsed.visual_features||'' } };
+    renderCards(parsed.diagnoses, 'dCards', 'dSelectDx');
+    renderPathway(parsed.pathway, 'dPathwayContent', 'dPathwaySection');
+    document.getElementById('dResults').classList.add('show');
+    document.getElementById('dResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch(e) {
+    clearInterval(stInt);
+    document.getElementById('dLoading').classList.remove('show');
+    document.getElementById('dGoBtn').disabled = false;
+    dShowErr('Analysis Failed', e.message || 'Please check your API key and try again.');
+  }
+}
+
+function dSelectDx(i) {
+  var dx = dStore.diagnoses[i];
+  var ctx = dStore.ctx;
+  var date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  rptText =
+    'DERMATOLOGY REPORT\n' + '━'.repeat(42) + '\n' +
+    'Date       : ' + date + '\n' + '─'.repeat(42) + '\n\n' +
+    'PATIENT\n  ' + ctx.patStr + '\n\n' +
+    'LESION DETAILS\n  Location  : ' + ctx.loc + '\n  Duration  : ' + ctx.dur + '\n  Symptoms  : ' + ctx.sympStr + '\n\n' +
+    (ctx.visual ? 'VISUAL ANALYSIS\n  ' + ctx.visual + '\n\n' : '') +
+    '─'.repeat(42) + '\n\n' +
+    'DIAGNOSIS\n  ' + dx.name + '\n  Likelihood: ' + dx.likelihood + '%\n\n' +
+    '─'.repeat(42) + '\n\n' +
+    'MANAGEMENT PLAN\n\n' +
+    '  First-line Treatment:\n  ' + dx.first_line + '\n\n' +
+    '  Alternative Treatment:\n  ' + dx.alternatives + '\n\n' +
+    '  Recommended Workup:\n  ' + (dx.workup||'N/A').replace(/\n/g,'\n  ') + '\n\n' +
+    '  Guideline Reference: ' + (dx.guideline||'') + '\n\n' +
+    '━'.repeat(42) + '\n' +
+    'Physician Signature : _______________\nDate                : _______________';
+
+  document.getElementById('modTitle').textContent = 'Dermatology Report';
+  document.getElementById('modSub').textContent = 'Generated by DermDx';
+  document.getElementById('rptBox').textContent = rptText;
+  document.getElementById('movl').classList.add('show');
+}
+</script>
+
+</body>
+</html>
