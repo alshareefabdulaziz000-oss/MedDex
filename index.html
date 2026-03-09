@@ -64,51 +64,103 @@ LANDING PAGE
 #landing {
 min-height: calc(100vh - 62px);
 display: flex; flex-direction: column; align-items: center;
-justify-content: center; padding: 48px 24px;
+justify-content: center; padding: 48px 24px 64px;
+background: var(–bg);
 }
-.land-title {
-font-family: var(–display); font-size: 48px; font-weight: 300;
-text-align: center; line-height: 1.1; margin-bottom: 10px;
+
+/* HERO LOGO */
+.land-hero { text-align: center; margin-bottom: 56px; }
+.land-logo-wrap {
+display: inline-flex; align-items: center; gap: 14px;
+margin-bottom: 16px;
 }
-.land-title em { font-style: italic; }
-.land-sub {
-font-family: var(–mono); font-size: 9px; letter-spacing: .22em;
-color: var(–dim); text-transform: uppercase; text-align: center;
-margin-bottom: 60px;
+.land-logo-mark {
+width: 52px; height: 52px; background: #1a1714; border-radius: 14px;
+display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.tool-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; width: 100%; }
+.land-logo-mark svg { width: 28px; height: 28px; }
+.land-logo-text { text-align: left; }
+.land-logo-name {
+font-family: var(–display); font-size: 42px; font-weight: 300;
+line-height: 1; letter-spacing: -.02em; color: var(–text);
+}
+.land-logo-name span { color: #78450a; font-style: italic; }
+.land-logo-sub {
+font-family: var(–mono); font-size: 8px; letter-spacing: .25em;
+color: var(–dim); text-transform: uppercase; margin-top: 4px;
+}
+.land-tagline {
+font-family: var(–display); font-size: 17px; font-weight: 300;
+color: var(–muted); font-style: italic; letter-spacing: .01em;
+}
+
+/* TOOL CARDS */
+.tool-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 580px; width: 100%; }
+
 .tool-card {
-background: var(–surface); border: 1.5px solid var(–border2);
-border-radius: 20px; padding: 36px 28px; cursor: pointer;
-transition: all .22s; text-align: left; position: relative; overflow: hidden;
+background: var(–surface); border: 1.5px solid var(–border);
+border-radius: 20px; padding: 0; cursor: pointer;
+transition: all .25s; text-align: left;
+position: relative; overflow: hidden;
+box-shadow: 0 2px 8px rgba(0,0,0,.04);
 }
-.tool-card::before {
-content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+.tool-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.12); }
+
+.tool-card-top {
+padding: 28px 24px 22px;
+border-bottom: 1px solid var(–border);
 }
-.tool-card.clindx::before { background: #1a1714; }
-.tool-card.dermdx::before { background: #78450a; }
-.tool-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,.1); border-color: var(–text); }
-.tool-icon { font-size: 34px; margin-bottom: 16px; }
-.tool-name {
-font-family: var(–display); font-size: 30px; font-weight: 300;
-margin-bottom: 4px; line-height: 1;
+.tool-card.clindx .tool-card-top { background: #1a1714; }
+.tool-card.dermdx .tool-card-top { background: #78450a; }
+
+.tool-card-icon {
+width: 44px; height: 44px; border-radius: 12px;
+background: rgba(255,255,255,.15); display: flex;
+align-items: center; justify-content: center;
+font-size: 22px; margin-bottom: 14px;
 }
-.tool-name em { font-style: italic; }
-.tool-badge {
-font-family: var(–mono); font-size: 8px; letter-spacing: .18em;
-color: var(–dim); text-transform: uppercase; margin-bottom: 18px;
+.tool-card-name {
+font-family: var(–display); font-size: 28px; font-weight: 300;
+color: #ffffff; line-height: 1; margin-bottom: 4px;
 }
-.tool-desc { font-size: 13px; color: var(–muted); line-height: 1.65; }
-.tool-arrow {
-margin-top: 20px; font-family: var(–mono); font-size: 10px;
-color: var(–dim); display: flex; align-items: center; gap: 6px;
-letter-spacing: .1em;
+.tool-card-name em { font-style: italic; opacity: .85; }
+.tool-card-badge {
+font-family: var(–mono); font-size: 7.5px; letter-spacing: .2em;
+color: rgba(255,255,255,.5); text-transform: uppercase;
 }
+
+.tool-card-bottom { padding: 18px 24px 22px; }
+.tool-card-desc { font-size: 13px; color: var(–muted); line-height: 1.7; margin-bottom: 16px; }
+.tool-card-cta {
+display: flex; align-items: center; justify-content: space-between;
+font-family: var(–mono); font-size: 9.5px; letter-spacing: .12em;
+color: var(–text); text-transform: uppercase; font-weight: 600;
+}
+.tool-card.clindx .tool-card-cta { color: #1a1714; }
+.tool-card.dermdx .tool-card-cta { color: #78450a; }
+.tool-card-cta-arrow {
+width: 28px; height: 28px; border-radius: 50%; display: flex;
+align-items: center; justify-content: center; font-size: 14px;
+transition: transform .2s;
+}
+.tool-card.clindx .tool-card-cta-arrow { background: #1a1714; color: #fff; }
+.tool-card.dermdx .tool-card-cta-arrow { background: #78450a; color: #fff; }
+.tool-card:hover .tool-card-cta-arrow { transform: translateX(3px); }
+
+/* FEATURES ROW */
+.tool-features { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tool-feat {
+font-family: var(–mono); font-size: 8px; letter-spacing: .08em;
+padding: 4px 9px; border-radius: 20px; border: 1px solid var(–border2);
+color: var(–dim); background: var(–bg);
+}
+
 .land-note {
-font-family: var(–mono); font-size: 9px; color: var(–dim);
-text-align: center; margin-top: 44px; letter-spacing: .1em;
-line-height: 1.8;
+font-family: var(–mono); font-size: 8.5px; color: var(–dim);
+text-align: center; margin-top: 40px; letter-spacing: .08em;
+line-height: 2; max-width: 480px;
 }
+.land-note span { color: var(–text); }
 
 /* ═══════════════════════════════════════════
 APP WRAPPERS
@@ -390,30 +442,83 @@ input[type=file] { display: none; }
 <!-- ═══════════════ LANDING ═══════════════ -->
 
 <div id="landing">
-  <div class="land-title">Med<em>Dx</em></div>
-  <div class="land-sub">AI-Powered Clinical Diagnostic Suite</div>
+
+  <!-- HERO -->
+
+  <div class="land-hero">
+    <div class="land-logo-wrap">
+      <div class="land-logo-mark">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="6" width="20" height="2.5" rx="1.25" fill="white" opacity=".9"/>
+          <rect x="4" y="12.75" width="14" height="2.5" rx="1.25" fill="white" opacity=".7"/>
+          <rect x="4" y="19.5" width="17" height="2.5" rx="1.25" fill="white" opacity=".5"/>
+          <circle cx="23" cy="20.5" r="4.5" fill="#d97706"/>
+          <path d="M21.5 20.5h3M23 19v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="land-logo-text">
+        <div class="land-logo-name">Med<span>Dx</span></div>
+        <div class="land-logo-sub">Clinical AI Suite</div>
+      </div>
+    </div>
+    <div class="land-tagline">Intelligent diagnostic support for clinicians</div>
+  </div>
+
+  <!-- CARDS -->
+
   <div class="tool-cards">
 
 ```
 <div class="tool-card clindx" onclick="openApp('clindx')">
-  <div class="tool-icon">🩺</div>
-  <div class="tool-name">Clin<em>Dx</em></div>
-  <div class="tool-badge">Clinical Differential</div>
-  <div class="tool-desc">Enter symptoms, labs, and imaging to generate a ranked differential diagnosis with exact drug dosages and clinical workup.</div>
-  <div class="tool-arrow">Open → </div>
+  <div class="tool-card-top">
+    <div class="tool-card-icon">🩺</div>
+    <div class="tool-card-name">Clin<em>Dx</em></div>
+    <div class="tool-card-badge">Clinical Differential Diagnosis</div>
+  </div>
+  <div class="tool-card-bottom">
+    <div class="tool-features">
+      <span class="tool-feat">Differential Dx</span>
+      <span class="tool-feat">Drug Dosages</span>
+      <span class="tool-feat">Workup</span>
+      <span class="tool-feat">Decision Pathway</span>
+    </div>
+    <div class="tool-card-desc">Enter symptoms, labs, and imaging to generate a ranked differential with exact guideline-based treatments.</div>
+    <div class="tool-card-cta">
+      <span>Open ClinDx</span>
+      <div class="tool-card-cta-arrow">→</div>
+    </div>
+  </div>
 </div>
 
 <div class="tool-card dermdx" onclick="openApp('dermdx')">
-  <div class="tool-icon">🔬</div>
-  <div class="tool-name">Derm<em>Dx</em></div>
-  <div class="tool-badge">Dermatology AI</div>
-  <div class="tool-desc">Upload a lesion photo and enter clinical data for AI-powered visual analysis and dermatology differential diagnosis.</div>
-  <div class="tool-arrow">Open → </div>
+  <div class="tool-card-top">
+    <div class="tool-card-icon">🔬</div>
+    <div class="tool-card-name">Derm<em>Dx</em></div>
+    <div class="tool-card-badge">AI Dermatology Diagnosis</div>
+  </div>
+  <div class="tool-card-bottom">
+    <div class="tool-features">
+      <span class="tool-feat">Photo Analysis</span>
+      <span class="tool-feat">ISIC Archive</span>
+      <span class="tool-feat">AAD · BAD</span>
+      <span class="tool-feat">Visual AI</span>
+    </div>
+    <div class="tool-card-desc">Upload a lesion photo for AI-powered visual analysis and dermatology differential diagnosis.</div>
+    <div class="tool-card-cta">
+      <span>Open DermDx</span>
+      <div class="tool-card-cta-arrow">→</div>
+    </div>
+  </div>
 </div>
 ```
 
   </div>
-  <div class="land-note">Powered by Groq · Based on AAD · BAD · NICE · UpToDate · Harrison's<br>For clinical decision support only — not a substitute for clinical judgment</div>
+
+  <div class="land-note">
+    Powered by <span>Groq</span> · Guidelines: <span>AAD · BAD · NICE · UpToDate · Harrison's</span><br>
+    For clinical decision support only — not a substitute for clinical judgment
+  </div>
+
 </div>
 
 <!-- ═══════════════ APP WRAP ═══════════════ -->
