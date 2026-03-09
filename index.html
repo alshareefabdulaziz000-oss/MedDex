@@ -850,17 +850,24 @@ function renderCards(diagnoses, containerId, selectFn) {
   var container = document.getElementById(containerId);
   container.innerHTML = '';
   var labels = ['1st','2nd','3rd'];
-  diagnoses.slice(0,3).forEach(function(dx, i) {
+  // Filter only diagnoses with a real name
+  var valid = diagnoses.filter(function(dx) { return dx.name && dx.name.trim() && dx.name !== 'DIAGNOSIS NAME HERE'; });
+  if (!valid.length) valid = diagnoses; // fallback: show all
+  valid.slice(0,3).forEach(function(dx, i) {
     var d = document.createElement('div');
     d.className = 'dx dx' + (i+1);
+    var fl = dx.first_line || '—';
+    var alt = dx.alternatives || '—';
+    var wk = dx.workup || '—';
+    var gl = dx.guideline || '';
     d.innerHTML =
       '<div class="dx-head"><div class="dx-name">' + esc(dx.name) + '</div><div class="rank-chip">' + labels[i] + '</div></div>' +
       '<div class="prob-row"><div class="prob-track"><div class="prob-fill" data-w="' + (dx.likelihood||0) + '"></div></div><div class="prob-num">' + (dx.likelihood||'—') + '%</div></div>' +
-      '<div class="tx"><div class="tx-head"><span class="tx-lbl">First-line Treatment</span><span class="g-badge">' + esc(dx.guideline||'') + '</span></div><div class="tx-body">' + esc(dx.first_line||'') + '</div></div>' +
+      '<div class="tx"><div class="tx-head"><span class="tx-lbl">First-line Treatment</span><span class="g-badge">' + esc(gl) + '</span></div><div class="tx-body">' + esc(fl) + '</div></div>' +
       '<div class="divider"></div>' +
-      '<div class="tx"><div class="tx-head"><span class="tx-lbl">Alternative Treatment</span></div><div class="tx-body">' + esc(dx.alternatives||'') + '</div></div>' +
+      '<div class="tx"><div class="tx-head"><span class="tx-lbl">Alternative Treatment</span></div><div class="tx-body">' + esc(alt) + '</div></div>' +
       '<div class="divider"></div>' +
-      '<div class="tx"><div class="tx-head"><span class="tx-lbl">Recommended Workup</span></div><div class="tx-body green">' + esc(dx.workup||'') + '</div></div>' +
+      '<div class="tx"><div class="tx-head"><span class="tx-lbl">Recommended Workup</span></div><div class="tx-body green">' + esc(wk) + '</div></div>' +
       '<button class="sel-btn" onclick="' + selectFn + '(' + i + ')">Select this Diagnosis — Generate Report →</button>';
     container.appendChild(d);
   });
@@ -935,16 +942,47 @@ async function cAnalyze() {
     'Medical History & Medications: ' + historyStr + '\n' +
     'Labs: ' + labsStr + '\n' +
     'Imaging: ' + imaging + '\n\n' +
-    'CRITICAL INSTRUCTIONS:\n' +
-    '1. first_line: EXACT drug name + dose + route + frequency + duration per guidelines. Example: "Amoxicillin 500mg PO TID x 7 days (NICE NG193 2023)"\n' +
-    '2. alternatives: EXACT alternative drug + dose + route + duration + reason.\n' +
-    '3. workup: SPECIFIC tests with exact names + clinical reason + guideline citation per test. Example: "CBC with differential (assess leukocytosis — IDSA Sepsis Guidelines), Troponin I serial 0h/3h (ESC NSTEMI 2023 rapid rule-out)"\n' +
-    '4. guideline: Exact guideline name + year.\n\n' +
-    'Return ONLY raw JSON, no markdown, no code fences:\n' +
-    '{"diagnoses":[{"rank":1,"name":"","likelihood":0,"first_line":"","alternatives":"","workup":"","guideline":""}],' +
-    '"pathway":{"summary":"2-3 sentences on key differentiating features between these 3 diagnoses.",' +
-    '"steps":[{"step":1,"test":"Exact test","if_positive":"→ Supports [Dx1] because [reason]. Action: [next step]","if_negative":"→ [Dx1] less likely. Consider [Dx2]. Next: [action]"},{"step":2,"test":"","if_positive":"","if_negative":""},{"step":3,"test":"","if_positive":"","if_negative":""}]}}\n' +
-    'Return exactly 3 diagnoses ranked by likelihood.';
+    'YOU MUST return exactly 3 fully completed differential diagnoses. Every single field must be filled for all 3 diagnoses — no empty strings allowed.\n\n' +
+    'Return ONLY this JSON structure. Fill ALL fields completely:\n' +
+    '{\n' +
+    '  "diagnoses": [\n' +
+    '    {\n' +
+    '      "rank": 1,\n' +
+    '      "name": "Most likely diagnosis name",\n' +
+    '      "likelihood": 65,\n' +
+    '      "first_line": "Drug 500mg PO TID x 7 days (Guideline Year)",\n' +
+    '      "alternatives": "Alt drug dose route — reason for use",\n' +
+    '      "workup": "1. Test name (reason — Guideline). 2. Test name (reason — Guideline). 3. Test name (reason — Guideline).",\n' +
+    '      "guideline": "NICE NG123 2023"\n' +
+    '    },\n' +
+    '    {\n' +
+    '      "rank": 2,\n' +
+    '      "name": "Second most likely diagnosis name",\n' +
+    '      "likelihood": 25,\n' +
+    '      "first_line": "Drug 500mg PO TID x 7 days (Guideline Year)",\n' +
+    '      "alternatives": "Alt drug dose route — reason for use",\n' +
+    '      "workup": "1. Test name (reason — Guideline). 2. Test name (reason — Guideline). 3. Test name (reason — Guideline).",\n' +
+    '      "guideline": "AHA 2022"\n' +
+    '    },\n' +
+    '    {\n' +
+    '      "rank": 3,\n' +
+    '      "name": "Third most likely diagnosis name",\n' +
+    '      "likelihood": 10,\n' +
+    '      "first_line": "Drug 500mg PO TID x 7 days (Guideline Year)",\n' +
+    '      "alternatives": "Alt drug dose route — reason for use",\n' +
+    '      "workup": "1. Test name (reason — Guideline). 2. Test name (reason — Guideline). 3. Test name (reason — Guideline).",\n' +
+    '      "guideline": "IDSA 2021"\n' +
+    '    }\n' +
+    '  ],\n' +
+    '  "pathway": {\n' +
+    '    "summary": "2-3 sentences on key differentiating features between these 3 diagnoses.",\n' +
+    '    "steps": [\n' +
+    '      {"step": 1, "test": "Exact test name", "if_positive": "What this means and next action", "if_negative": "What this means and next action"},\n' +
+    '      {"step": 2, "test": "Exact test name", "if_positive": "What this means and next action", "if_negative": "What this means and next action"},\n' +
+    '      {"step": 3, "test": "Exact test name", "if_positive": "What this means and next action", "if_negative": "What this means and next action"}\n' +
+    '    ]\n' +
+    '  }\n' +
+    '}';
 
   try {
     var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -952,8 +990,11 @@ async function cAnalyze() {
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.2, max_tokens: 3000
+        messages: [
+          { role: 'system', content: 'You are a clinical expert physician. Always return complete valid JSON only. You MUST fully complete all 3 diagnoses with no empty fields. Never truncate output.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.2, max_tokens: 4000
       })
     });
     var data = await res.json();
@@ -1154,13 +1195,21 @@ async function dAnalyze() {
     '2. Correlate visual findings with clinical data.\n3. Exact treatment per guidelines WITH drug + dose + route + frequency + duration.\n' +
     '4. Workup: SPECIFIC tests with names + clinical reason + guideline citation per test.\n' +
     '5. Clinical decision pathway: sequential logic steps.\n\n' +
-    'Return ONLY raw JSON, no markdown:\n' +
-    '{"visual_features":"Detailed morphological description","diagnoses":[' +
-    '{"rank":1,"name":"","likelihood":75,"first_line":"Drug + exact dose + route + duration (guideline)","alternatives":"Alternative + dose + reason","workup":"1. Test (reason — guideline). 2. Test...","guideline":"Guideline + year"},' +
-    '{"rank":2,"name":"","likelihood":0,"first_line":"","alternatives":"","workup":"","guideline":""},' +
-    '{"rank":3,"name":"","likelihood":0,"first_line":"","alternatives":"","workup":"","guideline":""}],' +
-    '"pathway":{"summary":"2-3 sentences on key differentiating features.",' +
-    '"steps":[{"step":1,"test":"","if_positive":"→ [result]","if_negative":"→ [result]"},{"step":2,"test":"","if_positive":"","if_negative":""},{"step":3,"test":"","if_positive":"","if_negative":""}]}}';
+    'YOU MUST return exactly 3 fully completed diagnoses. Every field must be filled for all 3 — no empty strings.\n\n' +
+    'Return ONLY this JSON structure with ALL fields filled:\n' +
+    '{\n  "visual_features": "Detailed morphological description",\n' +
+    '  "diagnoses": [\n' +
+    '    {"rank":1,"name":"Most likely diagnosis","likelihood":65,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug dose route — reason","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"AAD 2023"},\n' +
+    '    {"rank":2,"name":"Second likely diagnosis","likelihood":25,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug dose route — reason","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"BAD 2022"},\n' +
+    '    {"rank":3,"name":"Third likely diagnosis","likelihood":10,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug dose route — reason","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"NICE 2023"}\n' +
+    '  ],\n' +
+    '  "pathway": {\n' +
+    '    "summary": "2-3 sentences on key differentiating features.",\n' +
+    '    "steps": [\n' +
+    '      {"step":1,"test":"Exact test name","if_positive":"Action and reasoning","if_negative":"Action and reasoning"},\n' +
+    '      {"step":2,"test":"Exact test name","if_positive":"Action and reasoning","if_negative":"Action and reasoning"},\n' +
+    '      {"step":3,"test":"Exact test name","if_positive":"Action and reasoning","if_negative":"Action and reasoning"}\n' +
+    '    ]\n  }\n}';
 
   try {
     var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -1168,11 +1217,14 @@ async function dAnalyze() {
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
       body: JSON.stringify({
         model: 'meta-llama/llama-4-scout-17b-16e-instruct',
-        messages: [{ role: 'user', content: [
-          { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + dImgB64 } },
-          { type: 'text', text: prompt }
-        ]}],
-        temperature: 0.15, max_tokens: 3500
+        messages: [
+          { role: 'system', content: 'You are a board-certified dermatologist. Always return complete valid JSON only. You MUST fully complete all 3 diagnoses with no empty fields. Never truncate output.' },
+          { role: 'user', content: [
+            { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + dImgB64 } },
+            { type: 'text', text: prompt }
+          ]}
+        ],
+        temperature: 0.15, max_tokens: 4500
       })
     });
     var data = await res.json();
