@@ -882,12 +882,13 @@ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   <!-- RESULTS -->
   <div id="eResults" style="display:none; margin-top:40px;">
 
-    <!-- CRITICAL ALERT (shown if needed) -->
+    <!-- CRITICAL ALERT -->
     <div id="eCriticalAlert" style="display:none;" class="ecg-critical">
       <div class="ecg-crit-icon">🚨</div>
-      <div>
-        <div class="ecg-crit-title">CRITICAL FINDING</div>
+      <div style="flex:1">
+        <div class="ecg-crit-title">CRITICAL — IMMEDIATE ACTION REQUIRED</div>
         <div id="eCriticalText" class="ecg-crit-msg"></div>
+        <div id="eCriticalAction" class="ecg-crit-action"></div>
       </div>
     </div>
 
@@ -901,28 +902,26 @@ display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     </div>
 
     <!-- MEASUREMENTS -->
-    <div class="sec-hdr"><span class="sec-lbl">ECG Measurements</span><div class="sec-line"></div></div>
+    <div class="sec-hdr"><span class="sec-lbl">Measurements</span><div class="sec-line"></div></div>
     <div class="ecg-measurements" id="eMeasurements"></div>
 
-    <!-- FINDINGS -->
-    <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">ECG Findings & Interpretation</span><div class="sec-line"></div></div>
-    <div id="eFindings"></div>
-
-    <!-- DIFFERENTIAL -->
-    <div id="eDiffSection" style="display:none;">
-      <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
-      <div id="eDiffCards"></div>
+    <!-- ECG READING SUMMARY -->
+    <div id="eSummaryBlock" style="display:none; margin-top:20px;">
+      <div class="ecg-summary-box">
+        <div class="ecg-sum-lbl">ECG Reading</div>
+        <div id="eSummaryTxt" class="ecg-sum-txt"></div>
+      </div>
     </div>
 
-    <!-- WORKUP PATHWAY -->
-    <div id="ePathwaySection" style="display:none;">
-      <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">Clinical Decision Pathway</span><div class="sec-line"></div></div>
-      <div id="ePathwayContent"></div>
+    <!-- DIAGNOSTIC FLOW -->
+    <div id="eDxFlow" style="display:none; margin-top:24px;">
+      <div class="sec-hdr"><span class="sec-lbl">Diagnostic Decision Flow</span><div class="sec-line"></div></div>
+      <div id="eDxCards" class="ecg-dx-flow"></div>
     </div>
 
     <!-- REPORT BUTTON -->
-    <button class="sel-btn" style="margin-top:28px;background:#0f4c81!important;" onclick="eShowReport()">
-      Generate Full ECG Report →
+    <button class="sel-btn" id="eRptBtn" style="display:none;margin-top:28px;background:#0f4c81!important;color:#fff!important;" onclick="eShowReport()">
+      Generate ECG Report →
     </button>
 
   </div>
@@ -1616,46 +1615,98 @@ async function eAnalyze() {
   if (context) patStr += ' — ' + context;
 
   var prompt =
-    'You are a senior cardiologist with 25 years of experience interpreting ECGs. ' +
-    'Base ALL interpretations strictly on AHA/ACC/ESC/HRS guidelines.\n\n' +
+    'You are a senior cardiologist (25 years experience). Base ALL answers strictly on AHA/ACC/ESC/HRS guidelines.\n\n' +
     'PATIENT: ' + patStr + '\n' +
-    (history ? 'HISTORY & MEDS: ' + history + '\n' : '') +
-    '\nAnalyze this ECG image carefully and systematically.\n\n' +
-    'IMPORTANT:\n' +
-    '- If the ECG is NORMAL: set is_normal=true, write a brief normal_comment, and leave differential empty.\n' +
-    '- If CRITICAL finding (STEMI, VT, VF, Complete Heart Block, WPW with AF): set critical=true and critical_finding to a clear urgent message.\n' +
-    '- Always measure or estimate all intervals from the image.\n' +
-    '- Be specific — cite lead names, exact changes, and guideline references.\n\n' +
-    'Return ONLY this JSON, no markdown:\n' +
+    (history ? 'HISTORY: ' + history + '\n' : '') +
+    '\nSYSTEMATICALLY analyze this ECG image. Every word you write must have direct clinical value.\n\n' +
+    'RULES:\n' +
+    '- is_normal=true ONLY if genuinely normal. Write one concise sentence. Leave diagnoses empty.\n' +
+    '- critical=true for: STEMI, NSTEMI pattern, VT/VF, 3rd degree AV block, WPW+AF, Brugada pattern.\n' +
+    '- critical_finding: one urgent sentence + immediate_action: exact first steps (e.g. "Activate Cath Lab. Aspirin 300mg stat. IV access x2.").\n' +
+    '- ecg_reading: 2-3 sentences ONLY describing what you see in the ECG — rhythm, rate, intervals, key changes with lead names. No diagnosis yet.\n' +
+    '- For each diagnosis: ecg_evidence = specific ECG features supporting it (lead names, measurements).\n' +
+    '- investigations: 2-3 tests MAXIMUM per diagnosis. Each test must have:\n' +
+    '    positive_result: exact threshold (e.g. "Troponin I >0.04 ng/mL") + confirmed_diagnosis + treatment\n' +
+    '    negative_result: exact threshold + what it excludes + go_to (e.g. "→ Consider Dx 2")\n' +
+    '- treatment: exact drug + dose + route + timing per guideline. No vague instructions.\n' +
+    '- alt_treatment: ONE alternative with dose + indication.\n' +
+    '- guideline: exact name + year (e.g. "ESC STEMI Guidelines 2023").\n\n' +
+    'Return ONLY this JSON — all fields required, no empty strings:\n' +
     '{\n' +
-    '  "is_normal": false,\n' +
-    '  "normal_comment": "",\n' +
-    '  "critical": false,\n' +
-    '  "critical_finding": "",\n' +
-    '  "measurements": {\n' +
-    '    "heart_rate": {"value": "75", "unit": "bpm", "status": "normal"},\n' +
-    '    "pr_interval": {"value": "160", "unit": "ms", "status": "normal"},\n' +
-    '    "qrs_duration": {"value": "90", "unit": "ms", "status": "normal"},\n' +
-    '    "qt_qtc": {"value": "420/440", "unit": "ms", "status": "normal"},\n' +
-    '    "p_axis": {"value": "60", "unit": "°", "status": "normal"},\n' +
-    '    "qrs_axis": {"value": "45", "unit": "°", "status": "normal"}\n' +
+    '"is_normal": false,\n' +
+    '"normal_comment": "",\n' +
+    '"critical": false,\n' +
+    '"critical_finding": "",\n' +
+    '"immediate_action": "",\n' +
+    '"measurements": {\n' +
+    '  "heart_rate":   {"value":"75",      "unit":"bpm", "status":"normal"},\n' +
+    '  "pr_interval":  {"value":"160",     "unit":"ms",  "status":"normal"},\n' +
+    '  "qrs_duration": {"value":"90",      "unit":"ms",  "status":"normal"},\n' +
+    '  "qt_qtc":       {"value":"420/440", "unit":"ms",  "status":"normal"},\n' +
+    '  "p_axis":       {"value":"60",      "unit":"deg", "status":"normal"},\n' +
+    '  "qrs_axis":     {"value":"45",      "unit":"deg", "status":"normal"}\n' +
+    '},\n' +
+    '"ecg_reading": "Specific rhythm + rate + interval description + key morphological changes with lead names.",\n' +
+    '"diagnoses": [\n' +
+    '  {\n' +
+    '    "rank": 1,\n' +
+    '    "name": "Full diagnosis name",\n' +
+    '    "likelihood": 65,\n' +
+    '    "ecg_evidence": "Specific ECG features from this ECG that support this diagnosis.",\n' +
+    '    "investigations": [\n' +
+    '      {\n' +
+    '        "test": "Troponin I (0h and 3h)",\n' +
+    '        "positive_result": ">0.04 ng/mL at 3h → Confirms ACS. Start anticoagulation.",\n' +
+    '        "negative_result": "<0.04 ng/mL at 3h → ACS excluded. Consider Dx 2."\n' +
+    '      },\n' +
+    '      {\n' +
+    '        "test": "Bedside Echo",\n' +
+    '        "positive_result": "Regional wall motion abnormality → Confirms ischemia. Activate Cath Lab.",\n' +
+    '        "negative_result": "Normal wall motion → Ischemia less likely. Consider Pericarditis."\n' +
+    '      }\n' +
+    '    ],\n' +
+    '    "treatment": "Aspirin 300mg PO stat + Ticagrelor 180mg PO stat + UFH 60 U/kg IV bolus (max 4000U) (ESC STEMI 2023)",\n' +
+    '    "alt_treatment": "Clopidogrel 600mg if Ticagrelor unavailable — use only if no planned CABG",\n' +
+    '    "guideline": "ESC STEMI Guidelines 2023"\n' +
     '  },\n' +
-    '  "findings": [\n' +
-    '    {"severity": "critical|warning|normal", "title": "Finding name", "description": "Detailed description with lead references and guideline citation"}\n' +
-    '  ],\n' +
-    '  "differential": [\n' +
-    '    {"rank": 1, "name": "Diagnosis name", "likelihood": 70, "ecg_support": "Specific ECG features that support this diagnosis"},\n' +
-    '    {"rank": 2, "name": "Diagnosis name", "likelihood": 20, "ecg_support": "Specific ECG features that support this diagnosis"},\n' +
-    '    {"rank": 3, "name": "Diagnosis name", "likelihood": 10, "ecg_support": "Specific ECG features that support this diagnosis"}\n' +
-    '  ],\n' +
-    '  "pathway": {\n' +
-    '    "summary": "2-3 sentence clinical summary of this ECG and its significance.",\n' +
-    '    "steps": [\n' +
-    '      {"step": 1, "test": "Exact test name (e.g. Troponin I serial 0h/3h)", "if_positive": "Clinical action and reasoning", "if_negative": "Clinical action and reasoning"},\n' +
-    '      {"step": 2, "test": "Exact test name", "if_positive": "Clinical action", "if_negative": "Clinical action"},\n' +
-    '      {"step": 3, "test": "Exact test name", "if_positive": "Clinical action", "if_negative": "Clinical action"}\n' +
-    '    ]\n' +
+    '  {\n' +
+    '    "rank": 2,\n' +
+    '    "name": "Full diagnosis name",\n' +
+    '    "likelihood": 25,\n' +
+    '    "ecg_evidence": "Specific ECG features supporting this diagnosis.",\n' +
+    '    "investigations": [\n' +
+    '      {\n' +
+    '        "test": "Test name",\n' +
+    '        "positive_result": "Threshold + confirmed + action",\n' +
+    '        "negative_result": "Threshold + excluded + next step"\n' +
+    '      },\n' +
+    '      {\n' +
+    '        "test": "Test name",\n' +
+    '        "positive_result": "Threshold + confirmed + action",\n' +
+    '        "negative_result": "Threshold + excluded + next step"\n' +
+    '      }\n' +
+    '    ],\n' +
+    '    "treatment": "Drug dose route timing (Guideline year)",\n' +
+    '    "alt_treatment": "Alternative drug dose — indication",\n' +
+    '    "guideline": "Guideline name year"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "rank": 3,\n' +
+    '    "name": "Full diagnosis name",\n' +
+    '    "likelihood": 10,\n' +
+    '    "ecg_evidence": "Specific ECG features supporting this diagnosis.",\n' +
+    '    "investigations": [\n' +
+    '      {\n' +
+    '        "test": "Test name",\n' +
+    '        "positive_result": "Threshold + confirmed + action",\n' +
+    '        "negative_result": "Threshold + excluded + next step"\n' +
+    '      }\n' +
+    '    ],\n' +
+    '    "treatment": "Drug dose route timing (Guideline year)",\n' +
+    '    "alt_treatment": "Alternative drug dose — indication",\n' +
+    '    "guideline": "Guideline name year"\n' +
     '  }\n' +
+    ']\n' +
     '}';
 
   try {
@@ -1698,83 +1749,130 @@ async function eAnalyze() {
 }
 
 function eRenderResults(r) {
-  // Critical alert
   var ca = document.getElementById('eCriticalAlert');
   var na = document.getElementById('eNormalAlert');
   ca.style.display = 'none'; na.style.display = 'none';
 
+  // Critical banner
   if (r.critical && r.critical_finding) {
     document.getElementById('eCriticalText').textContent = r.critical_finding;
+    var act = document.getElementById('eCriticalAction');
+    act.textContent = r.immediate_action ? '→ ' + r.immediate_action : '';
     ca.style.display = 'flex';
   }
+
+  // Normal banner
   if (r.is_normal) {
-    document.getElementById('eNormalText').textContent = r.normal_comment || 'No significant abnormalities identified on this ECG.';
+    document.getElementById('eNormalText').textContent = r.normal_comment || 'No significant abnormalities identified on this ECG. Sinus rhythm with normal intervals.';
     na.style.display = 'flex';
+    document.getElementById('eSummaryBlock').style.display = 'none';
+    document.getElementById('eDxFlow').style.display = 'none';
+    document.getElementById('eRptBtn').style.display = 'block';
   }
 
   // Measurements
   var meas = r.measurements || {};
-  var measLabels = {
-    heart_rate: 'Heart Rate', pr_interval: 'PR Interval',
-    qrs_duration: 'QRS Duration', qt_qtc: 'QT / QTc',
-    p_axis: 'P Axis', qrs_axis: 'QRS Axis'
-  };
+  var measDef = [
+    ['heart_rate','Heart Rate'], ['pr_interval','PR Interval'],
+    ['qrs_duration','QRS Duration'], ['qt_qtc','QT / QTc'],
+    ['p_axis','P Axis'], ['qrs_axis','QRS Axis']
+  ];
   var mHtml = '';
-  Object.keys(measLabels).forEach(function(k, idx) {
-    var m = meas[k] || {};
-    var status = (m.status || 'normal').toLowerCase();
-    var valClass = status === 'normal' ? '' : (status === 'borderline' ? 'borderline' : 'abnormal');
-    mHtml += '<div class="ecg-meas-card" style="animation-delay:' + (idx*0.06) + 's">' +
-      '<div class="ecg-meas-label">' + measLabels[k] + '</div>' +
-      '<div class="ecg-meas-value ' + valClass + '">' + esc(m.value || '—') + '</div>' +
+  measDef.forEach(function(kv, idx) {
+    var m = meas[kv[0]] || {};
+    var st = (m.status || 'normal').toLowerCase();
+    mHtml += '<div class="ecg-meas-card ' + st + '" style="animation-delay:' + (idx*0.06) + 's">' +
+      '<div class="ecg-meas-label">' + kv[1] + '</div>' +
+      '<div class="ecg-meas-value">' + esc(m.value || '—') + '</div>' +
       '<div class="ecg-meas-unit">' + esc(m.unit || '') + '</div>' +
+      '<div class="ecg-meas-status">' + st.toUpperCase() + '</div>' +
       '</div>';
   });
   document.getElementById('eMeasurements').innerHTML = mHtml;
 
-  // Findings
-  var findings = r.findings || [];
-  var fHtml = '';
-  findings.forEach(function(f, i) {
-    var sev = (f.severity || 'normal').toLowerCase();
-    var badge = sev === 'critical' ? 'CRITICAL' : (sev === 'warning' ? 'WARNING' : 'NORMAL');
-    fHtml += '<div class="ecg-finding-card ' + sev + '" style="animation-delay:' + (i*0.08) + 's">' +
-      '<div class="ecg-finding-row">' +
-      '<div class="ecg-finding-badge">' + badge + '</div>' +
-      '<div class="ecg-finding-body">' +
-      '<div class="ecg-finding-title">' + esc(f.title||'') + '</div>' +
-      '<div class="ecg-finding-desc">' + esc(f.description||'') + '</div>' +
-      '</div></div></div>';
-  });
-  document.getElementById('eFindings').innerHTML = fHtml;
-
-  // Differential (only if not normal)
-  var diff = r.differential || [];
-  var ds = document.getElementById('eDiffSection');
-  if (!r.is_normal && diff.length) {
-    var dHtml = '';
-    diff.slice(0,3).forEach(function(d, i) {
-      dHtml += '<div class="ecg-diff-card" style="animation-delay:' + (i*0.1) + 's">' +
-        '<div class="ecg-diff-num">' + (i+1) + '</div>' +
-        '<div class="ecg-diff-body">' +
-        '<div class="ecg-diff-name">' + esc(d.name||'') + '</div>' +
-        '<div class="ecg-diff-prob">' + (d.likelihood||'—') + '% likelihood</div>' +
-        '<div class="ecg-diff-prob-bar"><div class="ecg-diff-prob-fill" data-w="' + (d.likelihood||0) + '"></div></div>' +
-        '<div class="ecg-diff-support">' + esc(d.ecg_support||'') + '</div>' +
-        '</div></div>';
-    });
-    document.getElementById('eDiffCards').innerHTML = dHtml;
-    ds.style.display = 'block';
-    setTimeout(function() {
-      document.querySelectorAll('.ecg-diff-prob-fill').forEach(function(b) { b.style.width = b.dataset.w + '%'; });
-    }, 80);
-  } else {
-    ds.style.display = 'none';
+  if (r.is_normal) {
+    document.getElementById('eResults').style.display = 'block';
+    document.getElementById('eResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
   }
 
-  // Pathway
-  renderPathway(r.pathway, 'ePathwayContent', 'ePathwaySection');
+  // ECG reading summary
+  if (r.ecg_reading) {
+    document.getElementById('eSummaryTxt').textContent = r.ecg_reading;
+    document.getElementById('eSummaryBlock').style.display = 'block';
+  }
 
+  // Diagnostic flow cards
+  var diagnoses = r.diagnoses || [];
+  if (diagnoses.length) {
+    var rankColors = ['rank1','rank2','rank3'];
+    var rankLabels = ['PRIMARY DX','ALT. DX 2','ALT. DX 3'];
+    var dHtml = '';
+    diagnoses.slice(0,3).forEach(function(dx, i) {
+      var invs = dx.investigations || [];
+      // Connector arrow between cards
+      if (i > 0) {
+        dHtml += '<div class="ecg-dx-connector">If Dx ' + i + ' excluded — consider next</div>';
+      }
+      dHtml += '<div class="ecg-dx-card" style="animation-delay:' + (i*0.12) + 's">';
+      // Header
+      dHtml += '<div class="ecg-dx-header ' + rankColors[i] + '">' +
+        '<div class="ecg-dx-rank">' + rankLabels[i] + '</div>' +
+        '<div class="ecg-dx-name">' + esc(dx.name||'') + '</div>' +
+        '<div class="ecg-dx-pct">' + (dx.likelihood||'—') + '%</div>' +
+        '</div>';
+      // ECG evidence
+      dHtml += '<div class="ecg-evidence">' +
+        '<div class="ecg-ev-lbl">ECG Evidence</div>' +
+        '<div class="ecg-ev-txt">' + esc(dx.ecg_evidence||'—') + '</div>' +
+        '</div>';
+      // Investigations with if+/if-
+      if (invs.length) {
+        dHtml += '<div class="ecg-inv-block">' +
+          '<div class="ecg-inv-title">Required Investigations</div>';
+        invs.forEach(function(inv, j) {
+          var isLast = j === invs.length - 1;
+          dHtml += '<div class="ecg-inv-step">' +
+            '<div class="ecg-inv-left">' +
+            '<div class="ecg-inv-dot">' + (j+1) + '</div>' +
+            (!isLast ? '<div class="ecg-inv-line"></div>' : '') +
+            '</div>' +
+            '<div class="ecg-inv-content">' +
+            '<div class="ecg-inv-test">' + esc(inv.test||'') + '</div>' +
+            '<div class="ecg-inv-outcomes">' +
+            '<div class="ecg-inv-outcome pos">' +
+            '<div class="ecg-inv-oi">✓</div>' +
+            '<div><div class="ecg-inv-ol">If Positive</div>' +
+            '<div class="ecg-inv-ot">' + esc(inv.positive_result||'') + '</div></div>' +
+            '</div>' +
+            '<div class="ecg-inv-outcome neg">' +
+            '<div class="ecg-inv-oi">✗</div>' +
+            '<div><div class="ecg-inv-ol">If Negative</div>' +
+            '<div class="ecg-inv-ot">' + esc(inv.negative_result||'') + '</div></div>' +
+            '</div>' +
+            '</div>' +
+            '</div></div>';
+        });
+        dHtml += '</div>';
+      }
+      // Treatment block
+      dHtml += '<div class="ecg-tx-block">' +
+        '<div class="ecg-tx-lbl">If Confirmed — Treatment</div>' +
+        '<div class="ecg-tx-txt">' + esc(dx.treatment||'—') + '</div>';
+      if (dx.alt_treatment) {
+        dHtml += '<div class="ecg-tx-alt"><div class="ecg-tx-alt-lbl">Alternative</div>' + esc(dx.alt_treatment) + '</div>';
+      }
+      if (dx.guideline) {
+        dHtml += '<div style="margin-top:8px;"><span class="g-badge">' + esc(dx.guideline) + '</span></div>';
+      }
+      dHtml += '</div>';
+      dHtml += '</div>'; // close ecg-dx-card
+    });
+    document.getElementById('eDxCards').innerHTML = dHtml;
+    document.getElementById('eDxFlow').style.display = 'block';
+  }
+
+  document.getElementById('eRptBtn').style.display = 'block';
   document.getElementById('eResults').style.display = 'block';
   document.getElementById('eResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -1784,16 +1882,16 @@ function eShowReport() {
   if (!r) return;
   var date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   var meas = r.measurements || {};
+  var D = '─'.repeat(44); var H = '━'.repeat(44);
 
   var lines = [
     'ECG ANALYSIS REPORT',
-    '━'.repeat(44),
+    H,
     'Date       : ' + date,
     'Patient    : ' + (eStore.patStr || '—'),
-    (eStore.history ? 'History    : ' + eStore.history : ''),
-    '─'.repeat(44),
-    '',
-    'ECG MEASUREMENTS',
+    (eStore.history ? 'Hx & Meds  : ' + eStore.history : ''),
+    D, '',
+    'MEASUREMENTS',
     '  Heart Rate   : ' + ((meas.heart_rate||{}).value||'—') + ' ' + ((meas.heart_rate||{}).unit||''),
     '  PR Interval  : ' + ((meas.pr_interval||{}).value||'—') + ' ' + ((meas.pr_interval||{}).unit||''),
     '  QRS Duration : ' + ((meas.qrs_duration||{}).value||'—') + ' ' + ((meas.qrs_duration||{}).unit||''),
@@ -1801,51 +1899,62 @@ function eShowReport() {
     '  P Axis       : ' + ((meas.p_axis||{}).value||'—') + ' ' + ((meas.p_axis||{}).unit||''),
     '  QRS Axis     : ' + ((meas.qrs_axis||{}).value||'—') + ' ' + ((meas.qrs_axis||{}).unit||''),
     '',
-    '─'.repeat(44),
-    '',
   ];
 
-  if (r.critical && r.critical_finding) {
-    lines.push('⚠ CRITICAL FINDING');
-    lines.push('  ' + r.critical_finding);
+  if (r.critical) {
+    lines.push(D); lines.push('');
+    lines.push('⚠  CRITICAL FINDING — IMMEDIATE ACTION');
+    lines.push('   ' + (r.critical_finding||''));
+    lines.push('→  ' + (r.immediate_action||''));
     lines.push('');
   }
 
-  lines.push('ECG FINDINGS');
-  (r.findings||[]).forEach(function(f) {
-    lines.push('  [' + (f.severity||'').toUpperCase() + '] ' + (f.title||''));
-    lines.push('  ' + (f.description||''));
+  if (r.ecg_reading) {
+    lines.push(D); lines.push('');
+    lines.push('ECG READING');
+    lines.push('   ' + r.ecg_reading);
     lines.push('');
-  });
+  }
 
-  if (!r.is_normal && (r.differential||[]).length) {
-    lines.push('─'.repeat(44));
+  if (r.is_normal) {
+    lines.push(D); lines.push('');
+    lines.push('CONCLUSION : NORMAL ECG');
+    lines.push('   ' + (r.normal_comment||'No significant abnormalities.'));
     lines.push('');
-    lines.push('DIFFERENTIAL DIAGNOSIS');
-    (r.differential||[]).slice(0,3).forEach(function(d,i) {
-      lines.push('  ' + (i+1) + '. ' + d.name + ' (' + d.likelihood + '%)');
-      lines.push('     ' + d.ecg_support);
+  } else {
+    (r.diagnoses||[]).slice(0,3).forEach(function(dx,i) {
+      lines.push(D); lines.push('');
+      lines.push('DIAGNOSIS ' + (i+1) + '  (' + (dx.likelihood||'—') + '%)  ' + (dx.name||'').toUpperCase());
+      lines.push('');
+      lines.push('ECG Evidence:');
+      lines.push('   ' + (dx.ecg_evidence||'—'));
+      lines.push('');
+      lines.push('Investigations:');
+      (dx.investigations||[]).forEach(function(inv, j) {
+        lines.push('   ' + (j+1) + '. ' + (inv.test||''));
+        lines.push('      ✓ Positive : ' + (inv.positive_result||''));
+        lines.push('      ✗ Negative : ' + (inv.negative_result||''));
+      });
+      lines.push('');
+      lines.push('If Confirmed — Treatment:');
+      lines.push('   ' + (dx.treatment||'—'));
+      if (dx.alt_treatment) {
+        lines.push('   Alt: ' + dx.alt_treatment);
+      }
+      lines.push('   Guideline: ' + (dx.guideline||''));
       lines.push('');
     });
   }
 
-  if (r.pathway && r.pathway.summary) {
-    lines.push('─'.repeat(44));
-    lines.push('');
-    lines.push('CLINICAL SUMMARY');
-    lines.push('  ' + r.pathway.summary);
-    lines.push('');
-  }
-
-  lines.push('━'.repeat(44));
-  lines.push('⚠ FOR CLINICAL DECISION SUPPORT ONLY');
-  lines.push('  Final interpretation must be confirmed by a qualified physician.');
+  lines.push(H);
+  lines.push('⚠  FOR CLINICAL DECISION SUPPORT ONLY');
+  lines.push('   All findings must be verified by a qualified physician.');
+  lines.push('   Never act on AI output alone in emergency settings.');
   lines.push('');
   lines.push('Physician Signature : _______________');
   lines.push('Date                : _______________');
 
-  rptText = lines.filter(function(l) { return l !== undefined; }).join('\n');
-
+  rptText = lines.filter(function(l){ return l !== undefined; }).join('\n');
   document.getElementById('modTitle').textContent = 'ECG Analysis Report';
   document.getElementById('modSub').textContent = 'Generated by ECGDx · MedDx Suite';
   document.getElementById('rptBox').textContent = rptText;
