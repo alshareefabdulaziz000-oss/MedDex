@@ -420,93 +420,290 @@ input[type=file] { display: none; }
 .img-row { grid-template-columns: 1fr; }
 }
 /* ═══════════════════════════════════════════
-ECG-SPECIFIC
+ECG — COMPLETE DESIGN SYSTEM
 ═══════════════════════════════════════════ */
+
+/* DISCLAIMER */
 .ecg-disclaimer {
 display: flex; align-items: flex-start; gap: 12px;
-background: #fff8e7; border: 1.5px solid #f59e0b;
-border-radius: 12px; padding: 14px 16px; margin-bottom: 28px;
+background: #fffbeb; border: 1.5px solid #fcd34d;
+border-radius: 14px; padding: 16px 18px; margin-bottom: 32px;
 }
-.ecg-disc-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.ecg-disc-text { font-size: 12.5px; color: #78350f; line-height: 1.65; }
-.ecg-disc-text strong { display: block; margin-bottom: 3px; font-size: 13px; }
+.ecg-disc-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.ecg-disc-text { font-size: 12px; color: #92400e; line-height: 1.7; }
+.ecg-disc-text strong { font-size: 12.5px; display: block; margin-bottom: 2px; }
 
+/* ── CRITICAL BANNER ── */
 .ecg-critical {
-display: flex; align-items: flex-start; gap: 14px;
-background: #fff1f2; border: 2px solid #e11d48;
-border-radius: 14px; padding: 18px 20px; margin-bottom: 24px;
+display: flex; align-items: flex-start; gap: 16px;
+background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+border: 2px solid #fb7185; border-radius: 18px;
+padding: 22px 24px; margin-bottom: 28px;
+box-shadow: 0 4px 24px rgba(225,29,72,.12);
 animation: fadeUp .3s ease;
 }
-.ecg-crit-icon { font-size: 28px; flex-shrink: 0; }
-.ecg-crit-title { font-family: var(–mono); font-size: 10px; letter-spacing: .18em; color: #e11d48; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
-.ecg-crit-msg { font-size: 14px; color: #9f1239; line-height: 1.7; font-weight: 500; }
+.ecg-crit-icon { font-size: 32px; flex-shrink: 0; line-height: 1; }
+.ecg-crit-title {
+font-family: var(–mono); font-size: 9px; letter-spacing: .22em;
+color: #e11d48; text-transform: uppercase; font-weight: 700; margin-bottom: 6px;
+}
+.ecg-crit-msg { font-size: 15px; color: #881337; line-height: 1.7; font-weight: 600; margin-bottom: 8px; }
+.ecg-crit-action {
+font-family: var(–mono); font-size: 11px; color: #be123c;
+background: rgba(225,29,72,.08); border-radius: 8px;
+padding: 8px 12px; line-height: 1.6; letter-spacing: .02em;
+}
 
+/* ── NORMAL BANNER ── */
 .ecg-normal {
-display: flex; align-items: flex-start; gap: 14px;
-background: #f0fdf4; border: 2px solid #16a34a;
-border-radius: 14px; padding: 18px 20px; margin-bottom: 24px;
+display: flex; align-items: center; gap: 20px;
+background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+border: 2px solid #4ade80; border-radius: 18px;
+padding: 28px 28px; margin-bottom: 28px;
+box-shadow: 0 4px 24px rgba(22,163,74,.1);
 animation: fadeUp .3s ease;
 }
-.ecg-norm-icon { font-size: 28px; color: #16a34a; font-weight: 700; flex-shrink: 0; line-height: 1; }
-.ecg-norm-title { font-family: var(–mono); font-size: 10px; letter-spacing: .18em; color: #16a34a; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
-.ecg-norm-msg { font-size: 14px; color: #166534; line-height: 1.7; }
+.ecg-norm-icon {
+width: 56px; height: 56px; border-radius: 50%;
+background: #16a34a; color: #fff; font-size: 26px;
+display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ecg-norm-title {
+font-family: var(–mono); font-size: 9px; letter-spacing: .22em;
+color: #15803d; text-transform: uppercase; font-weight: 700; margin-bottom: 6px;
+}
+.ecg-norm-msg { font-size: 15px; color: #14532d; line-height: 1.75; }
 
+/* ── ECG READING SUMMARY BOX ── */
+.ecg-summary-box {
+background: #0f4c81;
+border-radius: 18px; padding: 26px 28px; margin-bottom: 28px;
+box-shadow: 0 8px 32px rgba(15,76,129,.22);
+animation: fadeUp .4s ease .05s backwards;
+position: relative; overflow: hidden;
+}
+.ecg-summary-box::before {
+content: ‘ECG’; position: absolute; right: -10px; top: 50%;
+transform: translateY(-50%);
+font-family: var(–display); font-size: 110px; font-weight: 400;
+color: rgba(255,255,255,.04); line-height: 1; pointer-events: none;
+}
+.ecg-sum-lbl {
+font-family: var(–mono); font-size: 8px; letter-spacing: .25em;
+color: rgba(255,255,255,.4); text-transform: uppercase; margin-bottom: 12px;
+}
+.ecg-sum-txt {
+font-family: var(–display); font-size: 18px; font-style: italic;
+font-weight: 300; color: rgba(255,255,255,.92); line-height: 1.8;
+}
+
+/* ── MEASUREMENTS GRID ── */
 .ecg-measurements {
-display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 8px;
+display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 32px;
 }
 .ecg-meas-card {
-background: var(–surface); border: 1px solid var(–border);
-border-radius: 12px; padding: 14px 16px; text-align: center;
+background: var(–surface); border: 1.5px solid var(–border);
+border-radius: 14px; padding: 18px 14px; text-align: center;
 animation: fadeUp .35s ease backwards;
+transition: transform .2s, box-shadow .2s;
+position: relative; overflow: hidden;
 }
-.ecg-meas-label { font-family: var(–mono); font-size: 8px; letter-spacing: .15em; color: var(–dim); text-transform: uppercase; margin-bottom: 6px; }
-.ecg-meas-value { font-family: var(–mono); font-size: 18px; font-weight: 600; color: var(–text); line-height: 1; margin-bottom: 3px; }
-.ecg-meas-value.abnormal { color: #dc2626; }
-.ecg-meas-value.borderline { color: #d97706; }
-.ecg-meas-unit { font-family: var(–mono); font-size: 9px; color: var(–dim); }
+.ecg-meas-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+.ecg-meas-card.abnormal {
+border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%);
+}
+.ecg-meas-card.borderline {
+border-color: #fde68a; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+.ecg-meas-card.normal { border-color: var(–border); }
+.ecg-meas-label {
+font-family: var(–mono); font-size: 7.5px; letter-spacing: .16em;
+color: var(–dim); text-transform: uppercase; margin-bottom: 10px;
+}
+.ecg-meas-value {
+font-family: var(–mono); font-size: 20px; font-weight: 700;
+color: var(–text); line-height: 1; margin-bottom: 4px;
+}
+.ecg-meas-card.abnormal .ecg-meas-value { color: #dc2626; }
+.ecg-meas-card.borderline .ecg-meas-value { color: #d97706; }
+.ecg-meas-unit { font-family: var(–mono); font-size: 9px; color: var(–dim); margin-bottom: 8px; }
+.ecg-meas-pip {
+width: 6px; height: 6px; border-radius: 50%; margin: 0 auto;
+background: #d1fae5;
+}
+.ecg-meas-card.abnormal .ecg-meas-pip { background: #fca5a5; }
+.ecg-meas-card.borderline .ecg-meas-pip { background: #fde68a; }
 
-.ecg-finding-card {
-background: var(–surface); border: 1px solid var(–border);
-border-left: 4px solid var(–text); border-radius: 12px;
-padding: 18px 20px; margin-bottom: 12px;
-animation: fadeUp .4s ease backwards;
-}
-.ecg-finding-card.critical { border-left-color: #dc2626; }
-.ecg-finding-card.warning  { border-left-color: #d97706; }
-.ecg-finding-card.normal   { border-left-color: #16a34a; }
-.ecg-finding-row { display: flex; align-items: flex-start; gap: 12px; }
-.ecg-finding-badge {
-font-family: var(–mono); font-size: 8px; letter-spacing: .12em; text-transform: uppercase;
-padding: 3px 9px; border-radius: 20px; flex-shrink: 0; margin-top: 3px; font-weight: 600;
-}
-.critical .ecg-finding-badge { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
-.warning  .ecg-finding-badge { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
-.normal   .ecg-finding-badge { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
-.ecg-finding-body { flex: 1; }
-.ecg-finding-title { font-size: 14px; font-weight: 600; color: var(–text); margin-bottom: 5px; }
-.ecg-finding-desc  { font-size: 13px; color: var(–muted); line-height: 1.7; }
+/* ── DIAGNOSTIC FLOW ── */
+.ecg-dx-flow { display: flex; flex-direction: column; gap: 6px; }
 
-.ecg-diff-card {
-background: var(–surface); border: 1px solid var(–border);
-border-radius: 12px; padding: 18px 20px; margin-bottom: 10px;
-display: flex; align-items: flex-start; gap: 16px;
-animation: fadeUp .4s ease backwards;
+/* CONNECTOR between diagnosis cards */
+.ecg-dx-connector {
+display: flex; align-items: center; gap: 12px;
+padding: 8px 0; color: var(–dim);
+font-family: var(–mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
 }
-.ecg-diff-num {
+.ecg-dx-connector::before, .ecg-dx-connector::after {
+content: ‘’; flex: 1; height: 1px;
+background: linear-gradient(90deg, transparent, var(–border), transparent);
+}
+
+/* DIAGNOSIS CARD */
+.ecg-dx-card {
+background: var(–surface);
+border: 1.5px solid var(–border); border-radius: 20px;
+overflow: hidden;
+box-shadow: 0 2px 12px rgba(0,0,0,.05);
+animation: fadeUp .45s ease backwards;
+transition: box-shadow .25s;
+}
+.ecg-dx-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,.1); }
+
+/* Header stripe */
+.ecg-dx-header {
+display: flex; align-items: center; gap: 16px;
+padding: 20px 24px;
+}
+.ecg-dx-header.rank1 { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); }
+.ecg-dx-header.rank2 { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+.ecg-dx-header.rank3 { background: linear-gradient(135deg, #374151 0%, #4b5563 100%); }
+
+.ecg-dx-rank-badge {
+flex-shrink: 0;
+background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18);
+border-radius: 8px; padding: 4px 10px;
+font-family: var(–mono); font-size: 8px; letter-spacing: .18em;
+color: rgba(255,255,255,.6); text-transform: uppercase;
+}
+.ecg-dx-name {
+flex: 1; font-family: var(–display); font-size: 24px;
+font-weight: 300; color: #fff; line-height: 1.1;
+}
+.ecg-dx-pct-wrap { flex-shrink: 0; text-align: right; }
+.ecg-dx-pct {
+font-family: var(–mono); font-size: 28px; font-weight: 700;
+color: rgba(255,255,255,.85); line-height: 1;
+}
+.ecg-dx-pct-lbl {
+font-family: var(–mono); font-size: 7px; letter-spacing: .12em;
+color: rgba(255,255,255,.35); text-transform: uppercase; margin-top: 2px;
+}
+
+/* ECG EVIDENCE stripe */
+.ecg-evidence {
+padding: 18px 24px; border-bottom: 1px solid var(–border);
+background: #fafaf8;
+}
+.ecg-ev-lbl {
+font-family: var(–mono); font-size: 7.5px; letter-spacing: .18em;
+color: #0f4c81; text-transform: uppercase; font-weight: 700; margin-bottom: 8px;
+display: flex; align-items: center; gap: 8px;
+}
+.ecg-ev-lbl::before {
+content: ‘’; width: 20px; height: 2px;
+background: linear-gradient(90deg, #0f4c81, transparent);
+}
+.ecg-ev-txt { font-size: 13.5px; color: var(–muted); line-height: 1.75; font-style: italic; }
+
+/* INVESTIGATIONS block */
+.ecg-inv-block { padding: 22px 24px; border-bottom: 1px solid var(–border); }
+.ecg-inv-title {
+font-family: var(–mono); font-size: 7.5px; letter-spacing: .2em;
+color: var(–dim); text-transform: uppercase; margin-bottom: 20px;
+display: flex; align-items: center; gap: 10px;
+}
+.ecg-inv-title::after { content: ‘’; flex: 1; height: 1px; background: var(–border); }
+
+/* each investigation step */
+.ecg-inv-step { display: flex; gap: 16px; margin-bottom: 24px; }
+.ecg-inv-step:last-child { margin-bottom: 0; }
+
+.ecg-inv-left {
+display: flex; flex-direction: column; align-items: center;
+flex-shrink: 0; width: 32px;
+}
+.ecg-inv-dot {
 width: 32px; height: 32px; border-radius: 50%;
 background: #0f4c81; color: #fff;
 font-family: var(–mono); font-size: 13px; font-weight: 700;
-display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+display: flex; align-items: center; justify-content: center;
+box-shadow: 0 2px 8px rgba(15,76,129,.3);
+flex-shrink: 0;
 }
-.ecg-diff-body { flex: 1; }
-.ecg-diff-name { font-family: var(–display); font-size: 20px; font-weight: 400; color: var(–text); margin-bottom: 5px; }
-.ecg-diff-prob { font-family: var(–mono); font-size: 10px; color: var(–dim); margin-bottom: 8px; }
-.ecg-diff-prob-bar { height: 3px; background: var(–border); border-radius: 2px; margin-bottom: 10px; overflow: hidden; }
-.ecg-diff-prob-fill { height: 100%; background: #0f4c81; border-radius: 2px; width: 0; transition: width 1.1s cubic-bezier(.4,0,.2,1); }
-.ecg-diff-support { font-size: 13px; color: var(–muted); line-height: 1.7; }
+.ecg-inv-line {
+width: 2px; flex: 1; margin: 6px 0;
+background: linear-gradient(180deg, #0f4c81 0%, var(–border) 100%);
+min-height: 20px;
+}
 
-@media (max-width: 520px) {
+.ecg-inv-content { flex: 1; padding-top: 4px; }
+.ecg-inv-test {
+font-size: 15px; font-weight: 700; color: var(–text);
+margin-bottom: 12px; line-height: 1.2;
+}
+
+/* outcome pills */
+.ecg-inv-outcomes { display: flex; flex-direction: column; gap: 8px; }
+.ecg-inv-outcome {
+display: flex; align-items: flex-start; gap: 12px;
+padding: 12px 16px; border-radius: 12px;
+}
+.ecg-inv-outcome.pos {
+background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+border: 1.5px solid #86efac;
+}
+.ecg-inv-outcome.neg {
+background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+border: 1.5px solid #fda4af;
+}
+.ecg-inv-icon-wrap {
+width: 22px; height: 22px; border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+flex-shrink: 0; font-size: 11px; font-weight: 800; margin-top: 1px;
+}
+.ecg-inv-outcome.pos .ecg-inv-icon-wrap { background: #16a34a; color: #fff; }
+.ecg-inv-outcome.neg .ecg-inv-icon-wrap { background: #dc2626; color: #fff; }
+.ecg-inv-body { flex: 1; }
+.ecg-inv-ol {
+font-family: var(–mono); font-size: 7.5px; letter-spacing: .14em;
+text-transform: uppercase; font-weight: 700; margin-bottom: 4px;
+}
+.ecg-inv-outcome.pos .ecg-inv-ol { color: #16a34a; }
+.ecg-inv-outcome.neg .ecg-inv-ol { color: #dc2626; }
+.ecg-inv-ot { font-size: 13px; color: var(–muted); line-height: 1.65; }
+
+/* TREATMENT block */
+.ecg-tx-block {
+padding: 22px 24px;
+background: linear-gradient(135deg, #f8fffe 0%, #f0fdf4 100%);
+}
+.ecg-tx-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.ecg-tx-icon {
+width: 28px; height: 28px; border-radius: 8px; background: #16a34a;
+display: flex; align-items: center; justify-content: center;
+font-size: 14px; flex-shrink: 0;
+}
+.ecg-tx-lbl {
+font-family: var(–mono); font-size: 8px; letter-spacing: .18em;
+color: #15803d; text-transform: uppercase; font-weight: 700;
+}
+.ecg-tx-txt { font-size: 14px; color: #14532d; line-height: 1.8; font-weight: 500; }
+.ecg-tx-divider { height: 1px; background: rgba(22,163,74,.15); margin: 14px 0; }
+.ecg-tx-alt-lbl {
+font-family: var(–mono); font-size: 7.5px; letter-spacing: .14em;
+color: var(–dim); text-transform: uppercase; margin-bottom: 5px;
+}
+.ecg-tx-alt { font-size: 13px; color: var(–muted); line-height: 1.7; }
+.ecg-tx-guideline { margin-top: 14px; }
+
+@media (max-width: 540px) {
 .ecg-measurements { grid-template-columns: repeat(2, 1fr); }
+.ecg-dx-name { font-size: 18px; }
+.ecg-dx-pct { font-size: 22px; }
+.ecg-inv-block { padding: 18px 16px; }
+.ecg-tx-block { padding: 18px 16px; }
+.ecg-evidence { padding: 16px; }
+.ecg-dx-header { padding: 16px 18px; }
 }
 </style>
 
@@ -1753,129 +1950,166 @@ function eRenderResults(r) {
   var na = document.getElementById('eNormalAlert');
   ca.style.display = 'none'; na.style.display = 'none';
 
-  // Critical banner
+  // ── CRITICAL ──
   if (r.critical && r.critical_finding) {
     document.getElementById('eCriticalText').textContent = r.critical_finding;
-    var act = document.getElementById('eCriticalAction');
-    act.textContent = r.immediate_action ? '→ ' + r.immediate_action : '';
+    var actEl = document.getElementById('eCriticalAction');
+    if (r.immediate_action) { actEl.textContent = '→ ' + r.immediate_action; actEl.style.display = 'block'; }
+    else { actEl.style.display = 'none'; }
     ca.style.display = 'flex';
   }
 
-  // Normal banner
+  // ── NORMAL ──
   if (r.is_normal) {
-    document.getElementById('eNormalText').textContent = r.normal_comment || 'No significant abnormalities identified on this ECG. Sinus rhythm with normal intervals.';
+    document.getElementById('eNormalText').textContent = r.normal_comment || 'Sinus rhythm. Normal rate, intervals, and axis. No ST, T-wave, or conduction abnormalities.';
     na.style.display = 'flex';
     document.getElementById('eSummaryBlock').style.display = 'none';
     document.getElementById('eDxFlow').style.display = 'none';
     document.getElementById('eRptBtn').style.display = 'block';
+    document.getElementById('eResults').style.display = 'block';
+    document.getElementById('eResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // still render measurements
   }
 
-  // Measurements
+  // ── MEASUREMENTS ──
   var meas = r.measurements || {};
   var measDef = [
-    ['heart_rate','Heart Rate'], ['pr_interval','PR Interval'],
-    ['qrs_duration','QRS Duration'], ['qt_qtc','QT / QTc'],
-    ['p_axis','P Axis'], ['qrs_axis','QRS Axis']
+    ['heart_rate','Heart Rate','bpm'],
+    ['pr_interval','PR Interval','ms'],
+    ['qrs_duration','QRS Duration','ms'],
+    ['qt_qtc','QT / QTc','ms'],
+    ['p_axis','P Axis','deg'],
+    ['qrs_axis','QRS Axis','deg']
   ];
   var mHtml = '';
   measDef.forEach(function(kv, idx) {
     var m = meas[kv[0]] || {};
     var st = (m.status || 'normal').toLowerCase();
-    mHtml += '<div class="ecg-meas-card ' + st + '" style="animation-delay:' + (idx*0.06) + 's">' +
+    mHtml += '<div class="ecg-meas-card ' + st + '" style="animation-delay:' + (idx * 0.07) + 's">' +
       '<div class="ecg-meas-label">' + kv[1] + '</div>' +
       '<div class="ecg-meas-value">' + esc(m.value || '—') + '</div>' +
-      '<div class="ecg-meas-unit">' + esc(m.unit || '') + '</div>' +
-      '<div class="ecg-meas-status">' + st.toUpperCase() + '</div>' +
+      '<div class="ecg-meas-unit">' + esc(m.unit || kv[2]) + '</div>' +
+      '<div class="ecg-meas-pip"></div>' +
       '</div>';
   });
   document.getElementById('eMeasurements').innerHTML = mHtml;
 
-  if (r.is_normal) {
-    document.getElementById('eResults').style.display = 'block';
-    document.getElementById('eResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    return;
-  }
+  if (r.is_normal) return;
 
-  // ECG reading summary
+  // ── ECG READING SUMMARY ──
   if (r.ecg_reading) {
     document.getElementById('eSummaryTxt').textContent = r.ecg_reading;
     document.getElementById('eSummaryBlock').style.display = 'block';
   }
 
-  // Diagnostic flow cards
+  // ── DIAGNOSTIC FLOW CARDS ──
   var diagnoses = r.diagnoses || [];
-  if (diagnoses.length) {
-    var rankColors = ['rank1','rank2','rank3'];
-    var rankLabels = ['PRIMARY DX','ALT. DX 2','ALT. DX 3'];
-    var dHtml = '';
-    diagnoses.slice(0,3).forEach(function(dx, i) {
-      var invs = dx.investigations || [];
-      // Connector arrow between cards
-      if (i > 0) {
-        dHtml += '<div class="ecg-dx-connector">If Dx ' + i + ' excluded — consider next</div>';
-      }
-      dHtml += '<div class="ecg-dx-card" style="animation-delay:' + (i*0.12) + 's">';
-      // Header
-      dHtml += '<div class="ecg-dx-header ' + rankColors[i] + '">' +
-        '<div class="ecg-dx-rank">' + rankLabels[i] + '</div>' +
-        '<div class="ecg-dx-name">' + esc(dx.name||'') + '</div>' +
-        '<div class="ecg-dx-pct">' + (dx.likelihood||'—') + '%</div>' +
-        '</div>';
-      // ECG evidence
-      dHtml += '<div class="ecg-evidence">' +
-        '<div class="ecg-ev-lbl">ECG Evidence</div>' +
-        '<div class="ecg-ev-txt">' + esc(dx.ecg_evidence||'—') + '</div>' +
-        '</div>';
-      // Investigations with if+/if-
-      if (invs.length) {
-        dHtml += '<div class="ecg-inv-block">' +
-          '<div class="ecg-inv-title">Required Investigations</div>';
-        invs.forEach(function(inv, j) {
-          var isLast = j === invs.length - 1;
-          dHtml += '<div class="ecg-inv-step">' +
-            '<div class="ecg-inv-left">' +
-            '<div class="ecg-inv-dot">' + (j+1) + '</div>' +
-            (!isLast ? '<div class="ecg-inv-line"></div>' : '') +
-            '</div>' +
-            '<div class="ecg-inv-content">' +
-            '<div class="ecg-inv-test">' + esc(inv.test||'') + '</div>' +
-            '<div class="ecg-inv-outcomes">' +
-            '<div class="ecg-inv-outcome pos">' +
-            '<div class="ecg-inv-oi">✓</div>' +
-            '<div><div class="ecg-inv-ol">If Positive</div>' +
-            '<div class="ecg-inv-ot">' + esc(inv.positive_result||'') + '</div></div>' +
-            '</div>' +
-            '<div class="ecg-inv-outcome neg">' +
-            '<div class="ecg-inv-oi">✗</div>' +
-            '<div><div class="ecg-inv-ol">If Negative</div>' +
-            '<div class="ecg-inv-ot">' + esc(inv.negative_result||'') + '</div></div>' +
-            '</div>' +
-            '</div>' +
-            '</div></div>';
-        });
-        dHtml += '</div>';
-      }
-      // Treatment block
-      dHtml += '<div class="ecg-tx-block">' +
-        '<div class="ecg-tx-lbl">If Confirmed — Treatment</div>' +
-        '<div class="ecg-tx-txt">' + esc(dx.treatment||'—') + '</div>';
-      if (dx.alt_treatment) {
-        dHtml += '<div class="ecg-tx-alt"><div class="ecg-tx-alt-lbl">Alternative</div>' + esc(dx.alt_treatment) + '</div>';
-      }
-      if (dx.guideline) {
-        dHtml += '<div style="margin-top:8px;"><span class="g-badge">' + esc(dx.guideline) + '</span></div>';
-      }
-      dHtml += '</div>';
-      dHtml += '</div>'; // close ecg-dx-card
-    });
-    document.getElementById('eDxCards').innerHTML = dHtml;
-    document.getElementById('eDxFlow').style.display = 'block';
+  if (!diagnoses.length) {
+    document.getElementById('eRptBtn').style.display = 'block';
+    document.getElementById('eResults').style.display = 'block';
+    return;
   }
 
+  var rankClass  = ['rank1','rank2','rank3'];
+  var rankLabel  = ['Primary Diagnosis','Alternative Dx · 2','Alternative Dx · 3'];
+  var dHtml = '';
+
+  diagnoses.slice(0, 3).forEach(function(dx, i) {
+    var invs = dx.investigations || [];
+
+    if (i > 0) {
+      dHtml += '<div class="ecg-dx-connector">If Dx ' + i + ' excluded — evaluate next</div>';
+    }
+
+    // Card open
+    dHtml += '<div class="ecg-dx-card" style="animation-delay:' + (i * 0.14) + 's">';
+
+    // ── HEADER ──
+    dHtml +=
+      '<div class="ecg-dx-header ' + rankClass[i] + '">' +
+        '<div class="ecg-dx-rank-badge">' + rankLabel[i] + '</div>' +
+        '<div class="ecg-dx-name">' + esc(dx.name || '—') + '</div>' +
+        '<div class="ecg-dx-pct-wrap">' +
+          '<div class="ecg-dx-pct">' + (dx.likelihood || '—') + '%</div>' +
+          '<div class="ecg-dx-pct-lbl">Likelihood</div>' +
+        '</div>' +
+      '</div>';
+
+    // ── ECG EVIDENCE ──
+    dHtml +=
+      '<div class="ecg-evidence">' +
+        '<div class="ecg-ev-lbl">ECG Evidence</div>' +
+        '<div class="ecg-ev-txt">' + esc(dx.ecg_evidence || '—') + '</div>' +
+      '</div>';
+
+    // ── INVESTIGATIONS ──
+    if (invs.length) {
+      dHtml += '<div class="ecg-inv-block"><div class="ecg-inv-title">Required Investigations</div>';
+      invs.forEach(function(inv, j) {
+        var isLast = j === invs.length - 1;
+        dHtml +=
+          '<div class="ecg-inv-step">' +
+            '<div class="ecg-inv-left">' +
+              '<div class="ecg-inv-dot">' + (j + 1) + '</div>' +
+              (!isLast ? '<div class="ecg-inv-line"></div>' : '') +
+            '</div>' +
+            '<div class="ecg-inv-content">' +
+              '<div class="ecg-inv-test">' + esc(inv.test || '') + '</div>' +
+              '<div class="ecg-inv-outcomes">' +
+
+                '<div class="ecg-inv-outcome pos">' +
+                  '<div class="ecg-inv-icon-wrap">✓</div>' +
+                  '<div class="ecg-inv-body">' +
+                    '<div class="ecg-inv-ol">If Positive</div>' +
+                    '<div class="ecg-inv-ot">' + esc(inv.positive_result || '') + '</div>' +
+                  '</div>' +
+                '</div>' +
+
+                '<div class="ecg-inv-outcome neg">' +
+                  '<div class="ecg-inv-icon-wrap">✗</div>' +
+                  '<div class="ecg-inv-body">' +
+                    '<div class="ecg-inv-ol">If Negative</div>' +
+                    '<div class="ecg-inv-ot">' + esc(inv.negative_result || '') + '</div>' +
+                  '</div>' +
+                '</div>' +
+
+              '</div>' +
+            '</div>' +
+          '</div>';
+      });
+      dHtml += '</div>'; // /ecg-inv-block
+    }
+
+    // ── TREATMENT ──
+    dHtml +=
+      '<div class="ecg-tx-block">' +
+        '<div class="ecg-tx-header">' +
+          '<div class="ecg-tx-icon">💊</div>' +
+          '<div class="ecg-tx-lbl">Treatment if Confirmed</div>' +
+        '</div>' +
+        '<div class="ecg-tx-txt">' + esc(dx.treatment || '—') + '</div>';
+
+    if (dx.alt_treatment) {
+      dHtml +=
+        '<div class="ecg-tx-divider"></div>' +
+        '<div class="ecg-tx-alt-lbl">Alternative</div>' +
+        '<div class="ecg-tx-alt">' + esc(dx.alt_treatment) + '</div>';
+    }
+    if (dx.guideline) {
+      dHtml += '<div class="ecg-tx-guideline"><span class="g-badge">' + esc(dx.guideline) + '</span></div>';
+    }
+    dHtml += '</div>'; // /ecg-tx-block
+
+    dHtml += '</div>'; // /ecg-dx-card
+  });
+
+  document.getElementById('eDxCards').innerHTML = dHtml;
+  document.getElementById('eDxFlow').style.display = 'block';
   document.getElementById('eRptBtn').style.display = 'block';
   document.getElementById('eResults').style.display = 'block';
   document.getElementById('eResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
 
 function eShowReport() {
   var r = eStore.result;
