@@ -95,7 +95,7 @@ color: var(–muted); font-style: italic; letter-spacing: .01em;
 }
 
 /* TOOL CARDS */
-.tool-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 580px; width: 100%; }
+.tool-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; max-width: 860px; width: 100%; }
 
 .tool-card {
 background: var(–surface); border: 1.5px solid var(–border);
@@ -112,6 +112,7 @@ border-bottom: 1px solid var(–border);
 }
 .tool-card.clindx .tool-card-top { background: #1a1714; }
 .tool-card.dermdx .tool-card-top { background: #78450a; }
+.tool-card.ecgdx .tool-card-top { background: #0f4c81; }
 
 .tool-card-icon {
 width: 44px; height: 44px; border-radius: 12px;
@@ -138,6 +139,7 @@ color: var(–text); text-transform: uppercase; font-weight: 600;
 }
 .tool-card.clindx .tool-card-cta { color: #1a1714; }
 .tool-card.dermdx .tool-card-cta { color: #78450a; }
+.tool-card.ecgdx .tool-card-cta { color: #0f4c81; }
 .tool-card-cta-arrow {
 width: 28px; height: 28px; border-radius: 50%; display: flex;
 align-items: center; justify-content: center; font-size: 14px;
@@ -145,6 +147,7 @@ transition: transform .2s;
 }
 .tool-card.clindx .tool-card-cta-arrow { background: #1a1714; color: #fff; }
 .tool-card.dermdx .tool-card-cta-arrow { background: #78450a; color: #fff; }
+.tool-card.ecgdx .tool-card-cta-arrow { background: #0f4c81; color: #fff; }
 .tool-card:hover .tool-card-cta-arrow { transform: translateX(3px); }
 
 /* FEATURES ROW */
@@ -409,12 +412,101 @@ input[type=file] { display: none; }
 .img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
 
 @media (max-width: 520px) {
-.tool-cards { grid-template-columns: 1fr; }
+.tool-cards { grid-template-columns: 1fr; max-width: 100%; }
 .land-title { font-size: 36px; }
 .sym-grid { grid-template-columns: 1fr; }
 .dur-row { flex-wrap: wrap; }
 .dur-btn { flex: none; min-width: calc(50% - 4px); }
 .img-row { grid-template-columns: 1fr; }
+}
+/* ═══════════════════════════════════════════
+ECG-SPECIFIC
+═══════════════════════════════════════════ */
+.ecg-disclaimer {
+display: flex; align-items: flex-start; gap: 12px;
+background: #fff8e7; border: 1.5px solid #f59e0b;
+border-radius: 12px; padding: 14px 16px; margin-bottom: 28px;
+}
+.ecg-disc-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.ecg-disc-text { font-size: 12.5px; color: #78350f; line-height: 1.65; }
+.ecg-disc-text strong { display: block; margin-bottom: 3px; font-size: 13px; }
+
+.ecg-critical {
+display: flex; align-items: flex-start; gap: 14px;
+background: #fff1f2; border: 2px solid #e11d48;
+border-radius: 14px; padding: 18px 20px; margin-bottom: 24px;
+animation: fadeUp .3s ease;
+}
+.ecg-crit-icon { font-size: 28px; flex-shrink: 0; }
+.ecg-crit-title { font-family: var(–mono); font-size: 10px; letter-spacing: .18em; color: #e11d48; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+.ecg-crit-msg { font-size: 14px; color: #9f1239; line-height: 1.7; font-weight: 500; }
+
+.ecg-normal {
+display: flex; align-items: flex-start; gap: 14px;
+background: #f0fdf4; border: 2px solid #16a34a;
+border-radius: 14px; padding: 18px 20px; margin-bottom: 24px;
+animation: fadeUp .3s ease;
+}
+.ecg-norm-icon { font-size: 28px; color: #16a34a; font-weight: 700; flex-shrink: 0; line-height: 1; }
+.ecg-norm-title { font-family: var(–mono); font-size: 10px; letter-spacing: .18em; color: #16a34a; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+.ecg-norm-msg { font-size: 14px; color: #166534; line-height: 1.7; }
+
+.ecg-measurements {
+display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 8px;
+}
+.ecg-meas-card {
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 12px; padding: 14px 16px; text-align: center;
+animation: fadeUp .35s ease backwards;
+}
+.ecg-meas-label { font-family: var(–mono); font-size: 8px; letter-spacing: .15em; color: var(–dim); text-transform: uppercase; margin-bottom: 6px; }
+.ecg-meas-value { font-family: var(–mono); font-size: 18px; font-weight: 600; color: var(–text); line-height: 1; margin-bottom: 3px; }
+.ecg-meas-value.abnormal { color: #dc2626; }
+.ecg-meas-value.borderline { color: #d97706; }
+.ecg-meas-unit { font-family: var(–mono); font-size: 9px; color: var(–dim); }
+
+.ecg-finding-card {
+background: var(–surface); border: 1px solid var(–border);
+border-left: 4px solid var(–text); border-radius: 12px;
+padding: 18px 20px; margin-bottom: 12px;
+animation: fadeUp .4s ease backwards;
+}
+.ecg-finding-card.critical { border-left-color: #dc2626; }
+.ecg-finding-card.warning  { border-left-color: #d97706; }
+.ecg-finding-card.normal   { border-left-color: #16a34a; }
+.ecg-finding-row { display: flex; align-items: flex-start; gap: 12px; }
+.ecg-finding-badge {
+font-family: var(–mono); font-size: 8px; letter-spacing: .12em; text-transform: uppercase;
+padding: 3px 9px; border-radius: 20px; flex-shrink: 0; margin-top: 3px; font-weight: 600;
+}
+.critical .ecg-finding-badge { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.warning  .ecg-finding-badge { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+.normal   .ecg-finding-badge { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+.ecg-finding-body { flex: 1; }
+.ecg-finding-title { font-size: 14px; font-weight: 600; color: var(–text); margin-bottom: 5px; }
+.ecg-finding-desc  { font-size: 13px; color: var(–muted); line-height: 1.7; }
+
+.ecg-diff-card {
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 12px; padding: 18px 20px; margin-bottom: 10px;
+display: flex; align-items: flex-start; gap: 16px;
+animation: fadeUp .4s ease backwards;
+}
+.ecg-diff-num {
+width: 32px; height: 32px; border-radius: 50%;
+background: #0f4c81; color: #fff;
+font-family: var(–mono); font-size: 13px; font-weight: 700;
+display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ecg-diff-body { flex: 1; }
+.ecg-diff-name { font-family: var(–display); font-size: 20px; font-weight: 400; color: var(–text); margin-bottom: 5px; }
+.ecg-diff-prob { font-family: var(–mono); font-size: 10px; color: var(–dim); margin-bottom: 8px; }
+.ecg-diff-prob-bar { height: 3px; background: var(–border); border-radius: 2px; margin-bottom: 10px; overflow: hidden; }
+.ecg-diff-prob-fill { height: 100%; background: #0f4c81; border-radius: 2px; width: 0; transition: width 1.1s cubic-bezier(.4,0,.2,1); }
+.ecg-diff-support { font-size: 13px; color: var(–muted); line-height: 1.7; }
+
+@media (max-width: 520px) {
+.ecg-measurements { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 
@@ -510,12 +602,34 @@ input[type=file] { display: none; }
     </div>
   </div>
 </div>
+
+
+<div class="tool-card ecgdx" onclick="openApp('ecgdx')">
+  <div class="tool-card-top">
+    <div class="tool-card-icon">🫀</div>
+    <div class="tool-card-name">ECG<em>Dx</em></div>
+    <div class="tool-card-badge">AI Electrocardiogram Analysis</div>
+  </div>
+  <div class="tool-card-bottom">
+    <div class="tool-features">
+      <span class="tool-feat">Rhythm Analysis</span>
+      <span class="tool-feat">STEMI Alert</span>
+      <span class="tool-feat">AHA · ESC</span>
+      <span class="tool-feat">Clinical Pathway</span>
+    </div>
+    <div class="tool-card-desc">Upload an ECG strip for AI-powered rhythm analysis, interval measurement, and structured clinical report.</div>
+    <div class="tool-card-cta">
+      <span>Open ECGDx</span>
+      <div class="tool-card-cta-arrow">→</div>
+    </div>
+  </div>
+</div>
 ```
 
   </div>
 
   <div class="land-note">
-    Powered by <span>Groq</span> · Guidelines: <span>AAD · BAD · NICE · UpToDate · Harrison's</span><br>
+    Powered by <span>Groq</span> · Guidelines: <span>AHA · ACC · ESC · AAD · BAD · NICE · UpToDate · Harrison's</span><br>
     For clinical decision support only — not a substitute for clinical judgment
   </div>
 
@@ -698,6 +812,123 @@ input[type=file] { display: none; }
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ══════ ECGDX ══════ -->
+
+  <div class="app-view" id="ecgdxView">
+    <div class="wrap">
+
+```
+  <!-- CRITICAL DISCLAIMER -->
+  <div class="ecg-disclaimer">
+    <div class="ecg-disc-icon">⚠️</div>
+    <div class="ecg-disc-text">
+      <strong>Clinical Decision Support Only</strong>
+      This tool is not a substitute for physician interpretation. All findings must be verified by a qualified cardiologist. Never act on AI output alone in emergency settings.
+    </div>
+  </div>
+
+  <!-- ECG UPLOAD -->
+  <div class="upload-zone" id="eUploadZone" onclick="document.getElementById('eImgInput').click()">
+    <div class="upload-ico" id="eUico">🫀</div>
+    <div class="upload-t" id="eUtitle">Upload ECG Strip</div>
+    <div class="upload-h" id="eUhint">12-lead ECG photo — clear, well-lit, all leads visible</div>
+    <img id="ePrev" alt="ECG" style="width:100%;max-height:320px;object-fit:contain;border-radius:14px;display:none;">
+    <button class="chg-btn" id="eChgBtn" onclick="event.stopPropagation(); document.getElementById('eImgInput').click()">Change ECG</button>
+  </div>
+  <input type="file" id="eImgInput" accept="image/*" onchange="eHandleImg(this)">
+
+  <!-- PATIENT INFO -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;">
+    <div class="fg" style="margin-bottom:0">
+      <div class="lbl">Age <span class="req">*</span></div>
+      <input type="number" id="eAge" min="0" max="120" placeholder="e.g. 62">
+    </div>
+    <div class="fg" style="margin-bottom:0">
+      <div class="lbl">Patient Sex <span class="req">*</span></div>
+      <div class="tog-row">
+        <button class="tog" id="eTMale" onclick="eSetSex('Male')">Male</button>
+        <button class="tog" id="eTFemale" onclick="eSetSex('Female')">Female</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLINICAL CONTEXT -->
+  <div class="fg">
+    <div class="lbl">Chief Complaint / Clinical Context <span class="opt">optional</span></div>
+    <textarea id="eContext" rows="2" placeholder="e.g. Chest pain 2 hours, diaphoresis, BP 90/60…"></textarea>
+  </div>
+  <div class="fg">
+    <div class="lbl">Relevant History & Medications <span class="opt">optional</span></div>
+    <textarea id="eHistory" rows="2" placeholder="e.g. Known HTN, DM, previous MI, on Aspirin, Metoprolol…"></textarea>
+  </div>
+
+  <button class="go" id="eGoBtn" onclick="eAnalyze()">Analyze ECG</button>
+  <div class="err" id="eErr"><strong id="eErrTitle"></strong><span id="eErrMsg"></span></div>
+
+  <!-- LOADING -->
+  <div class="loading" id="eLoading">
+    <div class="spin" style="border-top-color:#0f4c81;"></div>
+    <div class="spin-lbl">Analyzing ECG…</div>
+    <div class="spin-steps">
+      <div class="spin-step" id="eLs1">Measuring intervals and axis…</div>
+      <div class="spin-step" id="eLs2">Analyzing rhythm and morphology…</div>
+      <div class="spin-step" id="eLs3">Consulting AHA · ACC · ESC guidelines…</div>
+      <div class="spin-step" id="eLs4">Building clinical decision pathway…</div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="eResults" style="display:none; margin-top:40px;">
+
+    <!-- CRITICAL ALERT (shown if needed) -->
+    <div id="eCriticalAlert" style="display:none;" class="ecg-critical">
+      <div class="ecg-crit-icon">🚨</div>
+      <div>
+        <div class="ecg-crit-title">CRITICAL FINDING</div>
+        <div id="eCriticalText" class="ecg-crit-msg"></div>
+      </div>
+    </div>
+
+    <!-- NORMAL RESULT -->
+    <div id="eNormalAlert" style="display:none;" class="ecg-normal">
+      <div class="ecg-norm-icon">✓</div>
+      <div>
+        <div class="ecg-norm-title">Normal ECG</div>
+        <div id="eNormalText" class="ecg-norm-msg"></div>
+      </div>
+    </div>
+
+    <!-- MEASUREMENTS -->
+    <div class="sec-hdr"><span class="sec-lbl">ECG Measurements</span><div class="sec-line"></div></div>
+    <div class="ecg-measurements" id="eMeasurements"></div>
+
+    <!-- FINDINGS -->
+    <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">ECG Findings & Interpretation</span><div class="sec-line"></div></div>
+    <div id="eFindings"></div>
+
+    <!-- DIFFERENTIAL -->
+    <div id="eDiffSection" style="display:none;">
+      <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
+      <div id="eDiffCards"></div>
+    </div>
+
+    <!-- WORKUP PATHWAY -->
+    <div id="ePathwaySection" style="display:none;">
+      <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">Clinical Decision Pathway</span><div class="sec-line"></div></div>
+      <div id="ePathwayContent"></div>
+    </div>
+
+    <!-- REPORT BUTTON -->
+    <button class="sel-btn" style="margin-top:28px;background:#0f4c81!important;" onclick="eShowReport()">
+      Generate Full ECG Report →
+    </button>
+
+  </div>
+</div>
+```
+
   </div>
 
 </div><!-- /appWrap -->
@@ -1298,6 +1529,325 @@ function dSelectDx(i) {
 
   document.getElementById('modTitle').textContent = 'Dermatology Report';
   document.getElementById('modSub').textContent = 'Generated by DermDx';
+  document.getElementById('rptBox').textContent = rptText;
+  document.getElementById('movl').classList.add('show');
+}
+/* ════════════════════════════════════
+   ECGDX
+════════════════════════════════════ */
+var eSex = '', eImgB64 = '', eStore = {};
+
+// Update openApp & goHome to handle ecgdx
+var _origOpenApp = openApp;
+openApp = function(app) {
+  currentApp = app;
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('appWrap').classList.add('show');
+  document.getElementById('backBtn').classList.add('show');
+  document.getElementById('clindxView').classList.remove('show');
+  document.getElementById('dermdxView').classList.remove('show');
+  document.getElementById('ecgdxView').classList.remove('show');
+  if (app === 'clindx') {
+    document.getElementById('clindxView').classList.add('show');
+    document.getElementById('logoName').innerHTML = 'Clin<em>Dx</em>';
+    document.getElementById('logoTag').textContent = 'Clinical Differential Diagnosis';
+  } else if (app === 'dermdx') {
+    document.getElementById('dermdxView').classList.add('show');
+    document.getElementById('logoName').innerHTML = 'Derm<em>Dx</em>';
+    document.getElementById('logoTag').textContent = 'AI Dermatology Support';
+  } else {
+    document.getElementById('ecgdxView').classList.add('show');
+    document.getElementById('logoName').innerHTML = 'ECG<em>Dx</em>';
+    document.getElementById('logoTag').textContent = 'AI Electrocardiogram Analysis';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+function eHandleImg(inp) {
+  var f = inp.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    eImgB64 = e.target.result.split(',')[1];
+    var p = document.getElementById('ePrev');
+    p.src = e.target.result; p.style.display = 'block';
+    document.getElementById('eChgBtn').style.display = 'block';
+    document.getElementById('eUploadZone').classList.add('has-img');
+    ['eUico','eUtitle','eUhint'].forEach(function(id) { document.getElementById(id).style.display = 'none'; });
+  };
+  r.readAsDataURL(f);
+}
+
+function eSetSex(s) {
+  eSex = s;
+  document.getElementById('eTMale').classList.toggle('on', s==='Male');
+  document.getElementById('eTFemale').classList.toggle('on', s==='Female');
+}
+
+function eShowErr(t, m) {
+  document.getElementById('eErrTitle').textContent = t;
+  document.getElementById('eErrMsg').textContent = ' ' + m;
+  document.getElementById('eErr').classList.add('show');
+}
+function eHideErr() { document.getElementById('eErr').classList.remove('show'); }
+
+async function eAnalyze() {
+  eHideErr();
+  var age     = document.getElementById('eAge').value.trim();
+  var context = document.getElementById('eContext').value.trim();
+  var history = document.getElementById('eHistory').value.trim();
+  var apiKey  = getKey();
+
+  if (!eImgB64) { eShowErr('No ECG', 'Please upload an ECG image.'); return; }
+  if (!age)     { eShowErr('Missing Field', 'Please enter patient age.'); return; }
+  if (!eSex)    { eShowErr('Missing Field', 'Please select patient sex.'); return; }
+  if (!apiKey)  { eShowErr('No API Key', 'Tap ⚙ and enter your Groq API key from console.groq.com'); return; }
+
+  document.getElementById('eGoBtn').disabled = true;
+  document.getElementById('eLoading').classList.add('show');
+  document.getElementById('eResults').style.display = 'none';
+
+  var steps = ['eLs1','eLs2','eLs3','eLs4']; var si = 0;
+  var stInt = setInterval(function() {
+    steps.forEach(function(s) { document.getElementById(s).classList.remove('on'); });
+    if (si < steps.length) { document.getElementById(steps[si]).classList.add('on'); si++; }
+  }, 2200);
+
+  var patStr = age + ' year-old ' + eSex;
+  if (context) patStr += ' — ' + context;
+
+  var prompt =
+    'You are a senior cardiologist with 25 years of experience interpreting ECGs. ' +
+    'Base ALL interpretations strictly on AHA/ACC/ESC/HRS guidelines.\n\n' +
+    'PATIENT: ' + patStr + '\n' +
+    (history ? 'HISTORY & MEDS: ' + history + '\n' : '') +
+    '\nAnalyze this ECG image carefully and systematically.\n\n' +
+    'IMPORTANT:\n' +
+    '- If the ECG is NORMAL: set is_normal=true, write a brief normal_comment, and leave differential empty.\n' +
+    '- If CRITICAL finding (STEMI, VT, VF, Complete Heart Block, WPW with AF): set critical=true and critical_finding to a clear urgent message.\n' +
+    '- Always measure or estimate all intervals from the image.\n' +
+    '- Be specific — cite lead names, exact changes, and guideline references.\n\n' +
+    'Return ONLY this JSON, no markdown:\n' +
+    '{\n' +
+    '  "is_normal": false,\n' +
+    '  "normal_comment": "",\n' +
+    '  "critical": false,\n' +
+    '  "critical_finding": "",\n' +
+    '  "measurements": {\n' +
+    '    "heart_rate": {"value": "75", "unit": "bpm", "status": "normal"},\n' +
+    '    "pr_interval": {"value": "160", "unit": "ms", "status": "normal"},\n' +
+    '    "qrs_duration": {"value": "90", "unit": "ms", "status": "normal"},\n' +
+    '    "qt_qtc": {"value": "420/440", "unit": "ms", "status": "normal"},\n' +
+    '    "p_axis": {"value": "60", "unit": "°", "status": "normal"},\n' +
+    '    "qrs_axis": {"value": "45", "unit": "°", "status": "normal"}\n' +
+    '  },\n' +
+    '  "findings": [\n' +
+    '    {"severity": "critical|warning|normal", "title": "Finding name", "description": "Detailed description with lead references and guideline citation"}\n' +
+    '  ],\n' +
+    '  "differential": [\n' +
+    '    {"rank": 1, "name": "Diagnosis name", "likelihood": 70, "ecg_support": "Specific ECG features that support this diagnosis"},\n' +
+    '    {"rank": 2, "name": "Diagnosis name", "likelihood": 20, "ecg_support": "Specific ECG features that support this diagnosis"},\n' +
+    '    {"rank": 3, "name": "Diagnosis name", "likelihood": 10, "ecg_support": "Specific ECG features that support this diagnosis"}\n' +
+    '  ],\n' +
+    '  "pathway": {\n' +
+    '    "summary": "2-3 sentence clinical summary of this ECG and its significance.",\n' +
+    '    "steps": [\n' +
+    '      {"step": 1, "test": "Exact test name (e.g. Troponin I serial 0h/3h)", "if_positive": "Clinical action and reasoning", "if_negative": "Clinical action and reasoning"},\n' +
+    '      {"step": 2, "test": "Exact test name", "if_positive": "Clinical action", "if_negative": "Clinical action"},\n' +
+    '      {"step": 3, "test": "Exact test name", "if_positive": "Clinical action", "if_negative": "Clinical action"}\n' +
+    '    ]\n' +
+    '  }\n' +
+    '}';
+
+  try {
+    var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        messages: [
+          { role: 'system', content: 'You are a senior cardiologist. Return ONLY valid complete JSON. Never truncate. Never leave fields empty.' },
+          { role: 'user', content: [
+            { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + eImgB64 } },
+            { type: 'text', text: prompt }
+          ]}
+        ],
+        temperature: 0.1, max_tokens: 4000
+      })
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'API error');
+    var raw = data.choices[0].message.content;
+    raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
+    var match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('Could not parse ECG analysis — please try again');
+    var r = JSON.parse(match[0]);
+
+    clearInterval(stInt);
+    document.getElementById('eLoading').classList.remove('show');
+    document.getElementById('eGoBtn').disabled = false;
+
+    eStore = { result: r, patStr: patStr, history: history };
+    eRenderResults(r);
+
+  } catch(e) {
+    clearInterval(stInt);
+    document.getElementById('eLoading').classList.remove('show');
+    document.getElementById('eGoBtn').disabled = false;
+    eShowErr('Analysis Failed', e.message || 'Please check your API key and try again.');
+  }
+}
+
+function eRenderResults(r) {
+  // Critical alert
+  var ca = document.getElementById('eCriticalAlert');
+  var na = document.getElementById('eNormalAlert');
+  ca.style.display = 'none'; na.style.display = 'none';
+
+  if (r.critical && r.critical_finding) {
+    document.getElementById('eCriticalText').textContent = r.critical_finding;
+    ca.style.display = 'flex';
+  }
+  if (r.is_normal) {
+    document.getElementById('eNormalText').textContent = r.normal_comment || 'No significant abnormalities identified on this ECG.';
+    na.style.display = 'flex';
+  }
+
+  // Measurements
+  var meas = r.measurements || {};
+  var measLabels = {
+    heart_rate: 'Heart Rate', pr_interval: 'PR Interval',
+    qrs_duration: 'QRS Duration', qt_qtc: 'QT / QTc',
+    p_axis: 'P Axis', qrs_axis: 'QRS Axis'
+  };
+  var mHtml = '';
+  Object.keys(measLabels).forEach(function(k, idx) {
+    var m = meas[k] || {};
+    var status = (m.status || 'normal').toLowerCase();
+    var valClass = status === 'normal' ? '' : (status === 'borderline' ? 'borderline' : 'abnormal');
+    mHtml += '<div class="ecg-meas-card" style="animation-delay:' + (idx*0.06) + 's">' +
+      '<div class="ecg-meas-label">' + measLabels[k] + '</div>' +
+      '<div class="ecg-meas-value ' + valClass + '">' + esc(m.value || '—') + '</div>' +
+      '<div class="ecg-meas-unit">' + esc(m.unit || '') + '</div>' +
+      '</div>';
+  });
+  document.getElementById('eMeasurements').innerHTML = mHtml;
+
+  // Findings
+  var findings = r.findings || [];
+  var fHtml = '';
+  findings.forEach(function(f, i) {
+    var sev = (f.severity || 'normal').toLowerCase();
+    var badge = sev === 'critical' ? 'CRITICAL' : (sev === 'warning' ? 'WARNING' : 'NORMAL');
+    fHtml += '<div class="ecg-finding-card ' + sev + '" style="animation-delay:' + (i*0.08) + 's">' +
+      '<div class="ecg-finding-row">' +
+      '<div class="ecg-finding-badge">' + badge + '</div>' +
+      '<div class="ecg-finding-body">' +
+      '<div class="ecg-finding-title">' + esc(f.title||'') + '</div>' +
+      '<div class="ecg-finding-desc">' + esc(f.description||'') + '</div>' +
+      '</div></div></div>';
+  });
+  document.getElementById('eFindings').innerHTML = fHtml;
+
+  // Differential (only if not normal)
+  var diff = r.differential || [];
+  var ds = document.getElementById('eDiffSection');
+  if (!r.is_normal && diff.length) {
+    var dHtml = '';
+    diff.slice(0,3).forEach(function(d, i) {
+      dHtml += '<div class="ecg-diff-card" style="animation-delay:' + (i*0.1) + 's">' +
+        '<div class="ecg-diff-num">' + (i+1) + '</div>' +
+        '<div class="ecg-diff-body">' +
+        '<div class="ecg-diff-name">' + esc(d.name||'') + '</div>' +
+        '<div class="ecg-diff-prob">' + (d.likelihood||'—') + '% likelihood</div>' +
+        '<div class="ecg-diff-prob-bar"><div class="ecg-diff-prob-fill" data-w="' + (d.likelihood||0) + '"></div></div>' +
+        '<div class="ecg-diff-support">' + esc(d.ecg_support||'') + '</div>' +
+        '</div></div>';
+    });
+    document.getElementById('eDiffCards').innerHTML = dHtml;
+    ds.style.display = 'block';
+    setTimeout(function() {
+      document.querySelectorAll('.ecg-diff-prob-fill').forEach(function(b) { b.style.width = b.dataset.w + '%'; });
+    }, 80);
+  } else {
+    ds.style.display = 'none';
+  }
+
+  // Pathway
+  renderPathway(r.pathway, 'ePathwayContent', 'ePathwaySection');
+
+  document.getElementById('eResults').style.display = 'block';
+  document.getElementById('eResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function eShowReport() {
+  var r = eStore.result;
+  if (!r) return;
+  var date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  var meas = r.measurements || {};
+
+  var lines = [
+    'ECG ANALYSIS REPORT',
+    '━'.repeat(44),
+    'Date       : ' + date,
+    'Patient    : ' + (eStore.patStr || '—'),
+    (eStore.history ? 'History    : ' + eStore.history : ''),
+    '─'.repeat(44),
+    '',
+    'ECG MEASUREMENTS',
+    '  Heart Rate   : ' + ((meas.heart_rate||{}).value||'—') + ' ' + ((meas.heart_rate||{}).unit||''),
+    '  PR Interval  : ' + ((meas.pr_interval||{}).value||'—') + ' ' + ((meas.pr_interval||{}).unit||''),
+    '  QRS Duration : ' + ((meas.qrs_duration||{}).value||'—') + ' ' + ((meas.qrs_duration||{}).unit||''),
+    '  QT / QTc     : ' + ((meas.qt_qtc||{}).value||'—') + ' ' + ((meas.qt_qtc||{}).unit||''),
+    '  P Axis       : ' + ((meas.p_axis||{}).value||'—') + ' ' + ((meas.p_axis||{}).unit||''),
+    '  QRS Axis     : ' + ((meas.qrs_axis||{}).value||'—') + ' ' + ((meas.qrs_axis||{}).unit||''),
+    '',
+    '─'.repeat(44),
+    '',
+  ];
+
+  if (r.critical && r.critical_finding) {
+    lines.push('⚠ CRITICAL FINDING');
+    lines.push('  ' + r.critical_finding);
+    lines.push('');
+  }
+
+  lines.push('ECG FINDINGS');
+  (r.findings||[]).forEach(function(f) {
+    lines.push('  [' + (f.severity||'').toUpperCase() + '] ' + (f.title||''));
+    lines.push('  ' + (f.description||''));
+    lines.push('');
+  });
+
+  if (!r.is_normal && (r.differential||[]).length) {
+    lines.push('─'.repeat(44));
+    lines.push('');
+    lines.push('DIFFERENTIAL DIAGNOSIS');
+    (r.differential||[]).slice(0,3).forEach(function(d,i) {
+      lines.push('  ' + (i+1) + '. ' + d.name + ' (' + d.likelihood + '%)');
+      lines.push('     ' + d.ecg_support);
+      lines.push('');
+    });
+  }
+
+  if (r.pathway && r.pathway.summary) {
+    lines.push('─'.repeat(44));
+    lines.push('');
+    lines.push('CLINICAL SUMMARY');
+    lines.push('  ' + r.pathway.summary);
+    lines.push('');
+  }
+
+  lines.push('━'.repeat(44));
+  lines.push('⚠ FOR CLINICAL DECISION SUPPORT ONLY');
+  lines.push('  Final interpretation must be confirmed by a qualified physician.');
+  lines.push('');
+  lines.push('Physician Signature : _______________');
+  lines.push('Date                : _______________');
+
+  rptText = lines.filter(function(l) { return l !== undefined; }).join('\n');
+
+  document.getElementById('modTitle').textContent = 'ECG Analysis Report';
+  document.getElementById('modSub').textContent = 'Generated by ECGDx · MedDx Suite';
   document.getElementById('rptBox').textContent = rptText;
   document.getElementById('movl').classList.add('show');
 }
