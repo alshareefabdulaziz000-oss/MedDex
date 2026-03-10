@@ -95,7 +95,7 @@ color: var(–muted); font-style: italic; letter-spacing: .01em;
 }
 
 /* TOOL CARDS */
-.tool-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; max-width: 860px; width: 100%; }
+.tool-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 580px; width: 100%; }
 
 .tool-card {
 background: var(–surface); border: 1.5px solid var(–border);
@@ -112,7 +112,6 @@ border-bottom: 1px solid var(–border);
 }
 .tool-card.clindx .tool-card-top { background: #1a1714; }
 .tool-card.dermdx .tool-card-top { background: #78450a; }
-.tool-card.hairdx .tool-card-top { background: #5c3317; }
 
 .tool-card-icon {
 width: 44px; height: 44px; border-radius: 12px;
@@ -139,7 +138,7 @@ color: var(–text); text-transform: uppercase; font-weight: 600;
 }
 .tool-card.clindx .tool-card-cta { color: #1a1714; }
 .tool-card.dermdx .tool-card-cta { color: #78450a; }
-.tool-card.hairdx .tool-card-cta { color: #5c3317; }
+
 .tool-card-cta-arrow {
 width: 28px; height: 28px; border-radius: 50%; display: flex;
 align-items: center; justify-content: center; font-size: 14px;
@@ -147,7 +146,7 @@ transition: transform .2s;
 }
 .tool-card.clindx .tool-card-cta-arrow { background: #1a1714; color: #fff; }
 .tool-card.dermdx .tool-card-cta-arrow { background: #78450a; color: #fff; }
-.tool-card.hairdx .tool-card-cta-arrow { background: #5c3317; color: #fff; }
+
 .tool-card:hover .tool-card-cta-arrow { transform: translateX(3px); }
 
 /* FEATURES ROW */
@@ -420,168 +419,6 @@ input[type=file] { display: none; }
 .img-row { grid-template-columns: 1fr; }
 }
 
-/* ═══════════════════════════════════════════
-HAIRDX — BILINGUAL DESIGN SYSTEM
-═══════════════════════════════════════════ */
-
-/* Language toggle */
-.lang-toggle {
-display: flex; gap: 0; border: 1.5px solid var(–border2);
-border-radius: 10px; overflow: hidden; margin-bottom: 28px;
-width: fit-content;
-}
-.lang-btn {
-padding: 8px 20px; cursor: pointer; border: none;
-background: transparent; font-family: var(–mono);
-font-size: 10px; letter-spacing: .1em; color: var(–muted);
-transition: all .2s; font-weight: 600;
-}
-.lang-btn.on { background: #5c3317; color: #fff; }
-
-/* Hair type badge */
-.hair-type-card {
-background: #5c3317; border-radius: 18px;
-padding: 26px 28px; margin-bottom: 20px;
-animation: fadeUp .4s ease backwards;
-position: relative; overflow: hidden;
-}
-.hair-type-card::before {
-content: ‘’; position: absolute; right: -20px; top: 50%;
-transform: translateY(-50%);
-font-size: 120px; color: rgba(255,255,255,.05);
-font-family: var(–display); pointer-events: none;
-}
-.hair-type-eyebrow {
-font-family: var(–mono); font-size: 8px; letter-spacing: .22em;
-color: rgba(255,255,255,.45); text-transform: uppercase; margin-bottom: 10px;
-}
-.hair-type-value {
-font-family: var(–display); font-size: 44px; font-weight: 300;
-color: #fff; line-height: 1; margin-bottom: 6px;
-}
-.hair-type-name {
-font-family: var(–ui); font-size: 15px; color: rgba(255,255,255,.75);
-margin-bottom: 14px;
-}
-.hair-type-desc {
-font-size: 13.5px; color: rgba(255,255,255,.7); line-height: 1.75;
-}
-
-/* Problems grid */
-.hair-problems { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
-.hair-problem-card {
-background: var(–surface); border: 1.5px solid var(–border);
-border-radius: 14px; padding: 16px 20px;
-display: flex; align-items: flex-start; gap: 14px;
-animation: fadeUp .4s ease backwards;
-border-left: 4px solid var(–border);
-}
-.hair-problem-card.severe   { border-left-color: #dc2626; }
-.hair-problem-card.moderate { border-left-color: #d97706; }
-.hair-problem-card.mild     { border-left-color: #16a34a; }
-
-.hair-prob-icon {
-width: 36px; height: 36px; border-radius: 10px;
-display: flex; align-items: center; justify-content: center;
-font-size: 18px; flex-shrink: 0;
-}
-.severe   .hair-prob-icon { background: #fee2e2; }
-.moderate .hair-prob-icon { background: #fef3c7; }
-.mild     .hair-prob-icon { background: #dcfce7; }
-
-.hair-prob-body { flex: 1; }
-.hair-prob-name-en {
-font-size: 14px; font-weight: 700; color: var(–text);
-margin-bottom: 1px; line-height: 1.2;
-}
-.hair-prob-name-ar {
-font-size: 12px; color: var(–dim); margin-bottom: 6px;
-font-family: var(–display);
-}
-.hair-prob-desc { font-size: 13px; color: var(–muted); line-height: 1.7; }
-.hair-prob-severity {
-font-family: var(–mono); font-size: 7.5px; letter-spacing: .14em;
-text-transform: uppercase; padding: 2px 8px; border-radius: 20px;
-margin-top: 6px; display: inline-block; font-weight: 700;
-}
-.severe   .hair-prob-severity { background: #fee2e2; color: #dc2626; }
-.moderate .hair-prob-severity { background: #fef3c7; color: #d97706; }
-.mild     .hair-prob-severity { background: #dcfce7; color: #16a34a; }
-
-/* Care plan */
-.hair-care-day {
-background: var(–surface); border: 1.5px solid var(–border);
-border-radius: 14px; overflow: hidden; margin-bottom: 10px;
-animation: fadeUp .4s ease backwards;
-}
-.hair-care-day-hdr {
-display: flex; align-items: center; gap: 12px;
-padding: 14px 18px; background: #faf7f4;
-border-bottom: 1px solid var(–border);
-}
-.hair-care-day-dot {
-width: 8px; height: 8px; border-radius: 50%; background: #5c3317; flex-shrink: 0;
-}
-.hair-care-day-title { font-size: 13px; font-weight: 700; color: var(–text); }
-.hair-care-day-title-ar { font-size: 12px; color: var(–muted); margin-top: 1px; }
-.hair-care-steps { padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
-.hair-care-step { display: flex; align-items: flex-start; gap: 12px; }
-.hair-care-num {
-width: 22px; height: 22px; border-radius: 50%;
-background: #5c3317; color: #fff;
-font-family: var(–mono); font-size: 10px; font-weight: 700;
-display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.hair-care-step-txt { font-size: 13px; color: var(–muted); line-height: 1.7; flex: 1; }
-.hair-care-step-txt strong { color: var(–text); font-weight: 600; }
-
-/* Products */
-.hair-product-card {
-background: var(–surface); border: 1.5px solid var(–border);
-border-radius: 14px; padding: 16px 18px; margin-bottom: 8px;
-animation: fadeUp .4s ease backwards;
-}
-.hair-prod-row { display: flex; align-items: flex-start; gap: 12px; }
-.hair-prod-icon {
-width: 36px; height: 36px; border-radius: 10px;
-background: #f5f0ea; display: flex; align-items: center;
-justify-content: center; font-size: 18px; flex-shrink: 0;
-}
-.hair-prod-body { flex: 1; }
-.hair-prod-name { font-size: 14px; font-weight: 700; color: var(–text); margin-bottom: 3px; }
-.hair-prod-ingredient {
-font-family: var(–mono); font-size: 9px; letter-spacing: .1em;
-color: #5c3317; background: #f5f0ea;
-padding: 2px 8px; border-radius: 20px; display: inline-block;
-margin-bottom: 6px; font-weight: 700;
-}
-.hair-prod-desc { font-size: 12.5px; color: var(–muted); line-height: 1.65; }
-.hair-prod-evidence {
-margin-top: 6px; font-family: var(–mono); font-size: 8px;
-color: var(–dim); letter-spacing: .08em;
-}
-
-/* Doctor referral card */
-.hair-referral {
-background: linear-gradient(135deg, #fff8f0 0%, #fff0e0 100%);
-border: 1.5px solid #f59e0b; border-radius: 14px;
-padding: 18px 20px; margin-top: 8px;
-display: flex; align-items: flex-start; gap: 14px;
-animation: fadeUp .4s ease backwards;
-}
-.hair-ref-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
-.hair-ref-title { font-size: 14px; font-weight: 700; color: #92400e; margin-bottom: 5px; }
-.hair-ref-desc { font-size: 13px; color: #78350f; line-height: 1.7; }
-
-/* RTL for Arabic content */
-.rtl { direction: rtl; text-align: right; }
-.rtl .hair-prob-body { text-align: right; }
-.rtl .hair-care-step { flex-direction: row-reverse; }
-.rtl .hair-prod-row { flex-direction: row-reverse; }
-.rtl .hair-prod-body { text-align: right; }
-.rtl .hair-referral { flex-direction: row-reverse; }
-.rtl .hair-ref-icon { margin-top: 2px; }
-
 </style>
 </head>
 <body>
@@ -671,35 +508,6 @@ animation: fadeUp .4s ease backwards;
     <div class="tool-card-desc">Upload a lesion photo for AI-powered visual analysis and dermatology differential diagnosis.</div>
     <div class="tool-card-cta">
       <span>Open DermDx</span>
-      <div class="tool-card-cta-arrow">→</div>
-    </div>
-  </div>
-</div>
-
-
-
-<div class="tool-card hairdx" onclick="openApp('hairdx')">
-  <div class="tool-card-top">
-    <div class="tool-card-icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2C8 2 5 5 5 9c0 2.5 1 4.5 2.5 6L6 20h12l-1.5-5C18 13.5 19 11.5 19 9c0-4-3-7-7-7z"/>
-        <path d="M9 9c0-1.7 1.3-3 3-3s3 1.3 3 3"/>
-        <line x1="12" y1="2" x2="12" y2="6"/>
-      </svg>
-    </div>
-    <div class="tool-card-name">Hair<em>Dx</em></div>
-    <div class="tool-card-badge">AI Hair & Scalp Analysis</div>
-  </div>
-  <div class="tool-card-bottom">
-    <div class="tool-features">
-      <span class="tool-feat">Hair Typing</span>
-      <span class="tool-feat">Scalp Diagnosis</span>
-      <span class="tool-feat">Care Plan</span>
-      <span class="tool-feat">AR · EN</span>
-    </div>
-    <div class="tool-card-desc">Upload a photo of your hair and scalp for AI-powered analysis, type classification, and a personalised evidence-based care plan.</div>
-    <div class="tool-card-cta">
-      <span>Open HairDx</span>
       <div class="tool-card-cta-arrow">→</div>
     </div>
   </div>
@@ -894,131 +702,6 @@ animation: fadeUp .4s ease backwards;
     </div>
   </div>
 
-  <!-- ══════ HAIRDX ══════ -->
-
-  <div class="app-view" id="hairdxView">
-    <div class="wrap">
-
-```
-  <!-- LANGUAGE TOGGLE -->
-  <div class="lang-toggle">
-    <button class="lang-btn on" id="hLangEN" onclick="hSetLang('en')">English</button>
-    <button class="lang-btn"    id="hLangAR" onclick="hSetLang('ar')">العربية</button>
-  </div>
-
-  <!-- UPLOAD -->
-  <div class="upload-zone" id="hUploadZone" onclick="document.getElementById('hImgInput').click()">
-    <div class="upload-ico" id="hUico">
-      <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="24" cy="24" r="22" fill="#f0ebe3" stroke="#d0c9be" stroke-width="1.5"/>
-        <path d="M24 10c-5 0-9 4-9 9 0 3 1.2 5.5 3 7.5L16 38h16l-2-11.5c1.8-2 3-4.5 3-7.5 0-5-4-9-9-9z" fill="none" stroke="#5c3317" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M20 21c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#5c3317" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-        <line x1="24" y1="10" x2="24" y2="15" stroke="#5c3317" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="18" y1="38" x2="30" y2="38" stroke="#5c3317" stroke-width="1.4" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <div class="upload-t"   id="hUtitle" data-en="Upload Hair Photo" data-ar="ارفع صورة شعرك">Upload Hair Photo</div>
-    <div class="upload-h"   id="hUhint"
-      data-en="Top-down or side photo showing your hair and scalp clearly"
-      data-ar="صورة من الأعلى أو من الجانب تُظهر الشعر وفروة الرأس بوضوح">
-      Top-down or side photo showing your hair and scalp clearly
-    </div>
-    <img id="hPrev" alt="hair" style="width:100%;max-height:300px;object-fit:cover;border-radius:14px;display:none;">
-    <button class="chg-btn" id="hChgBtn" style="display:none"
-      onclick="event.stopPropagation(); document.getElementById('hImgInput').click()"
-      data-en="Change Photo" data-ar="تغيير الصورة">Change Photo</button>
-  </div>
-  <input type="file" id="hImgInput" accept="image/*" onchange="hHandleImg(this)">
-
-  <!-- INPUTS -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
-    <div class="fg" style="margin-bottom:0">
-      <div class="lbl" id="hLblAge" data-en="Age" data-ar="العمر">Age <span class="req">*</span></div>
-      <input type="number" id="hAge" min="5" max="99" placeholder="e.g. 25">
-    </div>
-    <div class="fg" style="margin-bottom:0">
-      <div class="lbl" id="hLblSex" data-en="Sex" data-ar="الجنس">Sex <span class="req">*</span></div>
-      <div class="tog-row">
-        <button class="tog" id="hTMale"   onclick="hSetSex('Male')"   data-en="Male"   data-ar="ذكر">Male</button>
-        <button class="tog" id="hTFemale" onclick="hSetSex('Female')" data-en="Female" data-ar="أنثى">Female</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="fg">
-    <div class="lbl" id="hLblConcern"
-      data-en="Main concern (optional)"
-      data-ar="القلق الرئيسي (اختياري)">Main concern <span class="opt">optional</span></div>
-    <textarea id="hConcern" rows="2"
-      data-placeholder-en="e.g. Hair loss, dandruff, dryness, breakage…"
-      data-placeholder-ar="مثلاً: تساقط الشعر، قشرة، جفاف، تقصف…"
-      placeholder="e.g. Hair loss, dandruff, dryness, breakage…"></textarea>
-  </div>
-
-  <button class="go" id="hGoBtn" onclick="hAnalyze()"
-    data-en="Analyze Hair" data-ar="تحليل الشعر">Analyze Hair</button>
-  <div class="err" id="hErr"><strong id="hErrTitle"></strong><span id="hErrMsg"></span></div>
-
-  <!-- LOADING -->
-  <div class="loading" id="hLoading">
-    <div class="spin" style="border-top-color:#5c3317;"></div>
-    <div class="spin-lbl" id="hLoadLbl" data-en="Analyzing your hair…" data-ar="جاري تحليل شعرك…">Analyzing your hair…</div>
-    <div class="spin-steps">
-      <div class="spin-step" id="hLs1" data-en="Identifying hair type and texture…"    data-ar="تحديد نوع الشعر والملمس…">Identifying hair type and texture…</div>
-      <div class="spin-step" id="hLs2" data-en="Detecting scalp conditions…"            data-ar="الكشف عن حالات فروة الرأس…">Detecting scalp conditions…</div>
-      <div class="spin-step" id="hLs3" data-en="Consulting AAD · JAAD · Fitzpatrick's…" data-ar="مراجعة المراجع الطبية…">Consulting AAD · JAAD · Fitzpatrick's…</div>
-      <div class="spin-step" id="hLs4" data-en="Building personalised care plan…"       data-ar="بناء خطة العناية الشخصية…">Building personalised care plan…</div>
-    </div>
-  </div>
-
-  <!-- RESULTS -->
-  <div id="hResults" style="display:none; margin-top:36px;">
-
-    <!-- HAIR TYPE -->
-    <div class="sec-hdr" id="hSecType">
-      <span class="sec-lbl" data-en="Hair Type" data-ar="نوع الشعر">Hair Type</span>
-      <div class="sec-line"></div>
-    </div>
-    <div id="hTypeCard"></div>
-
-    <!-- PROBLEMS -->
-    <div class="sec-hdr" style="margin-top:28px;" id="hSecProblems">
-      <span class="sec-lbl" data-en="Detected Issues" data-ar="المشاكل المكتشفة">Detected Issues</span>
-      <div class="sec-line"></div>
-    </div>
-    <div id="hProblemsWrap" class="hair-problems"></div>
-
-    <!-- CARE PLAN -->
-    <div class="sec-hdr" style="margin-top:28px;" id="hSecCare">
-      <span class="sec-lbl" data-en="Daily Care Plan" data-ar="خطة العناية اليومية">Daily Care Plan</span>
-      <div class="sec-line"></div>
-    </div>
-    <div id="hCarePlan"></div>
-
-    <!-- PRODUCTS -->
-    <div class="sec-hdr" style="margin-top:28px;" id="hSecProd">
-      <span class="sec-lbl" data-en="Recommended Ingredients" data-ar="المكونات الموصى بها">Recommended Ingredients</span>
-      <div class="sec-line"></div>
-    </div>
-    <div id="hProducts"></div>
-
-    <!-- REFERRAL -->
-    <div id="hReferralWrap" style="margin-top:8px;"></div>
-
-    <!-- REPORT BTN -->
-    <button class="sel-btn" id="hRptBtn"
-      style="margin-top:28px;background:#5c3317!important;color:#fff!important;display:none;"
-      onclick="hShowReport()"
-      data-en="Generate Hair Report →" data-ar="توليد تقرير الشعر ←">
-      Generate Hair Report →
-    </button>
-
-  </div>
-</div>
-```
-
-  </div>
-
 </div><!-- /appWrap -->
 
 <!-- SHARED DRAWER -->
@@ -1063,19 +746,14 @@ function openApp(app) {
   document.getElementById('landing').style.display = 'none';
   document.getElementById('appWrap').classList.add('show');
   document.getElementById('backBtn').classList.add('show');
-  ['clindxView','dermdxView','hairdxView'].forEach(function(id) {
-    document.getElementById(id).classList.remove('show');
-  });
   if (app === 'clindx') {
     document.getElementById('clindxView').classList.add('show');
+    document.getElementById('dermdxView').classList.remove('show');
     document.getElementById('logoName').innerHTML = 'Clin<em>Dx</em>';
     document.getElementById('logoTag').textContent = 'Clinical Differential Diagnosis';
-  } else if (app === 'hairdx') {
-    document.getElementById('hairdxView').classList.add('show');
-    document.getElementById('logoName').innerHTML = 'Hair<em>Dx</em>';
-    document.getElementById('logoTag').textContent = 'AI Hair & Scalp Analysis';
   } else {
     document.getElementById('dermdxView').classList.add('show');
+    document.getElementById('clindxView').classList.remove('show');
     document.getElementById('logoName').innerHTML = 'Derm<em>Dx</em>';
     document.getElementById('logoTag').textContent = 'AI Dermatology Support';
   }
@@ -1622,327 +1300,6 @@ function dSelectDx(i) {
 
   document.getElementById('modTitle').textContent = 'Dermatology Report';
   document.getElementById('modSub').textContent = 'Generated by DermDx';
-  document.getElementById('rptBox').textContent = rptText;
-  document.getElementById('movl').classList.add('show');
-}
-
-/* ════════════════════════════════════
-   HAIRDX
-════════════════════════════════════ */
-var hLang = 'en', hSex = '', hImgB64 = '', hStore = {};
-
-function hSetLang(lang) {
-  hLang = lang;
-  document.getElementById('hLangEN').classList.toggle('on', lang==='en');
-  document.getElementById('hLangAR').classList.toggle('on', lang==='ar');
-  document.querySelectorAll('#hairdxView [data-en]').forEach(function(el) {
-    if (el.tagName==='TEXTAREA'||el.tagName==='INPUT') {
-      el.placeholder = lang==='ar' ? (el.getAttribute('data-placeholder-ar')||'') : (el.getAttribute('data-placeholder-en')||'');
-    } else if (!el.querySelector('span.req,span.opt')) {
-      el.textContent = lang==='ar' ? el.dataset.ar : el.dataset.en;
-    }
-  });
-  var res = document.getElementById('hResults');
-  lang==='ar' ? res.classList.add('rtl') : res.classList.remove('rtl');
-  if (hStore.result) hRenderResults(hStore.result);
-}
-
-function hHandleImg(inp) {
-  var f = inp.files[0]; if (!f) return;
-  var r = new FileReader();
-  r.onload = function(e) {
-    hImgB64 = e.target.result.split(',')[1];
-    var p = document.getElementById('hPrev');
-    p.src = e.target.result; p.style.display = 'block';
-    document.getElementById('hChgBtn').style.display = 'inline-block';
-    ['hUico','hUtitle','hUhint'].forEach(function(id){ document.getElementById(id).style.display='none'; });
-  };
-  r.readAsDataURL(f);
-}
-
-function hSetSex(s) {
-  hSex = s;
-  document.getElementById('hTMale').classList.toggle('on', s==='Male');
-  document.getElementById('hTFemale').classList.toggle('on', s==='Female');
-}
-function hShowErr(t,m){ document.getElementById('hErrTitle').textContent=t; document.getElementById('hErrMsg').textContent=' '+m; document.getElementById('hErr').classList.add('show'); }
-function hHideErr(){ document.getElementById('hErr').classList.remove('show'); }
-
-async function hAnalyze() {
-  hHideErr();
-  var age = document.getElementById('hAge').value.trim();
-  var concern = document.getElementById('hConcern').value.trim();
-  var apiKey = getKey();
-  var ar = hLang==='ar';
-
-  if (!hImgB64) { hShowErr(ar?'لا توجد صورة':'No Photo', ar?'يرجى رفع صورة شعرك.':'Please upload a hair photo.'); return; }
-  if (!age)     { hShowErr(ar?'حقل مطلوب':'Missing Field', ar?'يرجى إدخال عمرك.':'Please enter your age.'); return; }
-  if (!hSex)    { hShowErr(ar?'حقل مطلوب':'Missing Field', ar?'يرجى اختيار الجنس.':'Please select sex.'); return; }
-  if (!apiKey)  { hShowErr('No API Key','Tap ⚙ and enter your Groq API key from console.groq.com'); return; }
-
-  document.getElementById('hGoBtn').disabled = true;
-  document.getElementById('hLoading').classList.add('show');
-  document.getElementById('hResults').style.display = 'none';
-
-  var steps=['hLs1','hLs2','hLs3','hLs4'], si=0;
-  var stInt = setInterval(function(){
-    steps.forEach(function(s){ document.getElementById(s).classList.remove('on'); });
-    if (si<steps.length) { document.getElementById(steps[si]).classList.add('on'); si++; }
-  }, 2000);
-
-  var patStr = age+'-year-old '+hSex;
-
-  // Bilingual examples — the model copies these, so they MUST be in the right language
-  var EX = ar ? {
-    htDesc:   'وصف كامل لنوع الشعر هذا وخصائصه وكيفية العناية به في 2-3 جمل.',
-    probDesc: 'ما هو مرئي في الصورة والأهمية السريرية.',
-    s1: 'استخدم شامبو كيتوكونازول 2% واتركه 5 دقائق قبل الشطف. يستهدف فطر الملاسيزيا المسبب للقشرة (AAD 2023).',
-    s2: 'ضع بلسماً مرطباً خالياً من العطور على أطراف الشعر فقط، تجنب فروة الرأس.',
-    sd: 'تجنب الحك بالأظافر. استخدم رأس الأصابع فقط لتقليل تلف الحاجز الجلدي.',
-    sw: 'ضع قناعاً مرطباً عميقاً لمدة 20-30 دقيقة لتعزيز الترطيب وتقليل التقصف.',
-    prodDesc: 'يقضي على فطر الملاسيزيا، السبب الرئيسي للقشرة والتهاب الجلد الدهني.',
-    refReason: 'السبب الطبي الذي يستدعي زيارة طبيب الجلدية.'
-  } : {
-    htDesc:   'Full description of this hair type, its characteristics, and key care needs in 2-3 sentences.',
-    probDesc: 'What is visible in the image and its clinical significance.',
-    s1: 'Apply Ketoconazole 2% shampoo, leave 5 min before rinsing. Targets Malassezia yeast causing dandruff (AAD 2023).',
-    s2: 'Follow with fragrance-free moisturising conditioner on lengths only, avoiding the scalp.',
-    sd: 'Avoid scratching with nails. Use fingertips only to reduce skin barrier damage.',
-    sw: 'Apply a deep conditioning mask for 20-30 minutes to boost moisture and reduce breakage.',
-    prodDesc: 'Eliminates Malassezia yeast, the primary cause of seborrheic dermatitis and dandruff.',
-    refReason: 'Medical reason requiring dermatologist evaluation.'
-  };
-
-  var LANG_RULE = ar
-    ? 'CRITICAL OUTPUT LANGUAGE RULE — MUST FOLLOW EXACTLY:\n'+
-      '• hair_type.description → Arabic\n'+
-      '• hair_type.name → English (keep as-is)\n'+
-      '• problems[].description → Arabic\n'+
-      '• problems[].name_en → English\n'+
-      '• problems[].name_ar → Arabic translation\n'+
-      '• care_plan[].steps[].step → ARABIC (every single step MUST be in Arabic)\n'+
-      '• products[].description → Arabic\n'+
-      '• products[].name → English\n'+
-      '• products[].active_ingredient → English with concentration\n'+
-      '• products[].evidence → English citation\n'+
-      '• referral_reason → Arabic\n'+
-      'ZERO English sentences in step or description fields when Arabic mode.'
-    : 'Write all text fields in English.';
-
-  var prompt =
-    'You are a certified trichologist and dermatologist (20 years experience). Base ALL answers strictly on: AAD Hair Loss Guidelines 2023, JAAD, British Journal of Dermatology, Fitzpatrick\'s Dermatology 9th ed, UpToDate Hair Module 2024, André Walker Hair Typing System.\n\n'+
-    LANG_RULE+'\n\n'+
-    'PATIENT: '+patStr+'\n'+(concern?'CONCERN: '+concern+'\n':'')+
-    '\nAnalyze this top-down hair and scalp photo systematically.\n\n'+
-    'STEP 1 — HAIR TYPE (André Walker 1A–4C)\n'+
-    'Identify exact subtype. Assess curl pattern, strand thickness (fine/medium/coarse), density (low/medium/high), visible porosity clues.\n\n'+
-    'STEP 2 — VISIBLE PROBLEMS (thorough, clinical)\n'+
-    'Check ALL: dandruff, seborrheic dermatitis, androgenetic alopecia (hairline/crown), alopecia areata (patches), traction alopecia, telogen effluvium (diffuse), breakage, split ends, dryness, oiliness, chemical/heat damage, scalp inflammation, folliculitis.\n'+
-    'Assign severity: "severe"=urgent medical care, "moderate"=needs treatment, "mild"=OTC manageable.\n\n'+
-    'STEP 3 — DAILY CARE PLAN (3 periods: wash day, daily, weekly)\n'+
-    'Each step: name the exact ingredient/product + technique + timing + clinical reason with guideline.\n'+
-    'Write each "step" string in the output language specified above.\n\n'+
-    'STEP 4 — ACTIVE INGREDIENTS (3-4, evidence-based)\n'+
-    'Include exact concentration. Choose ingredients relevant to the detected problems.\n\n'+
-    'STEP 5 — REFERRAL\n'+
-    'referral_needed=true only for: significant alopecia, inflammatory scalp, scarring, or >30% density loss.\n\n'+
-    'Return ONLY this JSON (use the language rule above for each field):\n'+
-    '{\n'+
-    '  "hair_type":{"code":"2B","name":"Wavy — Loose Waves","description":"'+EX.htDesc+'"},\n'+
-    '  "problems":[\n'+
-    '    {"name_en":"Seborrheic Dermatitis","name_ar":"التهاب الجلد الدهني","severity":"moderate","icon":"🔴","description":"'+EX.probDesc+'"}\n'+
-    '  ],\n'+
-    '  "care_plan":[\n'+
-    '    {"period":"Wash Day (2-3×/week)","period_ar":"يوم الغسيل (2-3 مرات/أسبوع)","steps":[{"step":"'+EX.s1+'"},{"step":"'+EX.s2+'"}]},\n'+
-    '    {"period":"Daily","period_ar":"يومياً","steps":[{"step":"'+EX.sd+'"}]},\n'+
-    '    {"period":"Weekly","period_ar":"أسبوعياً","steps":[{"step":"'+EX.sw+'"}]}\n'+
-    '  ],\n'+
-    '  "products":[\n'+
-    '    {"icon":"🧴","name":"Antifungal Shampoo","active_ingredient":"Ketoconazole 2%","description":"'+EX.prodDesc+'","evidence":"AAD Level A — JAAD 2023 meta-analysis"}\n'+
-    '  ],\n'+
-    '  "referral_needed":false,\n'+
-    '  "referral_reason":"'+EX.refReason+'"\n'+
-    '}';
-
-  try {
-    var res = await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
-      body: JSON.stringify({
-        model:'meta-llama/llama-4-scout-17b-16e-instruct',
-        messages:[
-          {role:'system',content:'You are a certified trichologist and dermatologist. Return ONLY valid complete JSON. No empty fields. Use specific clinical language with guideline citations. Follow the language rule in the prompt exactly — do not mix languages within the same field.'},
-          {role:'user',content:[
-            {type:'image_url',image_url:{url:'data:image/jpeg;base64,'+hImgB64}},
-            {type:'text',text:prompt}
-          ]}
-        ],
-        temperature:0.15, max_tokens:4500
-      })
-    });
-    var data = await res.json();
-    if (data.error) throw new Error(data.error.message||'API error');
-    var raw = data.choices[0].message.content;
-    raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
-    var match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Could not parse response — please try again');
-    var parsed = JSON.parse(match[0]);
-
-    clearInterval(stInt);
-    document.getElementById('hLoading').classList.remove('show');
-    document.getElementById('hGoBtn').disabled = false;
-    hStore = {result:parsed, patStr:patStr, concern:concern};
-    hRenderResults(parsed);
-  } catch(e) {
-    clearInterval(stInt);
-    document.getElementById('hLoading').classList.remove('show');
-    document.getElementById('hGoBtn').disabled = false;
-    hShowErr('Analysis Failed', e.message||'Please check your API key and try again.');
-  }
-}
-
-function hRenderResults(r) {
-  var ar = hLang==='ar';
-  // Hair type
-  var ht = r.hair_type||{};
-  document.getElementById('hTypeCard').innerHTML =
-    '<div class="hair-type-card">'+
-      '<div class="hair-type-eyebrow">'+(ar?'نوع الشعر — André Walker System':'Hair Type — André Walker System')+'</div>'+
-      '<div class="hair-type-value">'+esc(ht.code||'—')+'</div>'+
-      '<div class="hair-type-name">'+esc(ht.name||'')+'</div>'+
-      '<div class="hair-type-desc">'+esc(ht.description||'')+'</div>'+
-    '</div>';
-
-  // Problems
-  var probs = r.problems||[];
-  var pH = probs.map(function(p,i){
-    var sev=(p.severity||'mild').toLowerCase();
-    var nameDisplay = ar
-      ? esc(p.name_en||'')+'<span style="font-size:12px;color:var(--muted);font-weight:400"> ('+esc(p.name_ar||'')+')</span>'
-      : esc(p.name_en||'');
-    return '<div class="hair-problem-card '+sev+'" style="animation-delay:'+(i*0.08)+'s">'+
-      '<div class="hair-prob-icon">'+esc(p.icon||'⚠')+'</div>'+
-      '<div class="hair-prob-body">'+
-        '<div class="hair-prob-name-en">'+nameDisplay+'</div>'+
-        '<div class="hair-prob-desc">'+esc(p.description||'')+'</div>'+
-        '<div class="hair-prob-severity">'+sev.toUpperCase()+'</div>'+
-      '</div></div>';
-  }).join('');
-  document.getElementById('hProblemsWrap').innerHTML = pH ||
-    '<div class="hair-problem-card mild"><div class="hair-prob-icon">✓</div><div class="hair-prob-body"><div class="hair-prob-name-en">'+(ar?'لا مشاكل ظاهرة':'No visible issues detected')+'</div></div></div>';
-
-  // Care plan
-  var cH = (r.care_plan||[]).map(function(day,i){
-    var title = ar ? (day.period_ar||day.period) : day.period;
-    var steps = (day.steps||[]).map(function(s,j){
-      return '<div class="hair-care-step">'+
-        '<div class="hair-care-num">'+(j+1)+'</div>'+
-        '<div class="hair-care-step-txt">'+esc(s.step||'')+'</div>'+
-      '</div>';
-    }).join('');
-    return '<div class="hair-care-day" style="animation-delay:'+(i*0.1)+'s">'+
-      '<div class="hair-care-day-hdr"><div class="hair-care-day-dot"></div><div class="hair-care-day-title">'+esc(title)+'</div></div>'+
-      '<div class="hair-care-steps">'+steps+'</div>'+
-    '</div>';
-  }).join('');
-  document.getElementById('hCarePlan').innerHTML = cH;
-
-  // Products
-  var prodH = (r.products||[]).map(function(p,i){
-    return '<div class="hair-product-card" style="animation-delay:'+(i*0.08)+'s">'+
-      '<div class="hair-prod-row">'+
-        '<div class="hair-prod-icon">'+esc(p.icon||'🧴')+'</div>'+
-        '<div class="hair-prod-body">'+
-          '<div class="hair-prod-name">'+esc(p.name||'')+'</div>'+
-          '<div class="hair-prod-ingredient">'+esc(p.active_ingredient||'')+'</div>'+
-          '<div class="hair-prod-desc">'+esc(p.description||'')+'</div>'+
-          (p.evidence?'<div class="hair-prod-evidence">📚 '+esc(p.evidence)+'</div>':'')+
-        '</div>'+
-      '</div></div>';
-  }).join('');
-  document.getElementById('hProducts').innerHTML = prodH;
-
-  // Referral
-  var refWrap = document.getElementById('hReferralWrap');
-  if (r.referral_needed && r.referral_reason) {
-    refWrap.innerHTML =
-      '<div class="hair-referral">'+
-        '<div class="hair-ref-icon">🏥</div>'+
-        '<div>'+
-          '<div class="hair-ref-title">'+(ar?'راجع طبيب جلدية':'See a Dermatologist')+'</div>'+
-          '<div class="hair-ref-desc">'+esc(r.referral_reason)+'</div>'+
-        '</div>'+
-      '</div>';
-  } else { refWrap.innerHTML=''; }
-
-  // RTL
-  ar ? document.getElementById('hResults').classList.add('rtl') : document.getElementById('hResults').classList.remove('rtl');
-
-  var rptBtn = document.getElementById('hRptBtn');
-  rptBtn.style.display='block';
-  rptBtn.textContent = ar ? '← توليد تقرير الشعر' : 'Generate Hair Report →';
-  document.getElementById('hResults').style.display='block';
-  document.getElementById('hResults').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function hShowReport() {
-  var r = hStore.result; if (!r) return;
-  var ar = hLang==='ar';
-  var date = new Date().toLocaleDateString(ar?'ar-SA':'en-US',{year:'numeric',month:'long',day:'numeric'});
-  var D='─'.repeat(44), H='━'.repeat(44);
-  var ht = r.hair_type||{};
-  var lines = ar ? [
-    'تقرير تحليل الشعر — HairDx', H,
-    'التاريخ : '+date,
-    'المريض  : '+(hStore.patStr||'—'),
-    hStore.concern?'الشكوى  : '+hStore.concern:'',
-    D,'',
-    'نوع الشعر : '+(ht.code||'—')+' — '+(ht.name||''),
-    '  '+(ht.description||''),
-    '',D,'',
-    'المشاكل المكتشفة'
-  ] : [
-    'HAIR ANALYSIS REPORT — HairDx', H,
-    'Date    : '+date,
-    'Patient : '+(hStore.patStr||'—'),
-    hStore.concern?'Concern : '+hStore.concern:'',
-    D,'',
-    'Hair Type : '+(ht.code||'—')+' — '+(ht.name||''),
-    '  '+(ht.description||''),
-    '',D,'',
-    'DETECTED ISSUES'
-  ];
-
-  (r.problems||[]).forEach(function(p){
-    lines.push('  ['+((p.severity||'').toUpperCase())+'] '+(ar?p.name_en+' ('+p.name_ar+')':p.name_en));
-    lines.push('  '+(p.description||'')); lines.push('');
-  });
-  lines.push(D,''); lines.push(ar?'خطة العناية اليومية':'DAILY CARE PLAN');
-  (r.care_plan||[]).forEach(function(day){
-    lines.push('  '+(ar?(day.period_ar||day.period):day.period));
-    (day.steps||[]).forEach(function(s,j){ lines.push('  '+(j+1)+'. '+(s.step||'')); });
-    lines.push('');
-  });
-  lines.push(D,''); lines.push(ar?'المكونات الموصى بها':'RECOMMENDED INGREDIENTS');
-  (r.products||[]).forEach(function(p){
-    lines.push('  '+(p.name||'')+' — '+(p.active_ingredient||''));
-    lines.push('  '+(p.description||''));
-    if (p.evidence) lines.push('  Ref: '+p.evidence);
-    lines.push('');
-  });
-  if (r.referral_needed && r.referral_reason) {
-    lines.push(D,'');
-    lines.push(ar?'⚠ يُنصح بمراجعة طبيب جلدية':'⚠ DERMATOLOGIST REFERRAL RECOMMENDED');
-    lines.push('  '+(r.referral_reason||'')); lines.push('');
-  }
-  lines.push(H);
-  lines.push(ar?'للأغراض الإرشادية فقط — القرار النهائي للطبيب المختص':'For guidance only — final decision with qualified clinician');
-  lines.push(''); lines.push(ar?'توقيع الطبيب : _______________':'Physician Signature : _______________');
-  lines.push(ar?'التاريخ       : _______________':'Date               : _______________');
-
-  rptText = lines.filter(Boolean).join('\n');
-  document.getElementById('modTitle').textContent = ar?'تقرير تحليل الشعر':'Hair Analysis Report';
-  document.getElementById('modSub').textContent = 'Generated by HairDx · MedDx Suite';
   document.getElementById('rptBox').textContent = rptText;
   document.getElementById('movl').classList.add('show');
 }
