@@ -680,7 +680,13 @@ animation: fadeUp .4s ease backwards;
 
 <div class="tool-card hairdx" onclick="openApp('hairdx')">
   <div class="tool-card-top">
-    <div class="tool-card-icon">💇</div>
+    <div class="tool-card-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2C8 2 5 5 5 9c0 2.5 1 4.5 2.5 6L6 20h12l-1.5-5C18 13.5 19 11.5 19 9c0-4-3-7-7-7z"/>
+        <path d="M9 9c0-1.7 1.3-3 3-3s3 1.3 3 3"/>
+        <line x1="12" y1="2" x2="12" y2="6"/>
+      </svg>
+    </div>
     <div class="tool-card-name">Hair<em>Dx</em></div>
     <div class="tool-card-badge">AI Hair & Scalp Analysis</div>
   </div>
@@ -902,7 +908,15 @@ animation: fadeUp .4s ease backwards;
 
   <!-- UPLOAD -->
   <div class="upload-zone" id="hUploadZone" onclick="document.getElementById('hImgInput').click()">
-    <div class="upload-ico" id="hUico">💇</div>
+    <div class="upload-ico" id="hUico">
+      <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="22" fill="#f0ebe3" stroke="#d0c9be" stroke-width="1.5"/>
+        <path d="M24 10c-5 0-9 4-9 9 0 3 1.2 5.5 3 7.5L16 38h16l-2-11.5c1.8-2 3-4.5 3-7.5 0-5-4-9-9-9z" fill="none" stroke="#5c3317" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20 21c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#5c3317" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        <line x1="24" y1="10" x2="24" y2="15" stroke="#5c3317" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="18" y1="38" x2="30" y2="38" stroke="#5c3317" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </div>
     <div class="upload-t"   id="hUtitle" data-en="Upload Hair Photo" data-ar="ارفع صورة شعرك">Upload Hair Photo</div>
     <div class="upload-h"   id="hUhint"
       data-en="Top-down or side photo showing your hair and scalp clearly"
@@ -1677,41 +1691,77 @@ async function hAnalyze() {
   }, 2000);
 
   var patStr = age+'-year-old '+hSex;
-  var langNote = ar
-    ? 'IMPORTANT: Write ALL description/step/reason text in Arabic. Diagnosis names stay in English with Arabic in parentheses e.g. "Seborrheic Dermatitis (التهاب الجلد الدهني)".'
-    : 'Write all text in English.';
+
+  // Bilingual examples — the model copies these, so they MUST be in the right language
+  var EX = ar ? {
+    htDesc:   'وصف كامل لنوع الشعر هذا وخصائصه وكيفية العناية به في 2-3 جمل.',
+    probDesc: 'ما هو مرئي في الصورة والأهمية السريرية.',
+    s1: 'استخدم شامبو كيتوكونازول 2% واتركه 5 دقائق قبل الشطف. يستهدف فطر الملاسيزيا المسبب للقشرة (AAD 2023).',
+    s2: 'ضع بلسماً مرطباً خالياً من العطور على أطراف الشعر فقط، تجنب فروة الرأس.',
+    sd: 'تجنب الحك بالأظافر. استخدم رأس الأصابع فقط لتقليل تلف الحاجز الجلدي.',
+    sw: 'ضع قناعاً مرطباً عميقاً لمدة 20-30 دقيقة لتعزيز الترطيب وتقليل التقصف.',
+    prodDesc: 'يقضي على فطر الملاسيزيا، السبب الرئيسي للقشرة والتهاب الجلد الدهني.',
+    refReason: 'السبب الطبي الذي يستدعي زيارة طبيب الجلدية.'
+  } : {
+    htDesc:   'Full description of this hair type, its characteristics, and key care needs in 2-3 sentences.',
+    probDesc: 'What is visible in the image and its clinical significance.',
+    s1: 'Apply Ketoconazole 2% shampoo, leave 5 min before rinsing. Targets Malassezia yeast causing dandruff (AAD 2023).',
+    s2: 'Follow with fragrance-free moisturising conditioner on lengths only, avoiding the scalp.',
+    sd: 'Avoid scratching with nails. Use fingertips only to reduce skin barrier damage.',
+    sw: 'Apply a deep conditioning mask for 20-30 minutes to boost moisture and reduce breakage.',
+    prodDesc: 'Eliminates Malassezia yeast, the primary cause of seborrheic dermatitis and dandruff.',
+    refReason: 'Medical reason requiring dermatologist evaluation.'
+  };
+
+  var LANG_RULE = ar
+    ? 'CRITICAL OUTPUT LANGUAGE RULE — MUST FOLLOW EXACTLY:\n'+
+      '• hair_type.description → Arabic\n'+
+      '• hair_type.name → English (keep as-is)\n'+
+      '• problems[].description → Arabic\n'+
+      '• problems[].name_en → English\n'+
+      '• problems[].name_ar → Arabic translation\n'+
+      '• care_plan[].steps[].step → ARABIC (every single step MUST be in Arabic)\n'+
+      '• products[].description → Arabic\n'+
+      '• products[].name → English\n'+
+      '• products[].active_ingredient → English with concentration\n'+
+      '• products[].evidence → English citation\n'+
+      '• referral_reason → Arabic\n'+
+      'ZERO English sentences in step or description fields when Arabic mode.'
+    : 'Write all text fields in English.';
 
   var prompt =
     'You are a certified trichologist and dermatologist (20 years experience). Base ALL answers strictly on: AAD Hair Loss Guidelines 2023, JAAD, British Journal of Dermatology, Fitzpatrick\'s Dermatology 9th ed, UpToDate Hair Module 2024, André Walker Hair Typing System.\n\n'+
-    langNote+'\n\n'+
+    LANG_RULE+'\n\n'+
     'PATIENT: '+patStr+'\n'+(concern?'CONCERN: '+concern+'\n':'')+
     '\nAnalyze this top-down hair and scalp photo systematically.\n\n'+
     'STEP 1 — HAIR TYPE (André Walker 1A–4C)\n'+
-    'Assess: curl pattern, strand thickness (fine/medium/coarse), density (low/medium/high).\n\n'+
-    'STEP 2 — VISIBLE PROBLEMS\n'+
-    'Check for: dandruff/seborrheic dermatitis, alopecia (androgenetic/areata/traction), hair breakage, split ends, excessive dryness, oiliness, chemical/heat damage, scalp inflammation, hair thinning pattern.\n'+
-    'severity: "severe"=needs urgent medical attention, "moderate"=needs treatment, "mild"=manageable with care.\n\n'+
-    'STEP 3 — DAILY CARE PLAN\n'+
-    'Create specific periods: Wash Day, Daily, Weekly. Each step must name specific products/ingredients and explain WHY (guideline reference).\n\n'+
-    'STEP 4 — ACTIVE INGREDIENTS\n'+
-    'List 3-4 evidence-based ingredients. Must include exact concentration e.g. "Ketoconazole 2%", "Minoxidil 5%".\n\n'+
+    'Identify exact subtype. Assess curl pattern, strand thickness (fine/medium/coarse), density (low/medium/high), visible porosity clues.\n\n'+
+    'STEP 2 — VISIBLE PROBLEMS (thorough, clinical)\n'+
+    'Check ALL: dandruff, seborrheic dermatitis, androgenetic alopecia (hairline/crown), alopecia areata (patches), traction alopecia, telogen effluvium (diffuse), breakage, split ends, dryness, oiliness, chemical/heat damage, scalp inflammation, folliculitis.\n'+
+    'Assign severity: "severe"=urgent medical care, "moderate"=needs treatment, "mild"=OTC manageable.\n\n'+
+    'STEP 3 — DAILY CARE PLAN (3 periods: wash day, daily, weekly)\n'+
+    'Each step: name the exact ingredient/product + technique + timing + clinical reason with guideline.\n'+
+    'Write each "step" string in the output language specified above.\n\n'+
+    'STEP 4 — ACTIVE INGREDIENTS (3-4, evidence-based)\n'+
+    'Include exact concentration. Choose ingredients relevant to the detected problems.\n\n'+
     'STEP 5 — REFERRAL\n'+
-    'referral_needed=true ONLY for: significant alopecia, inflammatory scalp condition, scarring alopecia, or >30% density loss.\n\n'+
-    'Return ONLY this JSON — fully completed, no empty strings:\n'+
+    'referral_needed=true only for: significant alopecia, inflammatory scalp, scarring, or >30% density loss.\n\n'+
+    'Return ONLY this JSON (use the language rule above for each field):\n'+
     '{\n'+
-    '  "hair_type":{"code":"2B","name":"Wavy — Loose Waves","description":"Full description of this hair type, its characteristics, and key needs in 2-3 sentences."},\n'+
+    '  "hair_type":{"code":"2B","name":"Wavy — Loose Waves","description":"'+EX.htDesc+'"},\n'+
     '  "problems":[\n'+
-    '    {"name_en":"Seborrheic Dermatitis","name_ar":"التهاب الجلد الدهني","severity":"moderate","icon":"🔴","description":"What is visible and clinical significance."}\n'+
+    '    {"name_en":"Seborrheic Dermatitis","name_ar":"التهاب الجلد الدهني","severity":"moderate","icon":"🔴","description":"'+EX.probDesc+'"}\n'+
     '  ],\n'+
     '  "care_plan":[\n'+
-    '    {"period":"Wash Day (2-3×/week)","period_ar":"يوم الغسيل (2-3 مرات/أسبوع)","steps":[{"step":"Apply Ketoconazole 2% shampoo, leave 5 min. Targets Malassezia yeast (AAD 2023)."},{"step":"Follow with fragrance-free moisturising conditioner on lengths only."}]},\n'+
-    '    {"period":"Daily","period_ar":"يومياً","steps":[{"step":"Avoid scratching. Use fingertips only to reduce barrier damage."}]}\n'+
+    '    {"period":"Wash Day (2-3×/week)","period_ar":"يوم الغسيل (2-3 مرات/أسبوع)","steps":[{"step":"'+EX.s1+'"},{"step":"'+EX.s2+'"}]},\n'+
+    '    {"period":"Daily","period_ar":"يومياً","steps":[{"step":"'+EX.sd+'"}]},\n'+
+    '    {"period":"Weekly","period_ar":"أسبوعياً","steps":[{"step":"'+EX.sw+'"}]}\n'+
     '  ],\n'+
     '  "products":[\n'+
-    '    {"icon":"🧴","name":"Antifungal Shampoo","active_ingredient":"Ketoconazole 2%","description":"Eliminates Malassezia yeast, the primary cause of seborrheic dermatitis and dandruff.","evidence":"AAD Level A — JAAD 2023 meta-analysis"}\n'+
+    '    {"icon":"🧴","name":"Antifungal Shampoo","active_ingredient":"Ketoconazole 2%","description":"'+EX.prodDesc+'","evidence":"AAD Level A — JAAD 2023 meta-analysis"}\n'+
     '  ],\n'+
     '  "referral_needed":false,\n'+
-    '  "referral_reason":""\n'+
+    '  "referral_reason":"'+EX.refReason+'"\n'+
     '}';
 
   try {
@@ -1721,7 +1771,7 @@ async function hAnalyze() {
       body: JSON.stringify({
         model:'meta-llama/llama-4-scout-17b-16e-instruct',
         messages:[
-          {role:'system',content:'You are a certified trichologist and dermatologist. Return ONLY valid complete JSON. No empty fields. Use specific clinical language with guideline citations.'},
+          {role:'system',content:'You are a certified trichologist and dermatologist. Return ONLY valid complete JSON. No empty fields. Use specific clinical language with guideline citations. Follow the language rule in the prompt exactly — do not mix languages within the same field.'},
           {role:'user',content:[
             {type:'image_url',image_url:{url:'data:image/jpeg;base64,'+hImgB64}},
             {type:'text',text:prompt}
