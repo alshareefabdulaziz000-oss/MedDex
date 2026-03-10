@@ -4,436 +4,683 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MedDx — AI Clinical Diagnostic Support</title>
+<title>MedDx</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syne:wght@400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════
-   SHARED VARIABLES
-═══════════════════════════════════════════ */
 :root {
-  --bg:      #f7f5f0;
-  --surface: #ffffff;
-  --border:  #e5e0d8;
-  --border2: #d0c9be;
-  --text:    #1a1714;
-  --muted:   #6b6560;
-  --dim:     #a09990;
-  --green:   #166534;
-  --red:     #991b1b;
-  --gold:    #78450a;
-  --silver:  #4a4540;
-  --bronze:  #6b3a1a;
-  --display: 'Cormorant Garamond', serif;
-  --ui:      'Syne', sans-serif;
-  --mono:    'JetBrains Mono', monospace;
+  --bg:       #f5f0e8;
+  --bg2:      #fffdf8;
+  --bg3:      #f0ebe0;
+  --surface:  #ffffff;
+  --border:   #ddd8cc;
+  --border2:  #c8c2b4;
+  --text:     #1a1714;
+  --muted:    #6b6358;
+  --dim:      #a09880;
+  --blue:     #1a4b7a;
+  --blue2:    #2560a0;
+  --blue-bg:  #eef3fa;
+  --blue-bd:  #c5d8ef;
+  --green:    #15673a;
+  --green-bg: #eef7f2;
+  --green-bd: #b8deca;
+  --red:      #8b2020;
+  --red-bg:   #fdf2f2;
+  --red-bd:   #e8b4b4;
+  --amber:    #92600a;
+  --serif:    'Source Serif 4', Georgia, serif;
+  --sans:     'Inter', system-ui, sans-serif;
 }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: var(--ui); min-height: 100vh; }
-
-/* ═══════════════════════════════════════════
-SHARED HEADER
-═══════════════════════════════════════════ */
-.hdr {
-background: var(–surface); border-bottom: 1px solid var(–border);
-padding: 18px 24px; display: flex; align-items: center;
-justify-content: space-between; position: sticky; top: 0; z-index: 100;
-}
-.logo-name { font-family: var(–display); font-size: 26px; font-weight: 300; }
-.logo-name em { font-style: italic; }
-.logo-tag { font-family: var(–mono); font-size: 8px; letter-spacing: .2em; color: var(–dim); text-transform: uppercase; margin-top: 2px; }
-.hdr-right { display: flex; align-items: center; gap: 10px; }
-.back-btn {
-display: none; background: none; border: 1px solid var(–border2);
-border-radius: 8px; padding: 7px 14px; cursor: pointer;
-color: var(–muted); font-family: var(–ui); font-size: 12px; font-weight: 500;
-transition: all .18s;
-}
-.back-btn:hover { border-color: var(–text); color: var(–text); }
-.back-btn.show { display: flex; align-items: center; gap: 6px; }
-.gear-btn {
-background: none; border: 1px solid var(–border2); border-radius: 8px;
-padding: 8px 10px; cursor: pointer; color: var(–muted); transition: all .2s;
-}
-.gear-btn:hover { border-color: var(–text); color: var(–text); }
-
-/* ═══════════════════════════════════════════
-LANDING PAGE
-═══════════════════════════════════════════ */
-#landing {
-min-height: calc(100vh - 62px);
-display: flex; flex-direction: column; align-items: center;
-justify-content: center; padding: 48px 24px 64px;
+body {
 background: var(–bg);
+color: var(–text);
+font-family: var(–sans);
+min-height: 100vh;
+-webkit-font-smoothing: antialiased;
 }
 
-/* HERO LOGO */
-.land-hero { text-align: center; margin-bottom: 56px; }
-.land-logo-wrap {
-display: inline-flex; align-items: center; gap: 14px;
-margin-bottom: 16px;
+/* ─── HEADER ──────────────────────────── */
+.hdr {
+background: var(–blue);
+height: 54px;
+padding: 0 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+position: sticky;
+top: 0;
+z-index: 200;
 }
-.land-logo-mark {
-width: 52px; height: 52px; background: #1a1714; border-radius: 14px;
-display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+.hdr-logo { display: flex; align-items: center; gap: 10px; }
+.hdr-wordmark {
+font-family: var(–serif);
+font-size: 20px;
+font-weight: 600;
+color: #fff;
+letter-spacing: -.01em;
 }
-.land-logo-mark svg { width: 28px; height: 28px; }
-.land-logo-text { text-align: left; }
-.land-logo-name {
-font-family: var(–display); font-size: 42px; font-weight: 300;
-line-height: 1; letter-spacing: -.02em; color: var(–text);
+.hdr-wordmark span {
+font-weight: 300;
+font-style: italic;
+opacity: .75;
 }
-.land-logo-name span { color: #78450a; font-style: italic; }
-.land-logo-sub {
-font-family: var(–mono); font-size: 8px; letter-spacing: .25em;
-color: var(–dim); text-transform: uppercase; margin-top: 4px;
+.hdr-sep { width: 1px; height: 16px; background: rgba(255,255,255,.2); }
+.hdr-tag {
+font-size: 11px;
+font-weight: 400;
+color: rgba(255,255,255,.5);
+letter-spacing: .02em;
+}
+.hdr-r { display: flex; align-items: center; gap: 8px; }
+.back-btn {
+display: none;
+align-items: center;
+gap: 5px;
+background: rgba(255,255,255,.12);
+border: 1px solid rgba(255,255,255,.2);
+border-radius: 5px;
+padding: 5px 13px;
+cursor: pointer;
+color: rgba(255,255,255,.8);
+font-family: var(–sans);
+font-size: 12px;
+font-weight: 400;
+transition: all .15s;
+}
+.back-btn:hover { background: rgba(255,255,255,.2); color: #fff; }
+.back-btn.show { display: flex; }
+.gear-btn {
+width: 33px; height: 33px;
+border-radius: 6px;
+background: rgba(255,255,255,.12);
+border: 1px solid rgba(255,255,255,.2);
+cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+transition: background .15s;
+}
+.gear-btn:hover { background: rgba(255,255,255,.22); }
+
+/* ─── LANDING ─────────────────────────── */
+#landing {
+min-height: calc(100vh - 54px);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 52px 20px 80px;
+}
+
+.land-inner {
+width: 100%;
+max-width: 440px;
+}
+
+.land-hero {
+text-align: center;
+margin-bottom: 36px;
+}
+
+.land-title {
+font-family: var(–serif);
+font-size: 42px;
+font-weight: 600;
+color: var(–text);
+letter-spacing: -.02em;
+line-height: 1;
+margin-bottom: 6px;
+}
+.land-title span {
+font-weight: 300;
+font-style: italic;
+color: var(–blue);
 }
 .land-tagline {
-font-family: var(–display); font-size: 17px; font-weight: 300;
-color: var(–muted); font-style: italic; letter-spacing: .01em;
+font-size: 14px;
+font-weight: 400;
+color: var(–muted);
+letter-spacing: .01em;
 }
 
-/* TOOL CARDS */
-.tool-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 580px; width: 100%; }
-
-.tool-card {
-background: var(–surface); border: 1.5px solid var(–border);
-border-radius: 20px; padding: 0; cursor: pointer;
-transition: all .25s; text-align: left;
-position: relative; overflow: hidden;
-box-shadow: 0 2px 8px rgba(0,0,0,.04);
-}
-.tool-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.12); }
-
-.tool-card-top {
-padding: 28px 24px 22px;
-border-bottom: 1px solid var(–border);
-}
-.tool-card.clindx .tool-card-top { background: #1a1714; }
-.tool-card.dermdx .tool-card-top { background: #78450a; }
-
-.tool-card-icon {
-width: 44px; height: 44px; border-radius: 12px;
-background: rgba(255,255,255,.15); display: flex;
-align-items: center; justify-content: center;
-font-size: 22px; margin-bottom: 14px;
-}
-.tool-card-name {
-font-family: var(–display); font-size: 28px; font-weight: 300;
-color: #ffffff; line-height: 1; margin-bottom: 4px;
-}
-.tool-card-name em { font-style: italic; opacity: .85; }
-.tool-card-badge {
-font-family: var(–mono); font-size: 7.5px; letter-spacing: .2em;
-color: rgba(255,255,255,.5); text-transform: uppercase;
+/* Tool cards — UpToDate style list */
+.tool-cards {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
 }
 
-.tool-card-bottom { padding: 18px 24px 22px; }
-.tool-card-desc { font-size: 13px; color: var(–muted); line-height: 1.7; margin-bottom: 16px; }
-.tool-card-cta {
-display: flex; align-items: center; justify-content: space-between;
-font-family: var(–mono); font-size: 9.5px; letter-spacing: .12em;
-color: var(–text); text-transform: uppercase; font-weight: 600;
+.tool-item {
+display: flex;
+align-items: center;
+gap: 14px;
+padding: 18px 18px;
+cursor: pointer;
+transition: background .12s;
+border: none;
+background: transparent;
+text-align: left;
+width: 100%;
 }
-.tool-card.clindx .tool-card-cta { color: #1a1714; }
-.tool-card.dermdx .tool-card-cta { color: #78450a; }
-
-.tool-card-cta-arrow {
-width: 28px; height: 28px; border-radius: 50%; display: flex;
-align-items: center; justify-content: center; font-size: 14px;
-transition: transform .2s;
+.tool-item + .tool-item {
+border-top: 1px solid var(–border);
 }
-.tool-card.clindx .tool-card-cta-arrow { background: #1a1714; color: #fff; }
-.tool-card.dermdx .tool-card-cta-arrow { background: #78450a; color: #fff; }
+.tool-item:hover { background: var(–blue-bg); }
 
-.tool-card:hover .tool-card-cta-arrow { transform: translateX(3px); }
-
-/* FEATURES ROW */
-.tool-features { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-.tool-feat {
-font-family: var(–mono); font-size: 8px; letter-spacing: .08em;
-padding: 4px 9px; border-radius: 20px; border: 1px solid var(–border2);
-color: var(–dim); background: var(–bg);
+.tool-icon {
+width: 42px; height: 42px;
+border-radius: 9px;
+background: var(–blue);
+display: flex; align-items: center; justify-content: center;
+flex-shrink: 0;
 }
+.tool-icon svg { display: block; }
+
+.tool-body { flex: 1; min-width: 0; }
+.tool-name {
+font-family: var(–serif);
+font-size: 17px;
+font-weight: 600;
+color: var(–text);
+letter-spacing: -.01em;
+margin-bottom: 2px;
+}
+.tool-name em {
+font-weight: 300;
+font-style: italic;
+color: var(–blue);
+}
+.tool-desc {
+font-size: 12px;
+font-weight: 400;
+color: var(–muted);
+line-height: 1.5;
+}
+
+.tool-chevron {
+color: var(–border2);
+font-size: 16px;
+flex-shrink: 0;
+transition: all .12s;
+}
+.tool-item:hover .tool-chevron { color: var(–blue); transform: translateX(2px); }
 
 .land-note {
-font-family: var(–mono); font-size: 8.5px; color: var(–dim);
-text-align: center; margin-top: 40px; letter-spacing: .08em;
-line-height: 2; max-width: 480px;
+margin-top: 20px;
+text-align: center;
+font-size: 11px;
+font-weight: 400;
+color: var(–dim);
+line-height: 1.9;
 }
-.land-note span { color: var(–text); }
 
-/* ═══════════════════════════════════════════
-APP WRAPPERS
-═══════════════════════════════════════════ */
+/* ─── OVERLAY + DRAWER ────────────────── */
+.ovl {
+position: fixed; inset: 0;
+background: rgba(0,0,0,.35);
+z-index: 300; display: none;
+}
+.ovl.show { display: block; }
+
+.drawer {
+position: fixed; right: -295px; top: 0; bottom: 0; width: 278px;
+background: var(–surface);
+border-left: 1px solid var(–border);
+z-index: 400;
+padding: 22px 18px;
+transition: right .26s cubic-bezier(.4,0,.2,1);
+overflow-y: auto;
+}
+.drawer.open { right: 0; }
+
+.dr-title {
+font-family: var(–serif);
+font-size: 18px;
+font-weight: 600;
+color: var(–text);
+letter-spacing: -.01em;
+margin-bottom: 3px;
+}
+.dr-sub {
+font-size: 11px;
+font-weight: 400;
+color: var(–dim);
+margin-bottom: 22px;
+}
+.dr-close {
+position: absolute; top: 16px; right: 16px;
+background: none; border: none;
+color: var(–dim); cursor: pointer;
+font-size: 20px; line-height: 1;
+transition: color .12s;
+}
+.dr-close:hover { color: var(–text); }
+
+.d-lbl {
+font-size: 10px;
+font-weight: 600;
+letter-spacing: .08em;
+color: var(–muted);
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+.d-hint {
+font-size: 12px;
+font-weight: 400;
+color: var(–dim);
+margin-bottom: 8px;
+line-height: 1.5;
+}
+.key-link {
+font-size: 11px;
+color: var(–blue2);
+text-decoration: none;
+display: inline-block;
+margin: 4px 0 14px;
+}
+.key-link:hover { text-decoration: underline; }
+
+.save-btn {
+width: 100%; padding: 11px;
+background: var(–blue); color: #fff;
+border: none; border-radius: 7px;
+font-family: var(–sans); font-size: 13px;
+font-weight: 500; cursor: pointer;
+transition: background .14s;
+}
+.save-btn:hover { background: var(–blue2); }
+.key-ok {
+display: none;
+color: var(–green);
+font-size: 12px;
+margin-top: 10px;
+text-align: center;
+font-weight: 500;
+}
+.dr-note {
+margin-top: 18px;
+font-size: 11px;
+font-weight: 400;
+color: var(–dim);
+line-height: 1.65;
+border-top: 1px solid var(–border);
+padding-top: 15px;
+}
+
+/* ─── APP WRAP ────────────────────────── */
 #appWrap { display: none; }
 #appWrap.show { display: block; }
 .app-view { display: none; }
 .app-view.show { display: block; }
-.wrap { max-width: 660px; margin: 0 auto; padding: 32px 20px 120px; }
+.wrap { max-width: 600px; margin: 0 auto; padding: 26px 18px 100px; }
 
-/* ═══════════════════════════════════════════
-SHARED FORM ELEMENTS
-═══════════════════════════════════════════ */
-.lbl { font-family: var(–mono); font-size: 9px; letter-spacing: .18em; color: var(–dim); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-.lbl .req { color: var(–red); }
-.lbl .opt { color: var(–dim); opacity: .7; font-size: 8.5px; }
-.fg { margin-bottom: 24px; }
+.app-bar {
+display: flex; align-items: baseline; gap: 10px;
+margin-bottom: 24px;
+padding-bottom: 14px;
+border-bottom: 2px solid var(–blue);
+}
+.app-bar-title {
+font-family: var(–serif);
+font-size: 22px; font-weight: 600;
+color: var(–text); letter-spacing: -.01em;
+}
+.app-bar-title em { font-weight: 300; font-style: italic; color: var(–blue); }
+.app-bar-sub {
+font-size: 11px; font-weight: 400;
+color: var(–dim); letter-spacing: .02em;
+}
+
+/* ─── FORM ────────────────────────────── */
+.fg { margin-bottom: 20px; }
+.lbl {
+font-size: 10px; font-weight: 600;
+letter-spacing: .07em; color: var(–muted);
+text-transform: uppercase; margin-bottom: 7px;
+display: flex; align-items: center; gap: 5px;
+}
+.lbl .req { color: var(–red); font-weight: 700; }
+.lbl .opt { color: var(–dim); font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 10px; }
 
 input[type=number], input[type=text], textarea, select {
-width: 100%; background: var(–surface); border: 1px solid var(–border);
-color: var(–text); font-family: var(–ui); font-size: 14px; line-height: 1.6;
-padding: 12px 14px; border-radius: 10px; outline: none;
-transition: border-color .18s; resize: none; -webkit-appearance: none; appearance: none;
+width: 100%;
+background: var(–surface);
+border: 1px solid var(–border);
+color: var(–text);
+font-family: var(–sans);
+font-weight: 400;
+font-size: 14px;
+line-height: 1.6;
+padding: 10px 12px;
+border-radius: 7px;
+outline: none;
+transition: border-color .14s, box-shadow .14s;
+resize: none;
+-webkit-appearance: none;
+appearance: none;
 }
-input[type=number]:focus, input[type=text]:focus, textarea:focus, select:focus { border-color: var(–text); }
+input:focus, textarea:focus, select:focus {
+border-color: var(–blue);
+box-shadow: 0 0 0 3px var(–blue-bg);
+}
 textarea::placeholder, input::placeholder { color: var(–dim); font-size: 13px; }
+select option { background: #fff; }
 
-/* TOGGLE BUTTONS */
-.tog-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.tog-row { display: flex; gap: 7px; flex-wrap: wrap; }
 .tog {
-padding: 11px 22px; background: var(–surface); border: 1.5px solid var(–border2);
-color: var(–muted); border-radius: 9px; font-family: var(–ui); font-size: 13.5px;
-font-weight: 500; cursor: pointer; transition: all .15s;
+padding: 9px 18px;
+background: var(–surface);
+border: 1px solid var(–border);
+color: var(–muted);
+border-radius: 7px;
+font-family: var(–sans);
+font-size: 13px; font-weight: 400;
+cursor: pointer; transition: all .13s;
 }
-.tog:hover { border-color: var(–text); color: var(–text); }
-.tog.on { background: #1a1714 !important; border-color: #1a1714 !important; color: #ffffff !important; font-weight: 600 !important; }
+.tog:hover { border-color: var(–blue2); color: var(–blue); }
+.tog.on {
+background: var(–blue-bg);
+border-color: var(–blue);
+color: var(–blue);
+font-weight: 500;
+}
 
-/* SELECT BUTTON */
 .sel-w { position: relative; }
-.sel-w::after { content: ‘▾’; position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: var(–muted); pointer-events: none; font-size: 11px; }
-
-/* GO BUTTON */
-.go {
-width: 100%; padding: 18px;
-background: #1a1714 !important; color: #ffffff !important;
-border: none !important; border-radius: 12px;
-font-family: var(–ui); font-size: 15px; font-weight: 600;
-cursor: pointer; transition: background .22s; margin-top: 8px;
--webkit-appearance: none; appearance: none;
+.sel-w::after {
+content: ‘›’;
+position: absolute; right: 13px; top: 50%;
+transform: translateY(-50%) rotate(90deg);
+color: var(–dim); pointer-events: none;
+font-size: 14px;
 }
-.go:hover:not(:disabled) { background: #2d2926 !important; }
-.go:disabled { background: #999999 !important; color: #dddddd !important; cursor: not-allowed; }
 
-/* ERROR */
-.err { display: none; margin-top: 12px; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 10px; padding: 13px 15px; color: var(–red); font-size: 13px; line-height: 1.6; }
+.go {
+width: 100%; padding: 13px;
+background: var(–blue); color: #fff;
+border: none; border-radius: 8px;
+font-family: var(–sans); font-size: 14px;
+font-weight: 500; cursor: pointer;
+transition: all .15s; margin-top: 6px;
+letter-spacing: .01em;
+box-shadow: 0 2px 8px rgba(26,75,122,.25);
+}
+.go:hover:not(:disabled) {
+background: var(–blue2);
+box-shadow: 0 4px 14px rgba(26,75,122,.3);
+}
+.go:disabled {
+background: var(–border2); color: var(–dim);
+cursor: not-allowed; box-shadow: none;
+}
+
+.err {
+display: none; margin-top: 10px;
+background: var(–red-bg); border: 1px solid var(–red-bd);
+border-radius: 7px; padding: 10px 14px;
+color: var(–red); font-size: 13px; line-height: 1.6;
+}
 .err.show { display: block; }
-.err strong { display: block; font-family: var(–mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 3px; }
+.err strong {
+display: block; font-size: 10px; font-weight: 600;
+letter-spacing: .06em; text-transform: uppercase;
+margin-bottom: 2px;
+}
 
-/* LOADING */
-.loading { display: none; text-align: center; padding: 64px 0; }
+/* ─── LOADING ─────────────────────────── */
+.loading { display: none; padding: 56px 0; text-align: center; }
 .loading.show { display: block; }
-.spin { width: 40px; height: 40px; margin: 0 auto 18px; border: 1.5px solid var(–border2); border-top-color: var(–text); border-radius: 50%; animation: spin .85s linear infinite; }
+.spin {
+width: 32px; height: 32px; margin: 0 auto 16px;
+border: 2px solid var(–border);
+border-top-color: var(–blue);
+border-radius: 50%;
+animation: spin .75s linear infinite;
+}
 @keyframes spin { to { transform: rotate(360deg); } }
-.spin-lbl { font-family: var(–mono); font-size: 10px; letter-spacing: .14em; color: var(–muted); }
+.spin-lbl {
+font-size: 12px; font-weight: 500;
+color: var(–muted); letter-spacing: .03em;
+}
 .spin-steps { margin-top: 14px; }
-.spin-step { font-size: 12px; color: var(–dim); margin: 5px 0; transition: all .3s; }
-.spin-step.on { color: var(–text); font-weight: 500; }
+.spin-step {
+font-size: 12px; color: var(–dim);
+margin: 5px 0; transition: all .3s; opacity: .5;
+}
+.spin-step.on { color: var(–blue); opacity: 1; font-weight: 500; }
 
-/* RESULTS */
-.results { display: none; margin-top: 44px; }
+/* ─── RESULTS ─────────────────────────── */
+.results { display: none; }
 .results.show { display: block; }
-.sec-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding-bottom: 11px; border-bottom: 1px solid var(–border); }
-.sec-lbl { font-family: var(–mono); font-size: 9px; letter-spacing: .2em; color: var(–dim); text-transform: uppercase; white-space: nowrap; }
+
+.sec-hdr {
+display: flex; align-items: center; gap: 10px;
+margin-bottom: 12px;
+}
+.sec-lbl {
+font-size: 10px; font-weight: 600;
+letter-spacing: .1em; color: var(–blue);
+text-transform: uppercase; flex-shrink: 0;
+}
 .sec-line { flex: 1; height: 1px; background: var(–border); }
 
-/* DX CARDS */
-.dx {
-background: var(–surface); border: 1px solid var(–border);
-border-radius: 14px; padding: 22px 24px; margin-bottom: 14px;
-position: relative; overflow: hidden;
-box-shadow: 0 1px 3px rgba(0,0,0,.05), 0 4px 12px rgba(0,0,0,.05);
-animation: fadeUp .4s ease backwards;
+/* Dx cards */
+.dx-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 9px;
+margin-bottom: 10px;
+overflow: hidden;
+box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
-.dx::before { content: ‘’; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
-.dx1::before { background: var(–gold); }
-.dx2::before { background: var(–silver); }
-.dx3::before { background: var(–bronze); }
-.dx1 { animation-delay: .05s; } .dx2 { animation-delay: .15s; } .dx3 { animation-delay: .25s; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
-
-.dx-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
-.dx-name { font-family: var(–display); font-size: 22px; font-weight: 400; line-height: 1.2; flex: 1; }
-.rank-chip { font-family: var(–mono); font-size: 9px; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; margin-top: 3px; }
-.dx1 .rank-chip { background: rgba(120,69,10,.1); color: var(–gold); border: 1px solid rgba(120,69,10,.2); }
-.dx2 .rank-chip { background: rgba(74,69,64,.1); color: var(–silver); border: 1px solid rgba(74,69,64,.2); }
-.dx3 .rank-chip { background: rgba(107,58,26,.1); color: var(–bronze); border: 1px solid rgba(107,58,26,.2); }
-
-.prob-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
-.prob-track { flex: 1; height: 3px; background: var(–border); border-radius: 2px; overflow: hidden; }
-.prob-fill { height: 100%; border-radius: 2px; width: 0; transition: width 1.1s cubic-bezier(.4,0,.2,1); }
-.dx1 .prob-fill { background: linear-gradient(90deg, #78450a, #d97706); }
-.dx2 .prob-fill { background: linear-gradient(90deg, #4a4540, #a8a29e); }
-.dx3 .prob-fill { background: linear-gradient(90deg, #6b3a1a, #b07040); }
-.prob-num { font-family: var(–mono); font-size: 12px; color: var(–muted); min-width: 34px; text-align: right; }
-
-.tx { margin-bottom: 16px; }
-.tx-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.tx-lbl { font-family: var(–mono); font-size: 8.5px; letter-spacing: .15em; color: var(–dim); text-transform: uppercase; }
-.g-badge { font-family: var(–mono); font-size: 8.5px; padding: 2px 8px; border-radius: 20px; background: #f0ede8; border: 1px solid var(–border2); color: var(–muted); }
-.tx-body { font-size: 13.5px; color: #5a5450; line-height: 1.75; }
-.tx-body.green { color: var(–green); }
-.divider { height: 1px; background: var(–border); margin: 16px 0; }
-
-.sel-btn {
-width: 100%; margin-top: 18px; padding: 13px;
-background: #1a1714 !important; border: none;
-color: #ffffff !important; border-radius: 9px;
-font-family: var(–ui); font-size: 13px; font-weight: 600;
-cursor: pointer; transition: background .18s;
--webkit-appearance: none; appearance: none;
+.dx-card-top {
+display: flex; align-items: center;
+padding: 14px 16px; gap: 12px;
+border-bottom: 1px solid var(–border);
 }
-.sel-btn:hover { background: #333333 !important; }
-
-/* PATHWAY */
-.pw-summary {
-background: #1a1714;
-border-radius: 14px; padding: 22px 24px; margin-bottom: 16px;
-animation: fadeUp .4s ease .3s backwards;
+.dx-rank-badge {
+font-size: 10px; font-weight: 600;
+letter-spacing: .05em; padding: 3px 8px;
+border-radius: 4px; flex-shrink: 0;
 }
-.pw-sum-lbl {
-font-family: var(–mono); font-size: 8px; letter-spacing: .22em;
-color: rgba(255,255,255,.45); text-transform: uppercase; margin-bottom: 10px;
-display: flex; align-items: center; gap: 8px;
-}
-.pw-sum-lbl::before { content: ‘’; width: 18px; height: 1px; background: rgba(255,255,255,.3); }
-.pw-sum-txt { font-size: 14.5px; color: rgba(255,255,255,.88); line-height: 1.8; font-family: var(–display); font-weight: 300; font-style: italic; }
+.dx-rank-1 .dx-rank-badge { background: var(–blue-bg); color: var(–blue); }
+.dx-rank-2 .dx-rank-badge { background: var(–bg3); color: var(–muted); }
+.dx-rank-3 .dx-rank-badge { background: var(–bg3); color: var(–dim); }
 
-.pw-steps-wrap { display: flex; flex-direction: column; gap: 12px; animation: fadeUp .4s ease .35s backwards; }
-
-.pw-step-card {
-background: var(–surface); border: 1px solid var(–border);
-border-radius: 14px; overflow: hidden;
+.dx-name {
+flex: 1;
+font-family: var(–serif);
+font-size: 16px; font-weight: 600;
+color: var(–text); letter-spacing: -.01em;
 }
-.pw-step-header {
-display: flex; align-items: center; gap: 14px;
-padding: 16px 20px; background: #f2efe9; border-bottom: 1px solid var(–border);
+.dx-pct {
+font-size: 22px; font-weight: 300;
+font-family: var(–serif); flex-shrink: 0;
+}
+.dx-rank-1 .dx-pct { color: var(–blue); }
+.dx-rank-2 .dx-pct { color: var(–muted); }
+.dx-rank-3 .dx-pct { color: var(–dim); }
+
+.dx-bar-wrap {
+height: 3px; background: var(–bg3);
+margin: 0 16px;
+}
+.dx-bar { height: 100%; width: 0%; transition: width .7s ease; border-radius: 99px; }
+.dx-rank-1 .dx-bar { background: var(–blue); }
+.dx-rank-2 .dx-bar { background: var(–border2); }
+.dx-rank-3 .dx-bar { background: var(–border); }
+
+.dx-body { padding: 14px 16px; }
+.dx-row { margin-bottom: 11px; }
+.dx-row:last-of-type { margin-bottom: 0; }
+.dx-row-lbl {
+font-size: 9px; font-weight: 600;
+letter-spacing: .1em; color: var(–dim);
+text-transform: uppercase; margin-bottom: 3px;
+}
+.dx-row-val {
+font-size: 13px; font-weight: 400;
+color: var(–muted); line-height: 1.65;
+}
+.dx-ref {
+display: inline-block; margin-top: 10px;
+font-size: 10px; font-weight: 500;
+color: var(–blue); background: var(–blue-bg);
+border: 1px solid var(–blue-bd);
+padding: 3px 9px; border-radius: 4px;
+letter-spacing: .02em;
+}
+.report-btn {
+width: 100%; margin-top: 13px; padding: 10px;
+background: transparent;
+border: 1px solid var(–border);
+border-radius: 7px; color: var(–muted);
+font-family: var(–sans); font-size: 12px;
+font-weight: 500; cursor: pointer;
+transition: all .13s;
+letter-spacing: .01em;
+}
+.report-btn:hover {
+background: var(–blue-bg);
+border-color: var(–blue);
+color: var(–blue);
+}
+
+/* ─── PATHWAY ─────────────────────────── */
+.pathway-summary {
+font-family: var(–serif);
+font-size: 14px; font-style: italic;
+color: var(–muted); line-height: 1.7;
+margin-bottom: 14px; padding: 13px 16px;
+background: var(–blue-bg);
+border: 1px solid var(–blue-bd);
+border-left: 3px solid var(–blue);
+border-radius: 0 8px 8px 0;
+}
+.pw-step {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 8px; padding: 13px 15px;
+margin-bottom: 8px;
 }
 .pw-step-num {
-width: 28px; height: 28px; border-radius: 50%;
-background: #1a1714; color: #fff;
-font-family: var(–mono); font-size: 11px; font-weight: 600;
-display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+font-size: 9px; font-weight: 600;
+letter-spacing: .1em; color: var(–dim);
+text-transform: uppercase; margin-bottom: 4px;
 }
-.pw-step-test {
-font-family: var(–ui); font-size: 15px; font-weight: 600; color: var(–text);
-flex: 1;
+.pw-test {
+font-size: 14px; font-weight: 500;
+color: var(–text); margin-bottom: 10px;
+font-family: var(–serif);
 }
-.pw-step-body { padding: 14px 20px; display: flex; flex-direction: column; gap: 10px; }
+.pw-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pw-col { padding: 9px 11px; border-radius: 6px; }
+.pw-col.pos { background: var(–green-bg); border: 1px solid var(–green-bd); }
+.pw-col.neg { background: var(–bg3); border: 1px solid var(–border); }
+.pw-col-lbl {
+font-size: 9px; font-weight: 600;
+letter-spacing: .08em; text-transform: uppercase;
+margin-bottom: 3px;
+}
+.pw-col.pos .pw-col-lbl { color: var(–green); }
+.pw-col.neg .pw-col-lbl { color: var(–dim); }
+.pw-col-val {
+font-size: 12px; font-weight: 400;
+color: var(–muted); line-height: 1.55;
+}
 
-.pw-outcome {
-display: flex; align-items: flex-start; gap: 12px;
-padding: 12px 16px; border-radius: 10px;
+/* ─── MODAL ───────────────────────────── */
+.movl {
+position: fixed; inset: 0;
+background: rgba(0,0,0,.4); z-index: 500;
+display: none; align-items: flex-end; justify-content: center;
 }
-.pw-outcome.pos { background: #f0fdf4; border: 1px solid #bbf7d0; }
-.pw-outcome.neg { background: #fff1f2; border: 1px solid #fecdd3; }
-
-.pw-outcome-icon {
-width: 24px; height: 24px; border-radius: 50%;
-display: flex; align-items: center; justify-content: center;
-font-size: 12px; flex-shrink: 0; margin-top: 1px; font-weight: 700;
-}
-.pw-outcome.pos .pw-outcome-icon { background: #166534; color: #fff; }
-.pw-outcome.neg .pw-outcome-icon { background: #991b1b; color: #fff; }
-
-.pw-outcome-label {
-font-family: var(–mono); font-size: 8px; letter-spacing: .15em;
-text-transform: uppercase; margin-bottom: 3px; font-weight: 600;
-}
-.pw-outcome.pos .pw-outcome-label { color: #166534; }
-.pw-outcome.neg .pw-outcome-label { color: #991b1b; }
-.pw-outcome-text { font-size: 13px; color: var(–muted); line-height: 1.65; }
-
-/* MODAL */
-.movl { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 300; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(6px); }
 .movl.show { display: flex; }
-.modal { background: #ffffff !important; border: 1px solid var(–border2); border-radius: 16px; padding: 28px 26px; max-width: 560px; width: 100%; max-height: 88vh; overflow-y: auto; position: relative; animation: pop .25s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 20px 60px rgba(0,0,0,.25); }
-@keyframes pop { from { opacity:0; transform:scale(.94) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
-.modal-title { font-family: var(–display); font-size: 24px; font-weight: 300; margin-bottom: 2px; }
-.modal-sub { font-family: var(–mono); font-size: 9px; letter-spacing: .18em; color: var(–dim); text-transform: uppercase; margin-bottom: 18px; }
-.rpt { background: #ffffff !important; border: 1.5px solid #1a1714 !important; border-radius: 10px; padding: 20px 22px; font-family: var(–mono); font-size: 12px; line-height: 2; color: #1a1714 !important; white-space: pre-wrap; word-break: break-word; margin-bottom: 18px; }
-.m-acts { display: flex; gap: 10px; }
-.m-btn { flex: 1; padding: 13px; border-radius: 9px; font-family: var(–ui); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .18s; border: 1.5px solid #1a1714 !important; background: #ffffff !important; color: #1a1714 !important; }
-.m-btn.pri { background: #1a1714 !important; color: #ffffff !important; border-color: #1a1714 !important; }
-.m-btn:hover { opacity: .85; }
-.m-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: var(–dim); cursor: pointer; font-size: 17px; }
-
-/* DRAWER */
-.ovl { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 200; }
-.ovl.show { display: block; }
-.drawer { position: fixed; right: -310px; top: 0; bottom: 0; width: 290px; background: var(–surface); border-left: 1px solid var(–border); z-index: 201; padding: 26px 20px; transition: right .3s cubic-bezier(.4,0,.2,1); overflow-y: auto; }
-.drawer.open { right: 0; }
-.drawer-title { font-family: var(–display); font-size: 22px; font-weight: 300; margin-bottom: 18px; }
-.drawer-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: var(–dim); cursor: pointer; font-size: 16px; }
-.save-btn { width: 100%; padding: 12px; background: #1a1714 !important; color: #fff !important; border: none; border-radius: 9px; font-family: var(–ui); font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 8px; }
-.key-ok { display: none; font-family: var(–mono); font-size: 9px; color: var(–green); text-align: center; margin-top: 10px; letter-spacing: .1em; }
-.drawer-note { font-size: 12px; color: var(–dim); line-height: 1.65; margin-top: 16px; }
-.key-link { color: var(–text); font-size: 12px; text-decoration: underline; }
-
-/* DERM-SPECIFIC */
-.upload-zone { border: 2px dashed var(–border2); border-radius: 16px; background: var(–surface); text-align: center; padding: 44px 20px; cursor: pointer; transition: all .22s; position: relative; overflow: hidden; margin-bottom: 28px; }
-.upload-zone:hover { border-color: var(–text); }
-.upload-zone.has-img { padding: 0; border-style: solid; border-color: var(–text); }
-#dPrev { width: 100%; max-height: 300px; object-fit: cover; border-radius: 14px; display: none; }
-.upload-ico { font-size: 36px; margin-bottom: 10px; }
-.upload-t { font-family: var(–display); font-size: 20px; font-weight: 300; margin-bottom: 5px; }
-.upload-h { font-size: 12px; color: var(–dim); }
-.chg-btn { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,.65); color: #fff; border: none; border-radius: 7px; padding: 5px 11px; font-family: var(–ui); font-size: 11px; cursor: pointer; display: none; }
-input[type=file] { display: none; }
-.loc-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-.loc-btn { padding: 9px 16px; background: var(–surface); border: 1.5px solid var(–border2); color: var(–muted); border-radius: 8px; font-family: var(–ui); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; }
-.loc-btn:hover { border-color: var(–text); color: var(–text); }
-.loc-btn.on { background: #1a1714 !important; border-color: #1a1714 !important; color: #ffffff !important; font-weight: 600 !important; }
-.dur-row { display: flex; gap: 8px; }
-.dur-btn { flex: 1; padding: 11px; text-align: center; background: var(–surface); border: 1.5px solid var(–border2); color: var(–muted); border-radius: 9px; font-family: var(–ui); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all .15s; }
-.dur-btn:hover { border-color: var(–text); color: var(–text); }
-.dur-btn.on { background: #1a1714 !important; border-color: #1a1714 !important; color: #ffffff !important; font-weight: 600 !important; }
-.sym-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.sym-item { display: flex; align-items: center; justify-content: space-between; background: var(–surface); border: 1px solid var(–border); border-radius: 9px; padding: 10px 13px; gap: 8px; transition: border-color .15s; }
-.sym-item.answered { border-color: var(–border2); }
-.sym-label { font-size: 13px; color: var(–text); flex: 1; }
-.sym-btns { display: flex; gap: 5px; }
-.sym-btn { padding: 5px 11px; border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer; border: 1.5px solid var(–border2); background: var(–bg); color: var(–muted); transition: all .15s; font-family: var(–ui); }
-.sym-btn:hover { border-color: var(–text); color: var(–text); }
-.sym-btn.yes.on { background: #166534 !important; border-color: #166534 !important; color: #ffffff !important; }
-.sym-btn.no.on  { background: #991b1b !important; border-color: #991b1b !important; color: #ffffff !important; }
-.visual-box { background: var(–surface); border: 1px solid var(–border); border-left: 3px solid var(–text); border-radius: 12px; padding: 16px 18px; margin-bottom: 18px; }
-.visual-lbl { font-family: var(–mono); font-size: 8.5px; letter-spacing: .18em; color: var(–dim); text-transform: uppercase; margin-bottom: 7px; }
-.visual-txt { font-size: 13.5px; color: var(–muted); line-height: 1.75; }
-.sim-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 8px; }
-.sim-img { border-radius: 9px; overflow: hidden; aspect-ratio: 1; position: relative; }
-.sim-img img { width: 100%; height: 100%; object-fit: cover; }
-.sim-badge { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.65); color: #fff; font-family: var(–mono); font-size: 8px; padding: 4px 6px; line-height: 1.3; }
-.sim-note { font-family: var(–mono); font-size: 9px; color: var(–dim); text-align: center; margin-bottom: 20px; letter-spacing: .07em; }
-
-/* CLIN-SPECIFIC */
-.img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
-
-@media (max-width: 520px) {
-.tool-cards { grid-template-columns: 1fr; max-width: 100%; }
-.land-title { font-size: 36px; }
-.sym-grid { grid-template-columns: 1fr; }
-.dur-row { flex-wrap: wrap; }
-.dur-btn { flex: none; min-width: calc(50% - 4px); }
-.img-row { grid-template-columns: 1fr; }
+.modal {
+background: var(–surface); width: 100%;
+max-width: 600px; max-height: 82vh;
+display: flex; flex-direction: column;
+border-radius: 14px 14px 0 0;
+border: 1px solid var(–border);
+border-bottom: none;
+box-shadow: 0 -8px 40px rgba(0,0,0,.12);
 }
+.mod-hdr {
+padding: 18px 20px 14px;
+border-bottom: 1px solid var(–border);
+display: flex; align-items: flex-start;
+justify-content: space-between; flex-shrink: 0;
+}
+.mod-title {
+font-family: var(–serif);
+font-size: 18px; font-weight: 600;
+color: var(–text); letter-spacing: -.01em;
+}
+.mod-sub {
+font-size: 11px; font-weight: 400;
+color: var(–dim); margin-top: 2px;
+}
+.mod-close {
+background: none; border: none; color: var(–dim);
+cursor: pointer; font-size: 22px; line-height: 1;
+transition: color .12s; padding: 2px;
+}
+.mod-close:hover { color: var(–text); }
+.rpt-box {
+flex: 1; overflow-y: auto; padding: 18px 20px;
+font-family: ‘Courier New’, monospace;
+font-size: 11.5px; line-height: 1.85;
+color: var(–muted); white-space: pre-wrap;
+word-break: break-word;
+}
+.mod-footer {
+padding: 13px 20px;
+border-top: 1px solid var(–border);
+display: flex; gap: 9px; flex-shrink: 0;
+}
+.copy-btn {
+flex: 1; padding: 11px;
+background: var(–blue); color: #fff;
+border: none; border-radius: 8px;
+font-family: var(–sans); font-size: 13px;
+font-weight: 500; cursor: pointer; transition: background .14s;
+}
+.copy-btn:hover { background: var(–blue2); }
+.new-btn {
+padding: 11px 18px;
+background: transparent; color: var(–muted);
+border: 1px solid var(–border); border-radius: 8px;
+font-family: var(–sans); font-size: 13px;
+font-weight: 400; cursor: pointer; transition: all .13s;
+}
+.new-btn:hover { border-color: var(–border2); color: var(–text); }
 
+/* ─── RESPONSIVE ──────────────────────── */
+@media (max-width: 480px) {
+.land-title { font-size: 34px; }
+.pw-row { grid-template-columns: 1fr; }
+.wrap { padding: 20px 16px 100px; }
+}
 </style>
+
 </head>
 <body>
 
-<!-- SHARED HEADER -->
+<!-- HEADER -->
 
 <header class="hdr">
-  <div id="logoWrap">
-    <div class="logo-name" id="logoName">Med<em>Dx</em></div>
-    <div class="logo-tag" id="logoTag">AI Clinical Diagnostic Suite</div>
+  <div class="hdr-logo">
+    <div class="hdr-wordmark" id="logoName">Med<span>Dx</span></div>
+    <div class="hdr-sep"></div>
+    <div class="hdr-tag" id="logoTag">Clinical AI Suite</div>
   </div>
-  <div class="hdr-right">
-    <button class="back-btn" id="backBtn" onclick="goHome()">← Home</button>
+  <div class="hdr-r">
+    <button class="back-btn" id="backBtn" onclick="goHome()">← Back</button>
     <button class="gear-btn" onclick="openDrawer()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="1.8" stroke-linecap="round">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
       </svg>
@@ -441,381 +688,205 @@ input[type=file] { display: none; }
   </div>
 </header>
 
-<!-- ═══════════════ LANDING ═══════════════ -->
+<!-- LANDING -->
 
 <div id="landing">
-
-  <!-- HERO -->
-
-  <div class="land-hero">
-    <div class="land-logo-wrap">
-      <div class="land-logo-mark">
-        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="4" y="6" width="20" height="2.5" rx="1.25" fill="white" opacity=".9"/>
-          <rect x="4" y="12.75" width="14" height="2.5" rx="1.25" fill="white" opacity=".7"/>
-          <rect x="4" y="19.5" width="17" height="2.5" rx="1.25" fill="white" opacity=".5"/>
-          <circle cx="23" cy="20.5" r="4.5" fill="#d97706"/>
-          <path d="M21.5 20.5h3M23 19v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="land-logo-text">
-        <div class="land-logo-name">Med<span>Dx</span></div>
-        <div class="land-logo-sub">Clinical AI Suite</div>
-      </div>
-    </div>
-    <div class="land-tagline">Intelligent diagnostic support for clinicians</div>
-  </div>
-
-  <!-- CARDS -->
-
-  <div class="tool-cards">
+  <div class="land-inner">
 
 ```
-<div class="tool-card clindx" onclick="openApp('clindx')">
-  <div class="tool-card-top">
-    <div class="tool-card-icon">🩺</div>
-    <div class="tool-card-name">Clin<em>Dx</em></div>
-    <div class="tool-card-badge">Clinical Differential Diagnosis</div>
-  </div>
-  <div class="tool-card-bottom">
-    <div class="tool-features">
-      <span class="tool-feat">Differential Dx</span>
-      <span class="tool-feat">Drug Dosages</span>
-      <span class="tool-feat">Workup</span>
-      <span class="tool-feat">Decision Pathway</span>
-    </div>
-    <div class="tool-card-desc">Enter symptoms, labs, and imaging to generate a ranked differential with exact guideline-based treatments.</div>
-    <div class="tool-card-cta">
-      <span>Open ClinDx</span>
-      <div class="tool-card-cta-arrow">→</div>
-    </div>
-  </div>
+<div class="land-hero">
+  <div class="land-title">Med<span>Dx</span></div>
+  <div class="land-tagline">Clinical diagnostic support for physicians</div>
 </div>
 
-<div class="tool-card dermdx" onclick="openApp('dermdx')">
-  <div class="tool-card-top">
-    <div class="tool-card-icon">🔬</div>
-    <div class="tool-card-name">Derm<em>Dx</em></div>
-    <div class="tool-card-badge">AI Dermatology Diagnosis</div>
-  </div>
-  <div class="tool-card-bottom">
-    <div class="tool-features">
-      <span class="tool-feat">Photo Analysis</span>
-      <span class="tool-feat">ISIC Archive</span>
-      <span class="tool-feat">AAD · BAD</span>
-      <span class="tool-feat">Visual AI</span>
+<div class="tool-cards">
+  <button class="tool-item" onclick="openApp('clindx')">
+    <div class="tool-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 12h6M12 9v6"/>
+        <circle cx="12" cy="12" r="9"/>
+      </svg>
     </div>
-    <div class="tool-card-desc">Upload a lesion photo for AI-powered visual analysis and dermatology differential diagnosis.</div>
-    <div class="tool-card-cta">
-      <span>Open DermDx</span>
-      <div class="tool-card-cta-arrow">→</div>
+    <div class="tool-body">
+      <div class="tool-name">Clin<em>Dx</em></div>
+      <div class="tool-desc">Differential diagnosis · Drug dosing · Workup · Decision pathway</div>
     </div>
-  </div>
+    <div class="tool-chevron">›</div>
+  </button>
+</div>
+
+<div class="land-note">
+  Powered by Groq · UpToDate · Harrison's · AHA · NICE · WHO<br>
+  For clinical decision support only — not a substitute for clinical judgment
 </div>
 ```
 
   </div>
-
-  <div class="land-note">
-    Powered by <span>Groq</span> · Guidelines: <span>AAD · JAAD · BJD · Fitzpatrick's · UpToDate · Trichology Society</span><br>
-    For clinical decision support only — not a substitute for clinical judgment
-  </div>
-
 </div>
 
-<!-- ═══════════════ APP WRAP ═══════════════ -->
+<!-- OVERLAY -->
+
+<div class="ovl" id="ovl" onclick="closeDrawer()"></div>
+
+<!-- DRAWER -->
+
+<div class="drawer" id="drawer">
+  <button class="dr-close" onclick="closeDrawer()">×</button>
+  <div class="dr-title">Settings</div>
+  <div class="dr-sub">API Configuration</div>
+
+  <div class="d-lbl">Groq API Key</div>
+  <div class="d-hint">Required for all AI features. Free at console.groq.com</div>
+  <input type="text" id="keyInput" placeholder="gsk_…" style="font-size:13px;margin-bottom:5px;">
+  <a class="key-link" href="https://console.groq.com" target="_blank">↗ Get free key at console.groq.com</a>
+
+<button class="save-btn" onclick="saveKey()">Save Key</button>
+
+  <div class="key-ok" id="keyOk">✓ Key saved</div>
+
+  <div class="dr-note">
+    Your key is stored only in this browser and sent directly to Groq. Never stored on any server.
+  </div>
+</div>
+
+<!-- APP -->
 
 <div id="appWrap">
-
-  <!-- ══════ CLINDX ══════ -->
-
   <div class="app-view" id="clindxView">
     <div class="wrap">
-      <div class="fg">
-        <div class="lbl">Symptoms <span class="req">*</span></div>
-        <textarea id="cSx" rows="4" placeholder="Describe symptoms, onset, duration, character…"></textarea>
-      </div>
-      <div class="fg">
-        <div class="lbl">Age <span class="req">*</span></div>
-        <input type="number" id="cAge" min="0" max="120" placeholder="e.g. 45" style="max-width:150px">
-      </div>
-      <div class="fg">
-        <div class="lbl">Patient Sex <span class="req">*</span></div>
-        <div class="tog-row">
-          <button class="tog" id="cTMale" onclick="cSetSex('Male')">Male</button>
-          <button class="tog" id="cTFemale" onclick="cSetSex('Female')">Female</button>
-        </div>
-        <div id="cPregWrap" style="display:none; margin-top:14px;">
-          <div class="lbl">Pregnancy Status</div>
-          <div class="tog-row">
-            <button class="tog" id="cTPreg" onclick="cSetPreg('Pregnant')">Pregnant</button>
-            <button class="tog" id="cTNotPreg" onclick="cSetPreg('Not Pregnant')">Not Pregnant</button>
-          </div>
-        </div>
-      </div>
-      <div class="fg">
-        <div class="lbl">Medical History & Medications <span class="opt">optional</span></div>
-        <textarea id="cHx" rows="3" placeholder="e.g. HTN, DM Type 2, on Metformin 500mg, Lisinopril 10mg…"></textarea>
-      </div>
-      <div class="fg">
-        <div class="lbl">Abnormal Lab Results <span class="opt">optional</span></div>
-        <textarea id="cLabs" rows="3" placeholder="e.g. WBC 14.5 k/uL, CRP 85 mg/L, Hgb 8.2 g/dL…"></textarea>
-      </div>
-      <div class="fg">
-        <div class="lbl">Imaging <span class="opt">optional</span></div>
-        <div class="img-row">
-          <div class="sel-w">
-            <select id="cItype">
-              <option value="">— Select type —</option>
-              <option>X-Ray</option><option>CT Scan</option>
-              <option>CT Pulmonary Angiography</option><option>MRI</option>
-              <option>Ultrasound</option><option>Echocardiography</option>
-              <option>Doppler Ultrasound</option><option>PET-CT</option>
-              <option>Mammography</option><option>DXA</option><option>Other</option>
-            </select>
-          </div>
-          <input type="text" id="cIfind" placeholder="e.g. bilateral infiltrates…">
-        </div>
-      </div>
-      <button class="go" id="cGoBtn" onclick="cAnalyze()">Analyze Patient</button>
-      <div class="err" id="cErr"><strong id="cErrTitle"></strong><span id="cErrMsg"></span></div>
-      <div class="loading" id="cLoading">
-        <div class="spin"></div>
-        <div class="spin-lbl">Consulting guidelines…</div>
-        <div class="spin-steps">
-          <div class="spin-step" id="cLs1">Reviewing patient data…</div>
-          <div class="spin-step" id="cLs2">Consulting UpToDate · NICE · AHA guidelines…</div>
-          <div class="spin-step" id="cLs3">Building differential diagnosis…</div>
-          <div class="spin-step" id="cLs4">Generating clinical pathway…</div>
-        </div>
-      </div>
-      <div class="results" id="cResults">
-        <div class="sec-hdr"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
-        <div id="cCards"></div>
-        <div id="cPathwaySection" style="display:none; margin-top:28px;">
-          <div class="sec-hdr"><span class="sec-lbl">Clinical Decision Pathway</span><div class="sec-line"></div></div>
-          <div id="cPathwayContent"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════ DERMDX ══════ -->
-
-  <div class="app-view" id="dermdxView">
-    <div class="wrap">
-      <div class="upload-zone" id="dUploadZone" onclick="document.getElementById('dImgInput').click()">
-        <div class="upload-ico" id="dUico">🔬</div>
-        <div class="upload-t" id="dUtitle">Upload Skin Photo</div>
-        <div class="upload-h" id="dUhint">Clear, close-up, well-lit photo of the affected area</div>
-        <img id="dPrev" alt="lesion">
-        <button class="chg-btn" id="dChgBtn" onclick="event.stopPropagation(); document.getElementById('dImgInput').click()">Change Photo</button>
-      </div>
-      <input type="file" id="dImgInput" accept="image/*" onchange="dHandleImg(this)">
 
 ```
-  <div class="fg">
-    <div class="lbl">Condition Type <span class="req">*</span></div>
-    <div class="loc-grid">
-      <button class="loc-btn" onclick="dSetCond(this,'Skin Lesion / Mole')">Lesion / Mole</button>
-      <button class="loc-btn" onclick="dSetCond(this,'Rash')">Rash</button>
-      <button class="loc-btn" onclick="dSetCond(this,'Wound / Laceration')">Wound / Cut</button>
-      <button class="loc-btn" onclick="dSetCond(this,'Burn')">Burn</button>
-      <button class="loc-btn" onclick="dSetCond(this,'Insect Bite / Sting')">Insect Bite</button>
-      <button class="loc-btn" onclick="dSetCond(this,'Nail or Hair Disorder')">Nail / Hair</button>
-    </div>
+  <div class="app-bar">
+    <div class="app-bar-title">Clin<em>Dx</em></div>
+    <div class="app-bar-sub">Differential Diagnosis</div>
   </div>
 
   <div class="fg">
-    <div class="lbl">Age <span class="req">*</span></div>
-    <input type="number" id="dAge" min="0" max="120" placeholder="e.g. 34" style="max-width:150px">
+    <div class="lbl">Symptoms <span class="req">*</span></div>
+    <textarea id="cSx" rows="4" placeholder="Describe symptoms, onset, duration, character…"></textarea>
   </div>
   <div class="fg">
-    <div class="lbl">Patient Sex <span class="req">*</span></div>
+    <div class="lbl">Age <span class="req">*</span></div>
+    <input type="number" id="cAge" min="0" max="120" placeholder="e.g. 45" style="max-width:130px">
+  </div>
+  <div class="fg">
+    <div class="lbl">Sex <span class="req">*</span></div>
     <div class="tog-row">
-      <button class="tog" id="dTMale" onclick="dSetSex('Male')">Male</button>
-      <button class="tog" id="dTFemale" onclick="dSetSex('Female')">Female</button>
+      <button class="tog" id="cTMale" onclick="cSetSex('Male')">Male</button>
+      <button class="tog" id="cTFemale" onclick="cSetSex('Female')">Female</button>
     </div>
-    <div id="dPregWrap" style="display:none; margin-top:14px;">
-      <div class="lbl">Pregnancy Status</div>
+    <div id="cPregWrap" style="display:none;margin-top:12px;">
+      <div class="lbl" style="margin-bottom:7px;">Pregnancy Status</div>
       <div class="tog-row">
-        <button class="tog" id="dTPreg" onclick="dSetPreg('Pregnant')">Pregnant</button>
-        <button class="tog" id="dTNotPreg" onclick="dSetPreg('Not Pregnant')">Not Pregnant</button>
+        <button class="tog" id="cTPreg" onclick="cSetPreg('Pregnant')">Pregnant</button>
+        <button class="tog" id="cTNotPreg" onclick="cSetPreg('Not Pregnant')">Not Pregnant</button>
       </div>
     </div>
   </div>
   <div class="fg">
-    <div class="lbl">Lesion Location <span class="req">*</span></div>
-    <div class="loc-grid">
-      <button class="loc-btn" onclick="dSetLoc(this,'Face')">Face</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Scalp')">Scalp</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Neck')">Neck</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Chest')">Chest</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Back')">Back</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Abdomen')">Abdomen</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Arms')">Arms</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Hands')">Hands</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Legs')">Legs</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Feet')">Feet</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Genitalia')">Genitalia</button>
-      <button class="loc-btn" onclick="dSetLoc(this,'Nails')">Nails</button>
-    </div>
+    <div class="lbl">Medical History & Medications <span class="opt">optional</span></div>
+    <textarea id="cHx" rows="2" placeholder="Past medical history, current medications, allergies…"></textarea>
   </div>
   <div class="fg">
-    <div class="lbl">Duration <span class="req">*</span></div>
-    <div class="dur-row">
-      <button class="dur-btn" onclick="dSetDur(this,'Days')">Days</button>
-      <button class="dur-btn" onclick="dSetDur(this,'Weeks')">Weeks</button>
-      <button class="dur-btn" onclick="dSetDur(this,'Months')">Months</button>
-      <button class="dur-btn" onclick="dSetDur(this,'Years')">Years</button>
-    </div>
+    <div class="lbl">Laboratory Results <span class="opt">optional</span></div>
+    <textarea id="cLabs" rows="2" placeholder="CBC, BMP, LFTs, troponin, CRP…"></textarea>
   </div>
   <div class="fg">
-    <div class="lbl">Onset Speed <span class="req">*</span></div>
-    <div class="dur-row">
-      <button class="dur-btn" id="dOnSudden" onclick="dSetOnset(this,'Sudden (hours)')">Sudden</button>
-      <button class="dur-btn" id="dOnGrad"   onclick="dSetOnset(this,'Gradual (days)')">Gradual</button>
-      <button class="dur-btn" id="dOnChronic" onclick="dSetOnset(this,'Chronic / Recurring')">Chronic</button>
+    <div class="lbl">Imaging <span class="opt">optional</span></div>
+    <div class="sel-w" style="margin-bottom:8px;">
+      <select id="cItype">
+        <option value="">— Select modality —</option>
+        <option>Chest X-Ray</option>
+        <option>CT Chest</option>
+        <option>CT Abdomen/Pelvis</option>
+        <option>CT Head</option>
+        <option>MRI Brain</option>
+        <option>MRI Spine</option>
+        <option>Abdominal Ultrasound</option>
+        <option>Echo / Cardiac US</option>
+        <option>ECG</option>
+        <option>Other</option>
+      </select>
     </div>
+    <input type="text" id="cIfind" placeholder="Key imaging findings…">
   </div>
 
-  <div class="fg">
-    <div class="lbl">Associated Symptoms <span class="req">*</span></div>
-    <div class="sym-grid">
-      <div class="sym-item"><span class="sym-label">Itching</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'itch','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'itch','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Pain</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'pain','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'pain','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Burning</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'burn','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'burn','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Bleeding</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'bleed','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'bleed','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Ulceration</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'ulcer','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'ulcer','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Spreading</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'spread','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'spread','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Growing</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'grow','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'grow','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Sun Sensitivity</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'sun','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'sun','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Family History</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'family','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'family','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">On Medications</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'meds','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'meds','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Fever</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'fever','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'fever','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Pus / Discharge</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'pus','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'pus','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Swelling / Oedema</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'swelling','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'swelling','no')">No</button></div></div>
-      <div class="sym-item"><span class="sym-label">Recent Travel</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'travel','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'travel','no')">No</button></div></div>
-    </div>
-  </div>
-  <div class="fg">
-    <div class="lbl">Additional Notes <span class="opt">optional</span></div>
-    <textarea id="dExtra" rows="3" placeholder="Medications, skin type, recent travel, previous treatments…"></textarea>
-  </div>
-  <button class="go" id="dGoBtn" onclick="dAnalyze()">Analyze Lesion</button>
-  <div class="err" id="dErr"><strong id="dErrTitle"></strong><span id="dErrMsg"></span></div>
-  <div class="loading" id="dLoading">
+  <button class="go" id="cGoBtn" onclick="cAnalyze()">Generate Differential Diagnosis</button>
+  <div class="err" id="cErr"><strong id="cErrTitle"></strong><span id="cErrMsg"></span></div>
+
+  <div class="loading" id="cLoading">
     <div class="spin"></div>
     <div class="spin-lbl">Analyzing…</div>
     <div class="spin-steps">
-      <div class="spin-step" id="dLs1">Searching ISIC database…</div>
-      <div class="spin-step" id="dLs2">Analyzing image with Llama Vision…</div>
-      <div class="spin-step" id="dLs3">Consulting AAD · BAD · NICE guidelines…</div>
-      <div class="spin-step" id="dLs4">Generating diagnostic report…</div>
+      <div class="spin-step" id="cLs1">Reviewing clinical presentation…</div>
+      <div class="spin-step" id="cLs2">Cross-referencing differentials…</div>
+      <div class="spin-step" id="cLs3">Consulting UpToDate · Harrison's · NICE…</div>
+      <div class="spin-step" id="cLs4">Generating treatment plan…</div>
     </div>
   </div>
-  <div class="results" id="dResults">
-    <div class="sec-hdr"><span class="sec-lbl">Similar Cases — ISIC Archive</span><div class="sec-line"></div></div>
-    <div class="sim-row" id="dSimRow"></div>
-    <div class="sim-note" id="dSimNote"></div>
-    <div id="dVisualBox"></div>
-    <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
-    <div id="dCards"></div>
-    <div id="dPathwaySection" style="display:none; margin-top:28px;">
-      <div class="sec-hdr"><span class="sec-lbl">Clinical Decision Pathway</span><div class="sec-line"></div></div>
-      <div id="dPathwayContent"></div>
+
+  <div class="results" id="cResults">
+    <div class="sec-hdr"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
+    <div id="cCards"></div>
+    <div id="cPathwaySection" style="display:none;margin-top:26px;">
+      <div class="sec-hdr"><span class="sec-lbl">Decision Pathway</span><div class="sec-line"></div></div>
+      <div id="cPathwayContent"></div>
     </div>
   </div>
+
 </div>
 ```
 
   </div>
-
-</div><!-- /appWrap -->
-
-<!-- SHARED DRAWER -->
-
-<div class="ovl" id="ovl" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer">
-  <button class="drawer-close" onclick="closeDrawer()">✕</button>
-  <div class="drawer-title">Settings</div>
-  <div class="lbl" style="margin-bottom:8px;">Groq API Key</div>
-  <input type="text" id="keyInput" placeholder="gsk_…" style="font-family:var(--mono);font-size:12px;margin-bottom:8px;">
-  <div style="margin:8px 0 14px;"><a class="key-link" href="https://console.groq.com" target="_blank">↗ Get free key at console.groq.com</a></div>
-  <button class="save-btn" onclick="saveKey()">Save Key</button>
-  <div class="key-ok" id="keyOk">✓ Key saved</div>
-  <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
-  <div class="drawer-note">Your key is stored only in your browser and sent directly to Groq. Never stored on any server.</div>
 </div>
 
-<!-- SHARED MODAL -->
+<!-- MODAL -->
 
 <div class="movl" id="movl">
   <div class="modal">
-    <button class="m-close" onclick="closeMod()">✕</button>
-    <div class="modal-title" id="modTitle">Report</div>
-    <div class="modal-sub" id="modSub">Generated by MedDx</div>
-    <div class="rpt" id="rptBox"></div>
-    <div class="m-acts">
-      <button class="m-btn pri" id="copyBtn" onclick="copyRpt()">Copy Report</button>
-      <button class="m-btn" onclick="newCase()">New Case</button>
+    <div class="mod-hdr">
+      <div>
+        <div class="mod-title" id="modTitle">Clinical Report</div>
+        <div class="mod-sub" id="modSub">Generated by ClinDx</div>
+      </div>
+      <button class="mod-close" onclick="closeMod()">×</button>
+    </div>
+    <div class="rpt-box" id="rptBox"></div>
+    <div class="mod-footer">
+      <button class="copy-btn" id="copyBtn" onclick="copyRpt()">Copy Report</button>
+      <button class="new-btn" onclick="newCase()">New Case</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ════════════════════════════════════
-   NAVIGATION
-════════════════════════════════════ */
-var currentApp = '';
-var rptText = '';
+var currentApp = '', rptText = '';
 
 function openApp(app) {
   currentApp = app;
   document.getElementById('landing').style.display = 'none';
   document.getElementById('appWrap').classList.add('show');
   document.getElementById('backBtn').classList.add('show');
-  if (app === 'clindx') {
-    document.getElementById('clindxView').classList.add('show');
-    document.getElementById('dermdxView').classList.remove('show');
-    document.getElementById('logoName').innerHTML = 'Clin<em>Dx</em>';
-    document.getElementById('logoTag').textContent = 'Clinical Differential Diagnosis';
-  } else {
-    document.getElementById('dermdxView').classList.add('show');
-    document.getElementById('clindxView').classList.remove('show');
-    document.getElementById('logoName').innerHTML = 'Derm<em>Dx</em>';
-    document.getElementById('logoTag').textContent = 'AI Dermatology Support';
-  }
+  document.getElementById('clindxView').classList.add('show');
+  document.getElementById('logoName').innerHTML = 'Clin<span>Dx</span>';
+  document.getElementById('logoTag').textContent = 'Differential Diagnosis';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
 function goHome() {
   document.getElementById('landing').style.display = '';
   document.getElementById('appWrap').classList.remove('show');
   document.getElementById('backBtn').classList.remove('show');
-  document.getElementById('logoName').innerHTML = 'Med<em>Dx</em>';
-  document.getElementById('logoTag').textContent = 'AI Clinical Diagnostic Suite';
+  document.getElementById('clindxView').classList.remove('show');
+  document.getElementById('logoName').innerHTML = 'Med<span>Dx</span>';
+  document.getElementById('logoTag').textContent = 'Clinical AI Suite';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-/* ════════════════════════════════════
-   SHARED UTILITIES
-════════════════════════════════════ */
 function getKey() { return localStorage.getItem('meddx_key') || ''; }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function openDrawer() {
-  document.getElementById('keyInput').value = getKey();
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('ovl').classList.add('show');
-}
-function closeDrawer() {
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('ovl').classList.remove('show');
-}
+function openDrawer() { document.getElementById('keyInput').value = getKey(); document.getElementById('drawer').classList.add('open'); document.getElementById('ovl').classList.add('show'); }
+function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('ovl').classList.remove('show'); }
 function saveKey() {
-  var k = document.getElementById('keyInput').value.trim();
-  localStorage.setItem('meddx_key', k);
+  localStorage.setItem('meddx_key', document.getElementById('keyInput').value.trim());
   document.getElementById('keyOk').style.display = 'block';
   setTimeout(function() { document.getElementById('keyOk').style.display = 'none'; closeDrawer(); }, 1400);
 }
@@ -823,591 +894,137 @@ function closeMod() { document.getElementById('movl').classList.remove('show'); 
 function copyRpt() {
   navigator.clipboard.writeText(rptText).then(function() {
     var b = document.getElementById('copyBtn');
-    b.textContent = '✓ Copied!';
+    b.textContent = '✓ Copied';
     setTimeout(function() { b.textContent = 'Copy Report'; }, 2000);
   });
 }
 
+function renderCards(diagnoses, containerId, onSelect) {
+  var c = document.getElementById(containerId); c.innerHTML = '';
+  diagnoses.forEach(function(dx, i) {
+    var rc = 'dx-rank-' + dx.rank, pct = dx.likelihood || 0;
+    var badge = i===0 ? 'Most Likely' : i===1 ? '2nd Likely' : '3rd Likely';
+    var card = document.createElement('div');
+    card.className = 'dx-card ' + rc;
+    card.innerHTML =
+      '<div class="dx-card-top">' +
+        '<span class="dx-rank-badge">' + badge + '</span>' +
+        '<div class="dx-name">' + esc(dx.name) + '</div>' +
+        '<div class="dx-pct">' + pct + '<span style="font-size:14px;opacity:.4">%</span></div>' +
+      '</div>' +
+      '<div class="dx-bar-wrap"><div class="dx-bar" style="width:0%" data-w="'+pct+'"></div></div>' +
+      '<div class="dx-body">' +
+        '<div class="dx-row"><div class="dx-row-lbl">First-line Treatment</div><div class="dx-row-val">' + esc(dx.first_line||'—') + '</div></div>' +
+        '<div class="dx-row"><div class="dx-row-lbl">Alternatives</div><div class="dx-row-val">' + esc(dx.alternatives||'—') + '</div></div>' +
+        '<div class="dx-row"><div class="dx-row-lbl">Recommended Workup</div><div class="dx-row-val">' + esc(dx.workup||'—') + '</div></div>' +
+        (dx.guideline ? '<div><span class="dx-ref">' + esc(dx.guideline) + '</span></div>' : '') +
+        '<button class="report-btn" onclick="' + onSelect + '(' + i + ')">Generate Clinical Report</button>' +
+      '</div>';
+    c.appendChild(card);
+    setTimeout(function() { var b = card.querySelector('.dx-bar'); b.style.width = b.getAttribute('data-w') + '%'; }, 80);
+  });
+}
+
 function renderPathway(pathway, containerId, sectionId) {
-  var ps = document.getElementById(sectionId);
-  var pc = document.getElementById(containerId);
+  var ps = document.getElementById(sectionId), pc = document.getElementById(containerId);
   if (!pathway || !pathway.steps || !pathway.steps.length) return;
-  var html = '';
-
-  // Clinical Summary — dark card
-  if (pathway.summary) {
-    html += '<div class="pw-summary">' +
-      '<div class="pw-sum-lbl">Clinical Summary</div>' +
-      '<div class="pw-sum-txt">' + esc(pathway.summary) + '</div>' +
-      '</div>';
-  }
-
-  // Steps
-  html += '<div class="pw-steps-wrap">';
-  pathway.steps.forEach(function(s) {
-    var posText = esc(s.if_positive || '');
-    var negText = esc(s.if_negative || '');
-    // Strip leading arrow if present
-    posText = posText.replace(/^[→\-\s]+/, '');
-    negText = negText.replace(/^[→\-\s]+/, '');
-
-    html +=
-      '<div class="pw-step-card">' +
-        '<div class="pw-step-header">' +
-          '<div class="pw-step-num">' + s.step + '</div>' +
-          '<div class="pw-step-test">' + esc(s.test || '') + '</div>' +
-        '</div>' +
-        '<div class="pw-step-body">' +
-          '<div class="pw-outcome pos">' +
-            '<div class="pw-outcome-icon">✓</div>' +
-            '<div><div class="pw-outcome-label">If Positive</div>' +
-            '<div class="pw-outcome-text">' + posText + '</div></div>' +
-          '</div>' +
-          '<div class="pw-outcome neg">' +
-            '<div class="pw-outcome-icon">✗</div>' +
-            '<div><div class="pw-outcome-label">If Negative</div>' +
-            '<div class="pw-outcome-text">' + negText + '</div></div>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-  });
-  html += '</div>';
-
-  pc.innerHTML = html;
-  ps.style.display = 'block';
-}
-
-function renderCards(diagnoses, containerId, selectFn) {
-  var container = document.getElementById(containerId);
-  container.innerHTML = '';
-  var labels = ['1st','2nd','3rd'];
-  // Filter only diagnoses with a real name
-  var valid = diagnoses.filter(function(dx) { return dx.name && dx.name.trim() && dx.name !== 'DIAGNOSIS NAME HERE'; });
-  if (!valid.length) valid = diagnoses; // fallback: show all
-  valid.slice(0,3).forEach(function(dx, i) {
-    var d = document.createElement('div');
-    d.className = 'dx dx' + (i+1);
-    var fl = dx.first_line || '—';
-    var alt = dx.alternatives || '—';
-    var wk = dx.workup || '—';
-    var gl = dx.guideline || '';
+  ps.style.display = ''; pc.innerHTML = '';
+  if (pathway.summary) { var s = document.createElement('div'); s.className = 'pathway-summary'; s.textContent = pathway.summary; pc.appendChild(s); }
+  pathway.steps.forEach(function(st) {
+    var d = document.createElement('div'); d.className = 'pw-step';
     d.innerHTML =
-      '<div class="dx-head"><div class="dx-name">' + esc(dx.name) + '</div><div class="rank-chip">' + labels[i] + '</div></div>' +
-      '<div class="prob-row"><div class="prob-track"><div class="prob-fill" data-w="' + (dx.likelihood||0) + '"></div></div><div class="prob-num">' + (dx.likelihood||'—') + '%</div></div>' +
-      '<div class="tx"><div class="tx-head"><span class="tx-lbl">First-line Treatment</span><span class="g-badge">' + esc(gl) + '</span></div><div class="tx-body">' + esc(fl) + '</div></div>' +
-      '<div class="divider"></div>' +
-      '<div class="tx"><div class="tx-head"><span class="tx-lbl">Alternative Treatment</span></div><div class="tx-body">' + esc(alt) + '</div></div>' +
-      '<div class="divider"></div>' +
-      '<div class="tx"><div class="tx-head"><span class="tx-lbl">Recommended Workup</span></div><div class="tx-body green">' + esc(wk) + '</div></div>' +
-      '<button class="sel-btn" onclick="' + selectFn + '(' + i + ')">Select this Diagnosis — Generate Report →</button>';
-    container.appendChild(d);
+      '<div class="pw-step-num">Step ' + st.step + '</div>' +
+      '<div class="pw-test">' + esc(st.test||'') + '</div>' +
+      '<div class="pw-row">' +
+        '<div class="pw-col pos"><div class="pw-col-lbl">If Positive</div><div class="pw-col-val">' + esc(st.if_positive||'') + '</div></div>' +
+        '<div class="pw-col neg"><div class="pw-col-lbl">If Negative</div><div class="pw-col-val">' + esc(st.if_negative||'') + '</div></div>' +
+      '</div>';
+    pc.appendChild(d);
   });
-  setTimeout(function() {
-    document.querySelectorAll('.prob-fill').forEach(function(b) { b.style.width = b.dataset.w + '%'; });
-  }, 80);
 }
 
-/* ════════════════════════════════════
-   CLINDX
-════════════════════════════════════ */
-var cSex = '', cPreg = '';
-var cStore = {};
-
-function cSetSex(s) {
-  cSex = s;
-  document.getElementById('cTMale').classList.toggle('on', s==='Male');
-  document.getElementById('cTFemale').classList.toggle('on', s==='Female');
-  document.getElementById('cPregWrap').style.display = s==='Female' ? 'block' : 'none';
-  if (s==='Male') cPreg = '';
-}
-function cSetPreg(p) {
-  cPreg = p;
-  document.getElementById('cTPreg').classList.toggle('on', p==='Pregnant');
-  document.getElementById('cTNotPreg').classList.toggle('on', p==='Not Pregnant');
-}
-
-function cShowErr(t, m) {
-  document.getElementById('cErrTitle').textContent = t;
-  document.getElementById('cErrMsg').textContent = ' ' + m;
-  document.getElementById('cErr').classList.add('show');
-}
+var cSex = '', cPreg = '', cStore = {};
+function cSetSex(s) { cSex = s; document.getElementById('cTMale').classList.toggle('on',s==='Male'); document.getElementById('cTFemale').classList.toggle('on',s==='Female'); document.getElementById('cPregWrap').style.display = s==='Female'?'block':'none'; if(s==='Male') cPreg=''; }
+function cSetPreg(p) { cPreg = p; document.getElementById('cTPreg').classList.toggle('on',p==='Pregnant'); document.getElementById('cTNotPreg').classList.toggle('on',p==='Not Pregnant'); }
+function cShowErr(t,m) { document.getElementById('cErrTitle').textContent=t; document.getElementById('cErrMsg').textContent=' '+m; document.getElementById('cErr').classList.add('show'); }
 function cHideErr() { document.getElementById('cErr').classList.remove('show'); }
 
 async function cAnalyze() {
   cHideErr();
-  var symptoms = document.getElementById('cSx').value.trim();
-  var age      = document.getElementById('cAge').value.trim();
-  var history  = document.getElementById('cHx').value.trim();
-  var labs     = document.getElementById('cLabs').value.trim();
-  var imgType  = document.getElementById('cItype').value;
-  var imgFind  = document.getElementById('cIfind').value.trim();
-  var apiKey   = getKey();
+  var sx=document.getElementById('cSx').value.trim(), age=document.getElementById('cAge').value.trim(),
+      hx=document.getElementById('cHx').value.trim(), labs=document.getElementById('cLabs').value.trim(),
+      it=document.getElementById('cItype').value, ifind=document.getElementById('cIfind').value.trim(),
+      key=getKey();
+  if(!sx)  { cShowErr('Missing Field','Please describe the patient symptoms.'); return; }
+  if(!age) { cShowErr('Missing Field','Please enter the patient age.'); return; }
+  if(!cSex){ cShowErr('Missing Field','Please select patient sex.'); return; }
+  if(!key) { cShowErr('No API Key','Open Settings and enter your Groq API key from console.groq.com'); return; }
 
-  if (!symptoms) { cShowErr('Missing Field', 'Please describe the patient symptoms.'); return; }
-  if (!age)      { cShowErr('Missing Field', 'Please enter the patient age.'); return; }
-  if (!cSex)     { cShowErr('Missing Field', 'Please select patient sex.'); return; }
-  if (!apiKey)   { cShowErr('No API Key', 'Tap ⚙ and enter your Groq API key from console.groq.com'); return; }
+  var imaging=it?(it+(ifind?': '+ifind:'')):'None', labsStr=labs||'None', hxStr=hx||'None';
+  var pregStr=cSex==='Female'?(cPreg||'Pregnancy status unknown'):'';
+  var patStr=age+' year-old '+cSex+(pregStr?', '+pregStr:'');
 
-  var imaging    = imgType ? (imgType + (imgFind ? ': ' + imgFind : '')) : 'None';
-  var labsStr    = labs || 'None';
-  var historyStr = history || 'None';
-  var pregStr    = cSex === 'Female' ? (cPreg || 'Pregnancy status unknown') : '';
-  var patientStr = age + ' year-old ' + cSex + (pregStr ? ', ' + pregStr : '');
-
-  document.getElementById('cGoBtn').disabled = true;
+  document.getElementById('cGoBtn').disabled=true;
   document.getElementById('cLoading').classList.add('show');
   document.getElementById('cResults').classList.remove('show');
-  document.getElementById('cCards').innerHTML = '';
-  document.getElementById('cPathwaySection').style.display = 'none';
+  document.getElementById('cCards').innerHTML='';
+  document.getElementById('cPathwaySection').style.display='none';
 
-  var steps = ['cLs1','cLs2','cLs3','cLs4']; var si = 0;
-  var stInt = setInterval(function() {
-    steps.forEach(function(s) { document.getElementById(s).classList.remove('on'); });
-    if (si < steps.length) { document.getElementById(steps[si]).classList.add('on'); si++; }
-  }, 2000);
+  var steps=['cLs1','cLs2','cLs3','cLs4'], si=0;
+  var stInt=setInterval(function(){ steps.forEach(function(s){document.getElementById(s).classList.remove('on');}); if(si<steps.length){document.getElementById(steps[si]).classList.add('on');si++;} },2000);
 
-  var prompt =
-    'You are a clinical expert physician. Base ALL answers strictly on UpToDate, NICE Guidelines, AHA/ACC/ESC/IDSA/ADA guidelines, BMJ Best Practice, and Harrison\'s Principles.\n\n' +
-    'Patient: ' + patientStr + '\n' +
-    'Symptoms: ' + symptoms + '\n' +
-    'Medical History & Medications: ' + historyStr + '\n' +
-    'Labs: ' + labsStr + '\n' +
-    'Imaging: ' + imaging + '\n\n' +
-    'YOU MUST return exactly 3 fully completed differential diagnoses. Every single field must be filled for all 3 diagnoses — no empty strings allowed.\n\n' +
-    'Return ONLY this JSON structure. Fill ALL fields completely:\n' +
-    '{\n' +
-    '  "diagnoses": [\n' +
-    '    {\n' +
-    '      "rank": 1,\n' +
-    '      "name": "Most likely diagnosis name",\n' +
-    '      "likelihood": 65,\n' +
-    '      "first_line": "Drug 500mg PO TID x 7 days (Guideline Year)",\n' +
-    '      "alternatives": "Alt drug dose route — reason for use",\n' +
-    '      "workup": "1. Test name (reason — Guideline). 2. Test name (reason — Guideline). 3. Test name (reason — Guideline).",\n' +
-    '      "guideline": "NICE NG123 2023"\n' +
-    '    },\n' +
-    '    {\n' +
-    '      "rank": 2,\n' +
-    '      "name": "Second most likely diagnosis name",\n' +
-    '      "likelihood": 25,\n' +
-    '      "first_line": "Drug 500mg PO TID x 7 days (Guideline Year)",\n' +
-    '      "alternatives": "Alt drug dose route — reason for use",\n' +
-    '      "workup": "1. Test name (reason — Guideline). 2. Test name (reason — Guideline). 3. Test name (reason — Guideline).",\n' +
-    '      "guideline": "AHA 2022"\n' +
-    '    },\n' +
-    '    {\n' +
-    '      "rank": 3,\n' +
-    '      "name": "Third most likely diagnosis name",\n' +
-    '      "likelihood": 10,\n' +
-    '      "first_line": "Drug 500mg PO TID x 7 days (Guideline Year)",\n' +
-    '      "alternatives": "Alt drug dose route — reason for use",\n' +
-    '      "workup": "1. Test name (reason — Guideline). 2. Test name (reason — Guideline). 3. Test name (reason — Guideline).",\n' +
-    '      "guideline": "IDSA 2021"\n' +
-    '    }\n' +
-    '  ],\n' +
-    '  "pathway": {\n' +
-    '    "summary": "2-3 sentences on key differentiating features between these 3 diagnoses.",\n' +
-    '    "steps": [\n' +
-    '      {"step": 1, "test": "Exact test name", "if_positive": "What this means and next action", "if_negative": "What this means and next action"},\n' +
-    '      {"step": 2, "test": "Exact test name", "if_positive": "What this means and next action", "if_negative": "What this means and next action"},\n' +
-    '      {"step": 3, "test": "Exact test name", "if_positive": "What this means and next action", "if_negative": "What this means and next action"}\n' +
-    '    ]\n' +
-    '  }\n' +
-    '}';
+  var prompt=
+    'You are a clinical expert physician. Base ALL answers strictly on UpToDate, NICE Guidelines, AHA/ACC/ESC/IDSA/ADA guidelines, BMJ Best Practice, and Harrison\'s Principles.\n\n'+
+    'Patient: '+patStr+'\nSymptoms: '+sx+'\nHistory & Medications: '+hxStr+'\nLabs: '+labsStr+'\nImaging: '+imaging+'\n\n'+
+    'Return ONLY this JSON — ALL fields filled, no empty strings:\n'+
+    '{"diagnoses":[{"rank":1,"name":"Most likely diagnosis","likelihood":65,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug — reason","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"NICE 2023"},{"rank":2,"name":"Second diagnosis","likelihood":25,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug — reason","workup":"1. Test. 2. Test. 3. Test.","guideline":"AHA 2022"},{"rank":3,"name":"Third diagnosis","likelihood":10,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug — reason","workup":"1. Test. 2. Test. 3. Test.","guideline":"IDSA 2021"}],"pathway":{"summary":"2-3 sentences on key differentiating features.","steps":[{"step":1,"test":"Test name","if_positive":"Action + reasoning","if_negative":"Action + next step"},{"step":2,"test":"Test name","if_positive":"Action + reasoning","if_negative":"Action + next step"},{"step":3,"test":"Test name","if_positive":"Action + reasoning","if_negative":"Action + next step"}]}}';
 
   try {
-    var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: 'You are a clinical expert physician. Always return complete valid JSON only. You MUST fully complete all 3 diagnoses with no empty fields. Never truncate output.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.2, max_tokens: 4000
-      })
-    });
-    var data = await res.json();
-    if (data.error) throw new Error(data.error.message || 'API error');
-    var raw = data.choices[0].message.content;
-    raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
-    var match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Invalid response — please try again');
-    var parsed = JSON.parse(match[0]);
-    if (!parsed.diagnoses || !parsed.diagnoses.length) throw new Error('No diagnoses returned');
-
+    var res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'system',content:'You are a clinical expert physician. Always return complete valid JSON only. Complete all 3 diagnoses. Never truncate.'},{role:'user',content:prompt}],temperature:0.2,max_tokens:4000})});
+    var data=await res.json();
+    if(data.error) throw new Error(data.error.message||'API error');
+    var raw=data.choices[0].message.content.replace(/```json/g,'').replace(/```/g,'').trim();
+    var match=raw.match(/\{[\s\S]*\}/);
+    if(!match) throw new Error('Invalid response — please try again');
+    var parsed=JSON.parse(match[0]);
+    if(!parsed.diagnoses||!parsed.diagnoses.length) throw new Error('No diagnoses returned');
     clearInterval(stInt);
     document.getElementById('cLoading').classList.remove('show');
-    document.getElementById('cGoBtn').disabled = false;
-
-    cStore = { diagnoses: parsed.diagnoses, ctx: { patientStr, symptoms, historyStr, labsStr, imaging } };
-    renderCards(parsed.diagnoses, 'cCards', 'cSelectDx');
-    renderPathway(parsed.pathway, 'cPathwayContent', 'cPathwaySection');
+    document.getElementById('cGoBtn').disabled=false;
+    cStore={diagnoses:parsed.diagnoses,ctx:{patStr,sx,hxStr,labsStr,imaging}};
+    renderCards(parsed.diagnoses,'cCards','cSelectDx');
+    renderPathway(parsed.pathway,'cPathwayContent','cPathwaySection');
     document.getElementById('cResults').classList.add('show');
-    document.getElementById('cResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+    document.getElementById('cResults').scrollIntoView({behavior:'smooth',block:'start'});
   } catch(e) {
     clearInterval(stInt);
     document.getElementById('cLoading').classList.remove('show');
-    document.getElementById('cGoBtn').disabled = false;
-    cShowErr('Analysis Failed', e.message || 'Please check your API key and try again.');
+    document.getElementById('cGoBtn').disabled=false;
+    cShowErr('Analysis Failed',e.message||'Please check your API key and try again.');
   }
 }
 
 function cSelectDx(i) {
-  var dx = cStore.diagnoses[i];
-  var ctx = cStore.ctx;
-  var date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
-  rptText =
-    'CLINICAL REPORT\n' + '━'.repeat(42) + '\n' +
-    'Date       : ' + date + '\n' + '─'.repeat(42) + '\n\n' +
-    'PATIENT\n  ' + ctx.patientStr + '\n\n' +
-    'PRESENTING COMPLAINT\n  ' + ctx.symptoms + '\n\n' +
-    'MEDICAL HISTORY & MEDICATIONS\n  ' + ctx.historyStr + '\n\n' +
-    'INVESTIGATIONS\n  Labs    : ' + ctx.labsStr + '\n  Imaging : ' + ctx.imaging + '\n\n' +
-    '─'.repeat(42) + '\n\n' +
-    'DIAGNOSIS\n  ' + dx.name + '\n  Likelihood: ' + dx.likelihood + '%\n\n' +
-    '─'.repeat(42) + '\n\n' +
-    'MANAGEMENT PLAN\n\n' +
-    '  First-line Treatment:\n  ' + dx.first_line + '\n\n' +
-    '  Alternative Treatment:\n  ' + dx.alternatives + '\n\n' +
-    '  Recommended Workup:\n  ' + (dx.workup||'N/A').replace(/\n/g,'\n  ') + '\n\n' +
-    '  Guideline Reference: ' + (dx.guideline||'') + '\n\n' +
-    '━'.repeat(42) + '\n' +
-    'Physician Signature : _______________\nDate                : _______________';
-
-  document.getElementById('modTitle').textContent = 'Clinical Report';
-  document.getElementById('modSub').textContent = 'Generated by ClinDx';
-  document.getElementById('rptBox').textContent = rptText;
+  var dx=cStore.diagnoses[i], ctx=cStore.ctx;
+  var date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  rptText='CLINICAL REPORT\n'+'─'.repeat(44)+'\nDate    : '+date+'\n'+'─'.repeat(44)+'\n\nPATIENT\n  '+ctx.patStr+'\n\nPRESENTING COMPLAINT\n  '+ctx.sx+'\n\nHISTORY & MEDICATIONS\n  '+ctx.hxStr+'\n\nINVESTIGATIONS\n  Labs    : '+ctx.labsStr+'\n  Imaging : '+ctx.imaging+'\n\n'+'─'.repeat(44)+'\n\nDIAGNOSIS\n  '+dx.name+'\n  Likelihood : '+dx.likelihood+'%\n\n'+'─'.repeat(44)+'\n\nMANAGEMENT\n\n  First-line:\n  '+dx.first_line+'\n\n  Alternative:\n  '+dx.alternatives+'\n\n  Workup:\n  '+(dx.workup||'—')+'\n\n  Guideline: '+(dx.guideline||'')+'\n\n'+'─'.repeat(44)+'\nPhysician : _______________\nDate      : _______________';
+  document.getElementById('modTitle').textContent='Clinical Report';
+  document.getElementById('modSub').textContent='Generated by ClinDx';
+  document.getElementById('rptBox').textContent=rptText;
   document.getElementById('movl').classList.add('show');
 }
 
 function newCase() {
   closeMod();
-  if (currentApp === 'clindx') {
-    document.getElementById('cResults').classList.remove('show');
-    ['cSx','cHx','cLabs','cIfind'].forEach(function(id) { document.getElementById(id).value = ''; });
-    document.getElementById('cAge').value = '';
-    document.getElementById('cItype').value = '';
-    cSex = ''; cPreg = '';
-    document.querySelectorAll('#clindxView .tog').forEach(function(b) { b.classList.remove('on'); });
-    document.getElementById('cPregWrap').style.display = 'none';
-  } else {
-    document.getElementById('dResults').classList.remove('show');
-    document.getElementById('dPrev').style.display = 'none';
-    document.getElementById('dChgBtn').style.display = 'none';
-    var z = document.getElementById('dUploadZone');
-    z.classList.remove('has-img');
-    ['dUico','dUtitle','dUhint'].forEach(function(id) { document.getElementById(id).style.display = ''; });
-    dImgB64 = ''; dSex = ''; dPreg = ''; dLoc = ''; dDur = ''; dCond = ''; dOnset = ''; dSyms = {};
-    document.getElementById('dAge').value = '';
-    document.getElementById('dExtra').value = '';
-    document.querySelectorAll('#dermdxView .tog, .loc-btn, .dur-btn, .sym-btn').forEach(function(b) { b.classList.remove('on'); });
-    document.querySelectorAll('.sym-item').forEach(function(b) { b.classList.remove('answered'); });
-    document.getElementById('dPregWrap').style.display = 'none';
-  }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('cResults').classList.remove('show');
+  ['cSx','cHx','cLabs','cIfind'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('cAge').value='';
+  document.getElementById('cItype').value='';
+  cSex=''; cPreg='';
+  document.querySelectorAll('.tog').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('cPregWrap').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-
-/* ════════════════════════════════════
-   DERMDX
-════════════════════════════════════ */
-var dSex = '', dPreg = '', dLoc = '', dDur = '', dCond = '', dOnset = '';
-var dSyms = {};
-var dImgB64 = '';
-var dStore = {};
-
-function dHandleImg(inp) {
-  var f = inp.files[0]; if (!f) return;
-  var r = new FileReader();
-  r.onload = function(e) {
-    dImgB64 = e.target.result.split(',')[1];
-    var p = document.getElementById('dPrev');
-    p.src = e.target.result; p.style.display = 'block';
-    document.getElementById('dChgBtn').style.display = 'block';
-    document.getElementById('dUploadZone').classList.add('has-img');
-    ['dUico','dUtitle','dUhint'].forEach(function(id) { document.getElementById(id).style.display = 'none'; });
-  };
-  r.readAsDataURL(f);
-}
-function dSetSex(s) {
-  dSex = s;
-  document.getElementById('dTMale').classList.toggle('on', s==='Male');
-  document.getElementById('dTFemale').classList.toggle('on', s==='Female');
-  document.getElementById('dPregWrap').style.display = s==='Female' ? 'block' : 'none';
-  if (s==='Male') dPreg = '';
-}
-function dSetPreg(p) {
-  dPreg = p;
-  document.getElementById('dTPreg').classList.toggle('on', p==='Pregnant');
-  document.getElementById('dTNotPreg').classList.toggle('on', p==='Not Pregnant');
-}
-function dSetLoc(btn, l) {
-  dLoc = l;
-  document.querySelectorAll('.loc-btn').forEach(function(b) { b.classList.remove('on'); });
-  btn.classList.add('on');
-}
-function dSetDur(btn, d) {
-  dDur = d;
-  btn.closest('.dur-row').querySelectorAll('.dur-btn').forEach(function(b) { b.classList.remove('on'); });
-  btn.classList.add('on');
-}
-function dSetCond(btn, c) {
-  dCond = c;
-  btn.closest('.loc-grid').querySelectorAll('.loc-btn').forEach(function(b) { b.classList.remove('on'); });
-  btn.classList.add('on');
-}
-function dSetOnset(btn, o) {
-  dOnset = o;
-  btn.closest('.dur-row').querySelectorAll('.dur-btn').forEach(function(b) { b.classList.remove('on'); });
-  btn.classList.add('on');
-}
-function dSetSym(btn, key, val) {
-  dSyms[key] = val;
-  btn.closest('.sym-btns').querySelectorAll('.sym-btn').forEach(function(b) { b.classList.remove('on'); });
-  btn.classList.add('on');
-  btn.closest('.sym-item').classList.add('answered');
-}
-
-function dSymStr() {
-  var map = { itch:'Itching', pain:'Pain', burn:'Burning', bleed:'Bleeding', ulcer:'Ulceration', spread:'Spreading', grow:'Growing', sun:'Sun sensitivity', family:'Family history of skin disease', meds:'Currently on medications' };
-  var yes = [], no = [];
-  Object.keys(map).forEach(function(k) { if (dSyms[k]==='yes') yes.push(map[k]); else if (dSyms[k]==='no') no.push(map[k]); });
-  var r = '';
-  if (yes.length) r += 'Present: ' + yes.join(', ') + '. ';
-  if (no.length)  r += 'Absent: '  + no.join(', ')  + '.';
-  return r || 'Not specified';
-}
-
-function dShowErr(t, m) {
-  document.getElementById('dErrTitle').textContent = t;
-  document.getElementById('dErrMsg').textContent = ' ' + m;
-  document.getElementById('dErr').classList.add('show');
-}
-function dHideErr() { document.getElementById('dErr').classList.remove('show'); }
-
-async function fetchISIC(dx) {
-  try {
-    var res = await fetch('https://api.isic-archive.com/api/v2/images/?diagnosis=' + encodeURIComponent(dx) + '&limit=3');
-    if (!res.ok) return [];
-    var d = await res.json();
-    return d.results || [];
-  } catch(e) { return []; }
-}
-
-async function dAnalyze() {
-  dHideErr();
-  var age    = document.getElementById('dAge').value.trim();
-  var extra  = document.getElementById('dExtra').value.trim();
-  var apiKey = getKey();
-
-  if (!dImgB64) { dShowErr('No Image', 'Please upload a photo of the skin condition.'); return; }
-  if (!dCond)   { dShowErr('Missing Field', 'Please select the condition type.'); return; }
-  if (!age)     { dShowErr('Missing Field', 'Please enter the patient age.'); return; }
-  if (!dSex)    { dShowErr('Missing Field', 'Please select patient sex.'); return; }
-  if (!dLoc)    { dShowErr('Missing Field', 'Please select lesion location.'); return; }
-  if (!dDur)    { dShowErr('Missing Field', 'Please select lesion duration.'); return; }
-  if (!apiKey)  { dShowErr('No API Key', 'Tap ⚙ and enter your Groq API key from console.groq.com'); return; }
-
-  var pregStr    = dSex==='Female' ? (dPreg||'Pregnancy status unknown') : '';
-  var patStr     = age + ' year-old ' + dSex + (pregStr ? ', ' + pregStr : '') + (dOnset ? ', Onset: ' + dOnset : '');
-  var sympStr    = dSymStr();
-
-  document.getElementById('dGoBtn').disabled = true;
-  document.getElementById('dLoading').classList.add('show');
-  document.getElementById('dResults').classList.remove('show');
-  document.getElementById('dCards').innerHTML = '';
-  document.getElementById('dSimRow').innerHTML = '';
-  document.getElementById('dVisualBox').innerHTML = '';
-  document.getElementById('dPathwaySection').style.display = 'none';
-
-  var steps = ['dLs1','dLs2','dLs3','dLs4']; var si = 0;
-  var stInt = setInterval(function() {
-    steps.forEach(function(s) { document.getElementById(s).classList.remove('on'); });
-    if (si < steps.length) { document.getElementById(steps[si]).classList.add('on'); si++; }
-  }, 2200);
-
-  // Condition-specific analysis protocol
-  var condProtocol = '';
-  if (dCond.indexOf('Rash') !== -1) {
-    condProtocol =
-      'RASH ANALYSIS PROTOCOL (SCAR criteria):\n'+
-      '- Site: exact distribution pattern (dermatomal / flexural / extensor / palmoplantar / truncal / generalized)\n'+
-      '- Character: macule/papule/vesicle/pustule/bulla/urticaria/petechia/purpura — describe each morphology\n'+
-      '- Associated features: scaling, crusting, lichenification, excoriation\n'+
-      '- Response pattern: does it blanch? (vascular vs. purpuric)\n'+
-      'Consider: drug reaction (DRESS/SJS/TEN), viral exanthem, contact dermatitis, urticaria, vasculitis, psoriasis, eczema, tinea, scabies, pityriasis.\n'+
-      'URGENCY FLAG: If suspect SJS/TEN/DRESS/vasculitis/meningococcaemia → mark as urgent in workup.\n';
-  } else if (dCond.indexOf('Wound') !== -1) {
-    condProtocol =
-      'WOUND ASSESSMENT PROTOCOL:\n'+
-      '- Classify: laceration/abrasion/puncture/avulsion/surgical/pressure ulcer\n'+
-      '- Depth estimate: superficial (epidermis) / partial thickness (dermis) / full thickness (subcutaneous)\n'+
-      '- Signs of infection: erythema >2cm around wound edge, pus, warmth, streak lymphangitis\n'+
-      '- Contamination level: clean / contaminated / dirty\n'+
-      '- Tetanus risk: assess based on mechanism\n'+
-      'References: NICE Wound Infection Guidelines 2019, British National Formulary wound care, IDSA Skin/Soft Tissue Infection Guidelines 2014.\n';
-  } else if (dCond.indexOf('Burn') !== -1) {
-    condProtocol =
-      'BURN ASSESSMENT PROTOCOL (Lund-Browder + Wallace Rule of Nines):\n'+
-      '- Depth: superficial epidermal (red, no blisters) / superficial partial (blisters, moist, painful) / deep partial (white/pale, reduced sensation) / full thickness (leathery, painless)\n'+
-      '- Estimate TBSA% visible from image using Rule of Nines\n'+
-      '- Features: blistering, eschar, wound bed colour, surrounding erythema\n'+
-      '- Resuscitation trigger: ≥15% TBSA adult / ≥10% child → Parkland formula IV fluids\n'+
-      'References: ABA Burn Guidelines 2023, ISBI Practice Guidelines for Burn Care 2016, NICE Burns Guideline 2019.\n';
-  } else if (dCond.indexOf('Bite') !== -1) {
-    condProtocol =
-      'BITE/STING ASSESSMENT PROTOCOL:\n'+
-      '- Identify: central punctum, surrounding flare, target/bull\'s-eye pattern (Lyme), necrotic centre (spider), urticarial halo\n'+
-      '- Infection signs: cellulitis spread, lymphangitis, regional lymphadenopathy\n'+
-      '- Systemic flags: anaphylaxis risk, systemic symptoms\n'+
-      '- Geographic risk: exotic spiders, ticks (Borrelia/Rickettsia risk), hymenoptera\n'+
-      'References: IDSA Lyme Disease Guidelines 2020, WHO Venomous Bites Management, CDC Tick-Borne Illness Guidelines.\n';
-  } else if (dCond.indexOf('Nail') !== -1) {
-    condProtocol =
-      'NAIL/HAIR DISORDER PROTOCOL:\n'+
-      '- Nail: colour change, pitting, onycholysis, subungual hyperkeratosis, splinter haemorrhages, clubbing, Beau lines, leukonychia\n'+
-      '- Hair: distribution of loss, scarring vs. non-scarring alopecia, pull test result estimate, hair shaft abnormalities\n'+
-      '- Pattern: androgenetic (Hamilton-Norwood / Ludwig scale), alopecia areata (patches), tinea capitis\n'+
-      'References: AAD Nail Disorders Guidelines, Trichological Society Classification, JAAD.\n';
-  } else {
-    condProtocol =
-      'SKIN LESION ANALYSIS (ABCDE + 7-point checklist):\n'+
-      '- ABCDE: Asymmetry, Border irregularity, Colour variation, Diameter, Evolution\n'+
-      '- 7-point checklist: major (irregular border, colour variation, >7mm) + minor (inflammation, oozing, itch, sensory change)\n'+
-      '- Morphology: macule/papule/nodule/plaque/vesicle/pustule/cyst — exact description\n'+
-      '- Red flags for malignancy: irregular pigmentation, ulceration, rapid growth, bleeding\n'+
-      'References: AAD Melanoma Guidelines 2023, NICE Skin Cancer Guidelines 2023, Fitzpatrick\'s 9th ed.\n';
-  }
-
-  var prompt =
-    'You are a board-certified dermatologist with 20 years of experience specialising in general dermatology, wound care, and emergency skin conditions.\n'+
-    'Base ALL answers on: AAD, BAD, NICE, Fitzpatrick\'s Dermatology (9th ed), UpToDate, IDSA, ABA, WHO guidelines as relevant.\n\n'+
-    'PATIENT DATA:\n'+
-    'Patient: ' + patStr + '\n'+
-    'Condition Type: ' + dCond + '\n'+
-    'Location: ' + dLoc + '\n'+
-    'Duration: ' + dDur + '\n'+
-    'Symptoms: ' + sympStr + '\n'+
-    (extra ? 'Additional Notes: ' + extra + '\n' : '') +
-    '\n' + condProtocol + '\n'+
-    'VISUAL ANALYSIS TASK:\n'+
-    '1. Describe EXACTLY what you see in visual_features: morphology, colour, borders, surface texture, size estimate, distribution pattern, any secondary changes.\n'+
-    '2. Correlate EVERY visual finding with the clinical data above.\n'+
-    '3. first_line: EXACT drug + dose + route + frequency + duration (Guideline Year). No vague instructions.\n'+
-    '4. workup: 3 specific tests — each with: test name + clinical reason + what result confirms/excludes + guideline citation.\n'+
-    '5. pathway: sequential decision logic — what to do first, what result leads where.\n\n'+
-    'YOU MUST return exactly 3 fully completed diagnoses. Every single field must be filled — no empty strings, no placeholders.\n\n'+
-    'Return ONLY this JSON:\n'+
-    '{\n'+
-    '  "visual_features": "Precise morphological description with colour, borders, texture, size, distribution, and any secondary changes.",\n'+
-    '  "diagnoses": [\n'+
-    '    {"rank":1,"name":"Most likely diagnosis — full name","likelihood":65,"first_line":"Drug Xmg route Xhourly for X days (AAD/NICE/BAD Guideline Year)","alternatives":"Alternative drug dose route — specific indication","workup":"1. Test (exact reason — Guideline). 2. Test (exact reason — Guideline). 3. Test (exact reason — Guideline).","guideline":"AAD 2023"},\n'+
-    '    {"rank":2,"name":"Second diagnosis — full name","likelihood":25,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alternative — indication","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"BAD 2022"},\n'+
-    '    {"rank":3,"name":"Third diagnosis — full name","likelihood":10,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alternative — indication","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"NICE 2023"}\n'+
-    '  ],\n'+
-    '  "pathway": {\n'+
-    '    "summary": "2-3 sentences on key differentiating features between the 3 diagnoses.",\n'+
-    '    "steps": [\n'+
-    '      {"step":1,"test":"Exact first test/action","if_positive":"Specific action + reasoning","if_negative":"Specific action + next step"},\n'+
-    '      {"step":2,"test":"Exact second test/action","if_positive":"Specific action + reasoning","if_negative":"Specific action + next step"},\n'+
-    '      {"step":3,"test":"Exact third test/action","if_positive":"Specific action + reasoning","if_negative":"Specific action + next step"}\n'+
-    '    ]\n'+
-    '  }\n'+
-    '}';
-
-  try {
-    var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-      body: JSON.stringify({
-        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
-        messages: [
-          { role: 'system', content: 'You are a board-certified dermatologist. Always return complete valid JSON only. You MUST fully complete all 3 diagnoses with no empty fields. Never truncate output.' },
-          { role: 'user', content: [
-            { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + dImgB64 } },
-            { type: 'text', text: prompt }
-          ]}
-        ],
-        temperature: 0.15, max_tokens: 4500
-      })
-    });
-    var data = await res.json();
-    if (data.error) throw new Error(data.error.message || 'API error');
-    var raw = data.choices[0].message.content;
-    raw = raw.replace(/```json/g,'').replace(/```/g,'').trim();
-    var match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Invalid response — please try again');
-    var parsed = JSON.parse(match[0]);
-    if (!parsed.diagnoses || !parsed.diagnoses.length) throw new Error('No diagnoses returned');
-
-    clearInterval(stInt);
-    var simImgs = await fetchISIC(parsed.diagnoses[0].name);
-    document.getElementById('dLoading').classList.remove('show');
-    document.getElementById('dGoBtn').disabled = false;
-
-    // ISIC
-    var simRow = document.getElementById('dSimRow');
-    if (simImgs && simImgs.length) {
-      simImgs.forEach(function(img) {
-        var dx2 = (img.metadata && img.metadata.diagnosis) ? img.metadata.diagnosis : parsed.diagnoses[0].name;
-        var d = document.createElement('div');
-        d.className = 'sim-img';
-        d.innerHTML = '<img src="' + img.files.thumbnail_256.url + '" alt="ISIC"><div class="sim-badge">' + esc(dx2) + '</div>';
-        simRow.appendChild(d);
-      });
-      document.getElementById('dSimNote').textContent = simImgs.length + ' similar cases from ISIC Archive';
-    } else {
-      document.getElementById('dSimNote').textContent = 'ISIC Archive searched — analysis based on clinical image review';
-    }
-
-    // Visual
-    if (parsed.visual_features) {
-      document.getElementById('dVisualBox').innerHTML = '<div class="visual-box"><div class="visual-lbl">Visual Analysis</div><div class="visual-txt">' + esc(parsed.visual_features) + '</div></div>';
-    }
-
-    dStore = { diagnoses: parsed.diagnoses, ctx: { patStr, sympStr, loc: dLoc, dur: dDur, extra, visual: parsed.visual_features||'' } };
-    renderCards(parsed.diagnoses, 'dCards', 'dSelectDx');
-    renderPathway(parsed.pathway, 'dPathwayContent', 'dPathwaySection');
-    document.getElementById('dResults').classList.add('show');
-    document.getElementById('dResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  } catch(e) {
-    clearInterval(stInt);
-    document.getElementById('dLoading').classList.remove('show');
-    document.getElementById('dGoBtn').disabled = false;
-    dShowErr('Analysis Failed', e.message || 'Please check your API key and try again.');
-  }
-}
-
-function dSelectDx(i) {
-  var dx = dStore.diagnoses[i];
-  var ctx = dStore.ctx;
-  var date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
-  rptText =
-    'DERMATOLOGY REPORT\n' + '━'.repeat(42) + '\n' +
-    'Date       : ' + date + '\n' + '─'.repeat(42) + '\n\n' +
-    'PATIENT\n  ' + ctx.patStr + '\n\n' +
-    'LESION DETAILS\n  Location  : ' + ctx.loc + '\n  Duration  : ' + ctx.dur + '\n  Symptoms  : ' + ctx.sympStr + '\n\n' +
-    (ctx.visual ? 'VISUAL ANALYSIS\n  ' + ctx.visual + '\n\n' : '') +
-    '─'.repeat(42) + '\n\n' +
-    'DIAGNOSIS\n  ' + dx.name + '\n  Likelihood: ' + dx.likelihood + '%\n\n' +
-    '─'.repeat(42) + '\n\n' +
-    'MANAGEMENT PLAN\n\n' +
-    '  First-line Treatment:\n  ' + dx.first_line + '\n\n' +
-    '  Alternative Treatment:\n  ' + dx.alternatives + '\n\n' +
-    '  Recommended Workup:\n  ' + (dx.workup||'N/A').replace(/\n/g,'\n  ') + '\n\n' +
-    '  Guideline Reference: ' + (dx.guideline||'') + '\n\n' +
-    '━'.repeat(42) + '\n' +
-    'Physician Signature : _______________\nDate                : _______________';
-
-  document.getElementById('modTitle').textContent = 'Dermatology Report';
-  document.getElementById('modSub').textContent = 'Generated by DermDx';
-  document.getElementById('rptBox').textContent = rptText;
-  document.getElementById('movl').classList.add('show');
-}
-
 </script>
 
 </body>
