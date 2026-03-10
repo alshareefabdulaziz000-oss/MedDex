@@ -606,100 +606,129 @@ input[type=file] { display: none; }
     <div class="wrap">
       <div class="upload-zone" id="dUploadZone" onclick="document.getElementById('dImgInput').click()">
         <div class="upload-ico" id="dUico">🔬</div>
-        <div class="upload-t" id="dUtitle">Upload Lesion Photo</div>
-        <div class="upload-h" id="dUhint">Tap to select — clear, close-up, well-lit photo</div>
+        <div class="upload-t" id="dUtitle">Upload Skin Photo</div>
+        <div class="upload-h" id="dUhint">Clear, close-up, well-lit photo of the affected area</div>
         <img id="dPrev" alt="lesion">
         <button class="chg-btn" id="dChgBtn" onclick="event.stopPropagation(); document.getElementById('dImgInput').click()">Change Photo</button>
       </div>
       <input type="file" id="dImgInput" accept="image/*" onchange="dHandleImg(this)">
-      <div class="fg">
-        <div class="lbl">Age <span class="req">*</span></div>
-        <input type="number" id="dAge" min="0" max="120" placeholder="e.g. 34" style="max-width:150px">
-      </div>
-      <div class="fg">
-        <div class="lbl">Patient Sex <span class="req">*</span></div>
-        <div class="tog-row">
-          <button class="tog" id="dTMale" onclick="dSetSex('Male')">Male</button>
-          <button class="tog" id="dTFemale" onclick="dSetSex('Female')">Female</button>
-        </div>
-        <div id="dPregWrap" style="display:none; margin-top:14px;">
-          <div class="lbl">Pregnancy Status</div>
-          <div class="tog-row">
-            <button class="tog" id="dTPreg" onclick="dSetPreg('Pregnant')">Pregnant</button>
-            <button class="tog" id="dTNotPreg" onclick="dSetPreg('Not Pregnant')">Not Pregnant</button>
-          </div>
-        </div>
-      </div>
-      <div class="fg">
-        <div class="lbl">Lesion Location <span class="req">*</span></div>
-        <div class="loc-grid">
-          <button class="loc-btn" onclick="dSetLoc(this,'Face')">Face</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Scalp')">Scalp</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Neck')">Neck</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Chest')">Chest</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Back')">Back</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Abdomen')">Abdomen</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Arms')">Arms</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Hands')">Hands</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Legs')">Legs</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Feet')">Feet</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Genitalia')">Genitalia</button>
-          <button class="loc-btn" onclick="dSetLoc(this,'Nails')">Nails</button>
-        </div>
-      </div>
-      <div class="fg">
-        <div class="lbl">Duration <span class="req">*</span></div>
-        <div class="dur-row">
-          <button class="dur-btn" onclick="dSetDur(this,'Days')">Days</button>
-          <button class="dur-btn" onclick="dSetDur(this,'Weeks')">Weeks</button>
-          <button class="dur-btn" onclick="dSetDur(this,'Months')">Months</button>
-          <button class="dur-btn" onclick="dSetDur(this,'Years')">Years</button>
-        </div>
-      </div>
-      <div class="fg">
-        <div class="lbl">Associated Symptoms <span class="req">*</span></div>
-        <div class="sym-grid">
-          <div class="sym-item"><span class="sym-label">Itching</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'itch','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'itch','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">Pain</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'pain','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'pain','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">Burning</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'burn','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'burn','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">Bleeding</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'bleed','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'bleed','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">Ulceration</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'ulcer','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'ulcer','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">Spreading</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'spread','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'spread','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">Growing</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'grow','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'grow','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">Sun Sensitivity</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'sun','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'sun','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">Family History</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'family','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'family','no')">No</button></div></div>
-          <div class="sym-item"><span class="sym-label">On Medications</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'meds','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'meds','no')">No</button></div></div>
-        </div>
-      </div>
-      <div class="fg">
-        <div class="lbl">Additional Notes <span class="opt">optional</span></div>
-        <textarea id="dExtra" rows="3" placeholder="Medications, skin type, recent travel, previous treatments…"></textarea>
-      </div>
-      <button class="go" id="dGoBtn" onclick="dAnalyze()">Analyze Lesion</button>
-      <div class="err" id="dErr"><strong id="dErrTitle"></strong><span id="dErrMsg"></span></div>
-      <div class="loading" id="dLoading">
-        <div class="spin"></div>
-        <div class="spin-lbl">Analyzing…</div>
-        <div class="spin-steps">
-          <div class="spin-step" id="dLs1">Searching ISIC database…</div>
-          <div class="spin-step" id="dLs2">Analyzing image with Llama Vision…</div>
-          <div class="spin-step" id="dLs3">Consulting AAD · BAD · NICE guidelines…</div>
-          <div class="spin-step" id="dLs4">Generating diagnostic report…</div>
-        </div>
-      </div>
-      <div class="results" id="dResults">
-        <div class="sec-hdr"><span class="sec-lbl">Similar Cases — ISIC Archive</span><div class="sec-line"></div></div>
-        <div class="sim-row" id="dSimRow"></div>
-        <div class="sim-note" id="dSimNote"></div>
-        <div id="dVisualBox"></div>
-        <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
-        <div id="dCards"></div>
-        <div id="dPathwaySection" style="display:none; margin-top:28px;">
-          <div class="sec-hdr"><span class="sec-lbl">Clinical Decision Pathway</span><div class="sec-line"></div></div>
-          <div id="dPathwayContent"></div>
-        </div>
+
+```
+  <div class="fg">
+    <div class="lbl">Condition Type <span class="req">*</span></div>
+    <div class="loc-grid">
+      <button class="loc-btn" onclick="dSetCond(this,'Skin Lesion / Mole')">Lesion / Mole</button>
+      <button class="loc-btn" onclick="dSetCond(this,'Rash')">Rash</button>
+      <button class="loc-btn" onclick="dSetCond(this,'Wound / Laceration')">Wound / Cut</button>
+      <button class="loc-btn" onclick="dSetCond(this,'Burn')">Burn</button>
+      <button class="loc-btn" onclick="dSetCond(this,'Insect Bite / Sting')">Insect Bite</button>
+      <button class="loc-btn" onclick="dSetCond(this,'Nail or Hair Disorder')">Nail / Hair</button>
+    </div>
+  </div>
+
+  <div class="fg">
+    <div class="lbl">Age <span class="req">*</span></div>
+    <input type="number" id="dAge" min="0" max="120" placeholder="e.g. 34" style="max-width:150px">
+  </div>
+  <div class="fg">
+    <div class="lbl">Patient Sex <span class="req">*</span></div>
+    <div class="tog-row">
+      <button class="tog" id="dTMale" onclick="dSetSex('Male')">Male</button>
+      <button class="tog" id="dTFemale" onclick="dSetSex('Female')">Female</button>
+    </div>
+    <div id="dPregWrap" style="display:none; margin-top:14px;">
+      <div class="lbl">Pregnancy Status</div>
+      <div class="tog-row">
+        <button class="tog" id="dTPreg" onclick="dSetPreg('Pregnant')">Pregnant</button>
+        <button class="tog" id="dTNotPreg" onclick="dSetPreg('Not Pregnant')">Not Pregnant</button>
       </div>
     </div>
+  </div>
+  <div class="fg">
+    <div class="lbl">Lesion Location <span class="req">*</span></div>
+    <div class="loc-grid">
+      <button class="loc-btn" onclick="dSetLoc(this,'Face')">Face</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Scalp')">Scalp</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Neck')">Neck</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Chest')">Chest</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Back')">Back</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Abdomen')">Abdomen</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Arms')">Arms</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Hands')">Hands</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Legs')">Legs</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Feet')">Feet</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Genitalia')">Genitalia</button>
+      <button class="loc-btn" onclick="dSetLoc(this,'Nails')">Nails</button>
+    </div>
+  </div>
+  <div class="fg">
+    <div class="lbl">Duration <span class="req">*</span></div>
+    <div class="dur-row">
+      <button class="dur-btn" onclick="dSetDur(this,'Days')">Days</button>
+      <button class="dur-btn" onclick="dSetDur(this,'Weeks')">Weeks</button>
+      <button class="dur-btn" onclick="dSetDur(this,'Months')">Months</button>
+      <button class="dur-btn" onclick="dSetDur(this,'Years')">Years</button>
+    </div>
+  </div>
+  <div class="fg">
+    <div class="lbl">Onset Speed <span class="req">*</span></div>
+    <div class="dur-row">
+      <button class="dur-btn" id="dOnSudden" onclick="dSetOnset(this,'Sudden (hours)')">Sudden</button>
+      <button class="dur-btn" id="dOnGrad"   onclick="dSetOnset(this,'Gradual (days)')">Gradual</button>
+      <button class="dur-btn" id="dOnChronic" onclick="dSetOnset(this,'Chronic / Recurring')">Chronic</button>
+    </div>
+  </div>
+
+  <div class="fg">
+    <div class="lbl">Associated Symptoms <span class="req">*</span></div>
+    <div class="sym-grid">
+      <div class="sym-item"><span class="sym-label">Itching</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'itch','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'itch','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Pain</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'pain','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'pain','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Burning</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'burn','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'burn','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Bleeding</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'bleed','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'bleed','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Ulceration</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'ulcer','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'ulcer','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Spreading</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'spread','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'spread','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Growing</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'grow','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'grow','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Sun Sensitivity</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'sun','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'sun','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Family History</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'family','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'family','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">On Medications</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'meds','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'meds','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Fever</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'fever','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'fever','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Pus / Discharge</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'pus','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'pus','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Swelling / Oedema</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'swelling','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'swelling','no')">No</button></div></div>
+      <div class="sym-item"><span class="sym-label">Recent Travel</span><div class="sym-btns"><button class="sym-btn yes" onclick="dSetSym(this,'travel','yes')">Yes</button><button class="sym-btn no" onclick="dSetSym(this,'travel','no')">No</button></div></div>
+    </div>
+  </div>
+  <div class="fg">
+    <div class="lbl">Additional Notes <span class="opt">optional</span></div>
+    <textarea id="dExtra" rows="3" placeholder="Medications, skin type, recent travel, previous treatments…"></textarea>
+  </div>
+  <button class="go" id="dGoBtn" onclick="dAnalyze()">Analyze Lesion</button>
+  <div class="err" id="dErr"><strong id="dErrTitle"></strong><span id="dErrMsg"></span></div>
+  <div class="loading" id="dLoading">
+    <div class="spin"></div>
+    <div class="spin-lbl">Analyzing…</div>
+    <div class="spin-steps">
+      <div class="spin-step" id="dLs1">Searching ISIC database…</div>
+      <div class="spin-step" id="dLs2">Analyzing image with Llama Vision…</div>
+      <div class="spin-step" id="dLs3">Consulting AAD · BAD · NICE guidelines…</div>
+      <div class="spin-step" id="dLs4">Generating diagnostic report…</div>
+    </div>
+  </div>
+  <div class="results" id="dResults">
+    <div class="sec-hdr"><span class="sec-lbl">Similar Cases — ISIC Archive</span><div class="sec-line"></div></div>
+    <div class="sim-row" id="dSimRow"></div>
+    <div class="sim-note" id="dSimNote"></div>
+    <div id="dVisualBox"></div>
+    <div class="sec-hdr" style="margin-top:28px;"><span class="sec-lbl">Differential Diagnosis</span><div class="sec-line"></div></div>
+    <div id="dCards"></div>
+    <div id="dPathwaySection" style="display:none; margin-top:28px;">
+      <div class="sec-hdr"><span class="sec-lbl">Clinical Decision Pathway</span><div class="sec-line"></div></div>
+      <div id="dPathwayContent"></div>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 
 </div><!-- /appWrap -->
@@ -1071,7 +1100,7 @@ function newCase() {
     var z = document.getElementById('dUploadZone');
     z.classList.remove('has-img');
     ['dUico','dUtitle','dUhint'].forEach(function(id) { document.getElementById(id).style.display = ''; });
-    dImgB64 = ''; dSex = ''; dPreg = ''; dLoc = ''; dDur = ''; dSyms = {};
+    dImgB64 = ''; dSex = ''; dPreg = ''; dLoc = ''; dDur = ''; dCond = ''; dOnset = ''; dSyms = {};
     document.getElementById('dAge').value = '';
     document.getElementById('dExtra').value = '';
     document.querySelectorAll('#dermdxView .tog, .loc-btn, .dur-btn, .sym-btn').forEach(function(b) { b.classList.remove('on'); });
@@ -1084,7 +1113,7 @@ function newCase() {
 /* ════════════════════════════════════
    DERMDX
 ════════════════════════════════════ */
-var dSex = '', dPreg = '', dLoc = '', dDur = '';
+var dSex = '', dPreg = '', dLoc = '', dDur = '', dCond = '', dOnset = '';
 var dSyms = {};
 var dImgB64 = '';
 var dStore = {};
@@ -1121,7 +1150,17 @@ function dSetLoc(btn, l) {
 }
 function dSetDur(btn, d) {
   dDur = d;
-  document.querySelectorAll('.dur-btn').forEach(function(b) { b.classList.remove('on'); });
+  btn.closest('.dur-row').querySelectorAll('.dur-btn').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+}
+function dSetCond(btn, c) {
+  dCond = c;
+  btn.closest('.loc-grid').querySelectorAll('.loc-btn').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+}
+function dSetOnset(btn, o) {
+  dOnset = o;
+  btn.closest('.dur-row').querySelectorAll('.dur-btn').forEach(function(b) { b.classList.remove('on'); });
   btn.classList.add('on');
 }
 function dSetSym(btn, key, val) {
@@ -1163,7 +1202,8 @@ async function dAnalyze() {
   var extra  = document.getElementById('dExtra').value.trim();
   var apiKey = getKey();
 
-  if (!dImgB64) { dShowErr('No Image', 'Please upload a photo of the lesion.'); return; }
+  if (!dImgB64) { dShowErr('No Image', 'Please upload a photo of the skin condition.'); return; }
+  if (!dCond)   { dShowErr('Missing Field', 'Please select the condition type.'); return; }
   if (!age)     { dShowErr('Missing Field', 'Please enter the patient age.'); return; }
   if (!dSex)    { dShowErr('Missing Field', 'Please select patient sex.'); return; }
   if (!dLoc)    { dShowErr('Missing Field', 'Please select lesion location.'); return; }
@@ -1171,7 +1211,7 @@ async function dAnalyze() {
   if (!apiKey)  { dShowErr('No API Key', 'Tap ⚙ and enter your Groq API key from console.groq.com'); return; }
 
   var pregStr    = dSex==='Female' ? (dPreg||'Pregnancy status unknown') : '';
-  var patStr     = age + ' year-old ' + dSex + (pregStr ? ', ' + pregStr : '');
+  var patStr     = age + ' year-old ' + dSex + (pregStr ? ', ' + pregStr : '') + (dOnset ? ', Onset: ' + dOnset : '');
   var sympStr    = dSymStr();
 
   document.getElementById('dGoBtn').disabled = true;
@@ -1188,30 +1228,94 @@ async function dAnalyze() {
     if (si < steps.length) { document.getElementById(steps[si]).classList.add('on'); si++; }
   }, 2200);
 
+  // Condition-specific analysis protocol
+  var condProtocol = '';
+  if (dCond.indexOf('Rash') !== -1) {
+    condProtocol =
+      'RASH ANALYSIS PROTOCOL (SCAR criteria):\n'+
+      '- Site: exact distribution pattern (dermatomal / flexural / extensor / palmoplantar / truncal / generalized)\n'+
+      '- Character: macule/papule/vesicle/pustule/bulla/urticaria/petechia/purpura — describe each morphology\n'+
+      '- Associated features: scaling, crusting, lichenification, excoriation\n'+
+      '- Response pattern: does it blanch? (vascular vs. purpuric)\n'+
+      'Consider: drug reaction (DRESS/SJS/TEN), viral exanthem, contact dermatitis, urticaria, vasculitis, psoriasis, eczema, tinea, scabies, pityriasis.\n'+
+      'URGENCY FLAG: If suspect SJS/TEN/DRESS/vasculitis/meningococcaemia → mark as urgent in workup.\n';
+  } else if (dCond.indexOf('Wound') !== -1) {
+    condProtocol =
+      'WOUND ASSESSMENT PROTOCOL:\n'+
+      '- Classify: laceration/abrasion/puncture/avulsion/surgical/pressure ulcer\n'+
+      '- Depth estimate: superficial (epidermis) / partial thickness (dermis) / full thickness (subcutaneous)\n'+
+      '- Signs of infection: erythema >2cm around wound edge, pus, warmth, streak lymphangitis\n'+
+      '- Contamination level: clean / contaminated / dirty\n'+
+      '- Tetanus risk: assess based on mechanism\n'+
+      'References: NICE Wound Infection Guidelines 2019, British National Formulary wound care, IDSA Skin/Soft Tissue Infection Guidelines 2014.\n';
+  } else if (dCond.indexOf('Burn') !== -1) {
+    condProtocol =
+      'BURN ASSESSMENT PROTOCOL (Lund-Browder + Wallace Rule of Nines):\n'+
+      '- Depth: superficial epidermal (red, no blisters) / superficial partial (blisters, moist, painful) / deep partial (white/pale, reduced sensation) / full thickness (leathery, painless)\n'+
+      '- Estimate TBSA% visible from image using Rule of Nines\n'+
+      '- Features: blistering, eschar, wound bed colour, surrounding erythema\n'+
+      '- Resuscitation trigger: ≥15% TBSA adult / ≥10% child → Parkland formula IV fluids\n'+
+      'References: ABA Burn Guidelines 2023, ISBI Practice Guidelines for Burn Care 2016, NICE Burns Guideline 2019.\n';
+  } else if (dCond.indexOf('Bite') !== -1) {
+    condProtocol =
+      'BITE/STING ASSESSMENT PROTOCOL:\n'+
+      '- Identify: central punctum, surrounding flare, target/bull\'s-eye pattern (Lyme), necrotic centre (spider), urticarial halo\n'+
+      '- Infection signs: cellulitis spread, lymphangitis, regional lymphadenopathy\n'+
+      '- Systemic flags: anaphylaxis risk, systemic symptoms\n'+
+      '- Geographic risk: exotic spiders, ticks (Borrelia/Rickettsia risk), hymenoptera\n'+
+      'References: IDSA Lyme Disease Guidelines 2020, WHO Venomous Bites Management, CDC Tick-Borne Illness Guidelines.\n';
+  } else if (dCond.indexOf('Nail') !== -1) {
+    condProtocol =
+      'NAIL/HAIR DISORDER PROTOCOL:\n'+
+      '- Nail: colour change, pitting, onycholysis, subungual hyperkeratosis, splinter haemorrhages, clubbing, Beau lines, leukonychia\n'+
+      '- Hair: distribution of loss, scarring vs. non-scarring alopecia, pull test result estimate, hair shaft abnormalities\n'+
+      '- Pattern: androgenetic (Hamilton-Norwood / Ludwig scale), alopecia areata (patches), tinea capitis\n'+
+      'References: AAD Nail Disorders Guidelines, Trichological Society Classification, JAAD.\n';
+  } else {
+    condProtocol =
+      'SKIN LESION ANALYSIS (ABCDE + 7-point checklist):\n'+
+      '- ABCDE: Asymmetry, Border irregularity, Colour variation, Diameter, Evolution\n'+
+      '- 7-point checklist: major (irregular border, colour variation, >7mm) + minor (inflammation, oozing, itch, sensory change)\n'+
+      '- Morphology: macule/papule/nodule/plaque/vesicle/pustule/cyst — exact description\n'+
+      '- Red flags for malignancy: irregular pigmentation, ulceration, rapid growth, bleeding\n'+
+      'References: AAD Melanoma Guidelines 2023, NICE Skin Cancer Guidelines 2023, Fitzpatrick\'s 9th ed.\n';
+  }
+
   var prompt =
-    'You are a board-certified dermatologist with 20 years of experience. Base ALL answers on AAD, BAD, NICE, Fitzpatrick\'s Dermatology (9th ed), UpToDate.\n\n' +
-    'PATIENT DATA:\nPatient: ' + patStr + '\nLesion Location: ' + dLoc + '\nDuration: ' + dDur + '\nSymptoms: ' + sympStr + '\n' +
+    'You are a board-certified dermatologist with 20 years of experience specialising in general dermatology, wound care, and emergency skin conditions.\n'+
+    'Base ALL answers on: AAD, BAD, NICE, Fitzpatrick\'s Dermatology (9th ed), UpToDate, IDSA, ABA, WHO guidelines as relevant.\n\n'+
+    'PATIENT DATA:\n'+
+    'Patient: ' + patStr + '\n'+
+    'Condition Type: ' + dCond + '\n'+
+    'Location: ' + dLoc + '\n'+
+    'Duration: ' + dDur + '\n'+
+    'Symptoms: ' + sympStr + '\n'+
     (extra ? 'Additional Notes: ' + extra + '\n' : '') +
-    '\nAnalyze the skin lesion image carefully.\n\n' +
-    'TASK:\n1. Describe EXACTLY what you see: morphology type, color, borders, texture, size estimate, distribution.\n' +
-    '2. Correlate visual findings with clinical data.\n3. Exact treatment per guidelines WITH drug + dose + route + frequency + duration.\n' +
-    '4. Workup: SPECIFIC tests with names + clinical reason + guideline citation per test.\n' +
-    '5. Clinical decision pathway: sequential logic steps.\n\n' +
-    'YOU MUST return exactly 3 fully completed diagnoses. Every field must be filled for all 3 — no empty strings.\n\n' +
-    'Return ONLY this JSON structure with ALL fields filled:\n' +
-    '{\n  "visual_features": "Detailed morphological description",\n' +
-    '  "diagnoses": [\n' +
-    '    {"rank":1,"name":"Most likely diagnosis","likelihood":65,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug dose route — reason","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"AAD 2023"},\n' +
-    '    {"rank":2,"name":"Second likely diagnosis","likelihood":25,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug dose route — reason","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"BAD 2022"},\n' +
-    '    {"rank":3,"name":"Third likely diagnosis","likelihood":10,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alt drug dose route — reason","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"NICE 2023"}\n' +
-    '  ],\n' +
-    '  "pathway": {\n' +
-    '    "summary": "2-3 sentences on key differentiating features.",\n' +
-    '    "steps": [\n' +
-    '      {"step":1,"test":"Exact test name","if_positive":"Action and reasoning","if_negative":"Action and reasoning"},\n' +
-    '      {"step":2,"test":"Exact test name","if_positive":"Action and reasoning","if_negative":"Action and reasoning"},\n' +
-    '      {"step":3,"test":"Exact test name","if_positive":"Action and reasoning","if_negative":"Action and reasoning"}\n' +
-    '    ]\n  }\n}';
+    '\n' + condProtocol + '\n'+
+    'VISUAL ANALYSIS TASK:\n'+
+    '1. Describe EXACTLY what you see in visual_features: morphology, colour, borders, surface texture, size estimate, distribution pattern, any secondary changes.\n'+
+    '2. Correlate EVERY visual finding with the clinical data above.\n'+
+    '3. first_line: EXACT drug + dose + route + frequency + duration (Guideline Year). No vague instructions.\n'+
+    '4. workup: 3 specific tests — each with: test name + clinical reason + what result confirms/excludes + guideline citation.\n'+
+    '5. pathway: sequential decision logic — what to do first, what result leads where.\n\n'+
+    'YOU MUST return exactly 3 fully completed diagnoses. Every single field must be filled — no empty strings, no placeholders.\n\n'+
+    'Return ONLY this JSON:\n'+
+    '{\n'+
+    '  "visual_features": "Precise morphological description with colour, borders, texture, size, distribution, and any secondary changes.",\n'+
+    '  "diagnoses": [\n'+
+    '    {"rank":1,"name":"Most likely diagnosis — full name","likelihood":65,"first_line":"Drug Xmg route Xhourly for X days (AAD/NICE/BAD Guideline Year)","alternatives":"Alternative drug dose route — specific indication","workup":"1. Test (exact reason — Guideline). 2. Test (exact reason — Guideline). 3. Test (exact reason — Guideline).","guideline":"AAD 2023"},\n'+
+    '    {"rank":2,"name":"Second diagnosis — full name","likelihood":25,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alternative — indication","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"BAD 2022"},\n'+
+    '    {"rank":3,"name":"Third diagnosis — full name","likelihood":10,"first_line":"Drug dose route duration (Guideline Year)","alternatives":"Alternative — indication","workup":"1. Test (reason — Guideline). 2. Test (reason — Guideline). 3. Test (reason — Guideline).","guideline":"NICE 2023"}\n'+
+    '  ],\n'+
+    '  "pathway": {\n'+
+    '    "summary": "2-3 sentences on key differentiating features between the 3 diagnoses.",\n'+
+    '    "steps": [\n'+
+    '      {"step":1,"test":"Exact first test/action","if_positive":"Specific action + reasoning","if_negative":"Specific action + next step"},\n'+
+    '      {"step":2,"test":"Exact second test/action","if_positive":"Specific action + reasoning","if_negative":"Specific action + next step"},\n'+
+    '      {"step":3,"test":"Exact third test/action","if_positive":"Specific action + reasoning","if_negative":"Specific action + next step"}\n'+
+    '    ]\n'+
+    '  }\n'+
+    '}';
 
   try {
     var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
